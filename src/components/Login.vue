@@ -96,6 +96,7 @@ export default {
 
 <style lang="less" scoped>
 .login_container {
+  height: 100%;
   background-color: #1e1e1e;
 }
 
