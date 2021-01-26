@@ -33,11 +33,15 @@
       <!-- <el-button type="info" @click="logout">退出</el-button> -->
     </el-header>
     <el-container>
-      <el-aside width="260px">
+      <el-aside :width="isCollapse ? '64px' : '260px'">
+        <div class="toggle-menu" @click="toToggleMenu">|||</div>
         <el-menu
+          default-active="2"
           background-color="#fff"
           text-color="#000"
-          active-text-color="#ffd04b"
+          active-text-color="#F56C6C"
+          :collapse="isCollapse"
+          :collapse-transition="false"
         >
           <el-submenu index="1">
             <template slot="title">
@@ -49,13 +53,6 @@
               <el-menu-item index="1-1">选项1</el-menu-item>
               <el-menu-item index="1-2">选项2</el-menu-item>
             </el-menu-item-group>
-            <el-menu-item-group title="分组2">
-              <el-menu-item index="1-3">选项3</el-menu-item>
-            </el-menu-item-group>
-            <el-submenu index="1-4">
-              <template slot="title">选项4</template>
-              <el-menu-item index="1-4-1">选项1</el-menu-item>
-            </el-submenu>
           </el-submenu>
           <el-menu-item index="2">
             <i class="icon-list iconfont"></i>
@@ -91,10 +88,18 @@
 </template>
 <script>
 export default {
+  data() {
+    return {
+      isCollapse: false
+    }
+  },
   methods: {
     logout() {
       window.sessionStorage.clear()
       this.$router.push('/login')
+    },
+    toToggleMenu() {
+      this.isCollapse = !this.isCollapse
     }
   }
 }
@@ -104,6 +109,7 @@ export default {
 .main-container {
   height: 100%;
 }
+
 .el-header {
   padding: 0 0;
   .logo {
@@ -122,16 +128,42 @@ export default {
       border-radius: 50%;
     }
   }
-}
-.el-aside {
-  box-shadow: 0 10px 10px #000;
-  .el-menu {
-    height: 100%;
+  .iconfont {
+    color: #fff;
+    margin-right: 20px;
   }
 }
-</style>
-<style>
+
+.el-aside {
+  box-shadow: 0 10px 10px #000;
+  height: 100%;
+  background-color: #fff;
+}
+
 .iconfont {
-  margin: 0 16px !important;
+  margin-right: 20px;
+  font-size: 18px;
+}
+
+.el-submenu,
+.el-menu-item {
+  span {
+    font-size: 16px;
+  }
+}
+
+.toggle-menu {
+  width: 100%;
+  color: #6c5ce7;
+  text-align: center;
+  padding: 10px 0;
+  letter-spacing: 0.2em;
+  cursor: pointer;
+  transition: letter-spacing 0.5s;
+}
+
+.toggle-menu:hover {
+  color: blue;
+  letter-spacing: 0.5em;
 }
 </style>
