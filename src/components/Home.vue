@@ -36,24 +36,18 @@
       <el-aside :width="isCollapse ? '64px' : '260px'">
         <div class="toggle-menu" @click="toToggleMenu">|||</div>
         <el-menu
-          default-active="2"
+          :default-active="activePath"
           background-color="#fff"
           text-color="#000"
           active-text-color="#F56C6C"
           :collapse="isCollapse"
           :collapse-transition="false"
+          router
         >
-          <el-submenu index="1">
-            <template slot="title">
-              <i class="iconfont icon-computer"></i>
-              <span>测评管理</span>
-            </template>
-            <el-menu-item-group>
-              <template slot="title">分组一</template>
-              <el-menu-item index="1-1">选项1</el-menu-item>
-              <el-menu-item index="1-2">选项2</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
+          <el-menu-item index="1">
+            <i class="iconfont icon-computer"></i>
+            <span slot="title">测评管理</span>
+          </el-menu-item>
           <el-menu-item index="2">
             <i class="icon-list iconfont"></i>
             <span slot="title">题目管理</span>
@@ -66,7 +60,7 @@
             <i class="icon-chart iconfont"></i>
             <span slot="title">成绩管理</span>
           </el-menu-item>
-          <el-menu-item index="5">
+          <el-menu-item index="/users" @click="saveActiveMenu('/users')">
             <i class="icon-user1 iconfont"></i>
             <span slot="title">用户管理</span>
           </el-menu-item>
@@ -81,7 +75,9 @@
         </el-menu>
       </el-aside>
       <el-container>
-        <el-main>Main</el-main>
+        <el-main>
+          <router-view></router-view>
+        </el-main>
       </el-container>
     </el-container>
   </el-container>
@@ -90,7 +86,8 @@
 export default {
   data() {
     return {
-      isCollapse: false
+      isCollapse: false,
+      activePath: ''
     }
   },
   methods: {
@@ -100,7 +97,13 @@ export default {
     },
     toToggleMenu() {
       this.isCollapse = !this.isCollapse
+    },
+    saveActiveMenu(url) {
+      window.sessionStorage.setItem('activeMenu', url)
     }
+  },
+  created() {
+    this.activePath = window.sessionStorage.getItem('activeMenu')
   }
 }
 </script>
