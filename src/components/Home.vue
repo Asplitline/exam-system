@@ -18,7 +18,7 @@
           <el-submenu class="user-info" index="1">
             <template slot="title">
               <img src="../assets/jenny.jpg" alt="" class="avatar" />
-              管理员
+              <span v-once>{{ name }}</span>
             </template>
             <el-menu-item
               ><i class="icon-user iconfont"></i>个人中心</el-menu-item
@@ -44,7 +44,7 @@
           :collapse-transition="false"
           router
         >
-          <el-menu-item index="1">
+          <el-menu-item index="/contest">
             <i class="iconfont icon-computer"></i>
             <span slot="title">测评管理</span>
           </el-menu-item>
@@ -87,7 +87,8 @@ export default {
   data() {
     return {
       isCollapse: false,
-      activePath: ''
+      activePath: '',
+      name: window.sessionStorage.getItem('name')
     }
   },
   methods: {

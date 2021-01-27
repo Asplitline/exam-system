@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Login from '../components/Login'
 import Home from '../components/Home'
 import UserList from '../components/user/User'
+import ContestList from '../components/user/Contest'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -13,6 +14,7 @@ const router = new VueRouter({
       path: '/home',
       component: Home,
       children: [
+        { path: '/contest', component: ContestList },
         { path: '/users', component: UserList }
       ]
     }

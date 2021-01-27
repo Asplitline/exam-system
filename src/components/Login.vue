@@ -28,9 +28,7 @@
           <el-button type="info" @click="resetForm('loginFormRef')"
             >重置</el-button
           >
-          <el-button
-            type="success"
-            @click="submitForm('loginFormRef')"
+          <el-button type="success" @click="submitForm('loginFormRef')"
             >登录</el-button
           >
         </el-form-item>
@@ -63,7 +61,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
-          const params = this.toUrlParams()
+          const params = this.toUrlParams(this.loginForm)
           const result = await this.$http.post('account/api/login', params)
           const { message, success, data } = result.data
           if (success === false) {
@@ -71,6 +69,7 @@ export default {
           } else {
             this.$message.success('登录成功')
             window.sessionStorage.setItem('token', data.id)
+            window.sessionStorage.setItem('name', data.username)
             this.$router.push('/home')
           }
         } else {
@@ -81,9 +80,8 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields()
     },
-    toUrlParams() {
+    toUrlParams(form) {
       let params = []
-      const form = this.loginForm
       for (const key in form) {
         params.push(key + '=' + form[key])
       }
