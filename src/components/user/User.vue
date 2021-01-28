@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="split-line">
-      <span><i class="iconfont icon-computer"></i>测评管理</span>
+      <span> <i class="icon-user1 iconfont"></i> 用户管理</span>
     </div>
     <!-- 面包导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -107,7 +107,6 @@
 
     <!-- 添加用户对话框 -->
     <el-dialog
-      title="提示"
       :visible.sync="isAddUserDialog"
       width="30%"
       @close="closeUserDialog"
@@ -157,7 +156,7 @@
     </el-dialog>
 
     <!-- 修改用户对话框 -->
-    <el-dialog title="提示" :visible.sync="isEditUserDialog" width="30%">
+    <el-dialog :visible.sync="isEditUserDialog" width="30%">
       <el-form
         :model="editUserFormData"
         :rules="editUserRules"
@@ -165,7 +164,7 @@
         label-width="80px"
       >
         <!-- 上传头像 -->
-        <el-form-item>
+        <el-form-item label-width="0">
           <el-upload
             class="avatar-uploader"
             :show-file-list="false"
@@ -174,7 +173,6 @@
             name="files"
           >
             <img :src="bindSrc(editUserFormData.avatarImgUrl)" class="avatar" />
-            <!-- <i v-else class="el-icon-plus avatar-uploader-icon"></i> -->
           </el-upload>
         </el-form-item>
         <el-form-item label="姓名" prop="name">
@@ -285,10 +283,6 @@ export default {
         this.total = total
       }
     },
-    // 获取图片地址
-    bindSrc(src) {
-      return 'http://localhost:8088/' + src
-    },
     // 数字换页
     handleSizeChange(newSize) {
       this.query.size = newSize
@@ -370,15 +364,13 @@ export default {
       }
     },
     // 上传图片
-    async handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw)
+    handleAvatarSuccess(res, file) {
       this.editUserFormData.avatarImgUrl = file.raw.name
     },
     // 提交修改
     submitEditUser() {
       this.$refs.editUserForm.validate(async (valid) => {
         if (!valid) return false
-        console.log(this.editUserFormData)
         const editData = this.editUserFormData
         const { data } = await this.$http.put(
           '/account/updateIgnoreNull',
@@ -411,7 +403,7 @@ export default {
           }
         })
         .catch(() => {
-          this.$message.error('删除失败')
+          this.$message.warning('已取消删除')
         })
     }
   },
@@ -422,10 +414,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.el-breadcrumb {
-  font-size: 18px;
-}
-
 .ban-icon {
   color: red;
 }
@@ -433,13 +421,6 @@ export default {
   color: #67c23a;
 }
 
-.el-pagination {
-  margin-top: 20px;
-}
-
-.mixInp {
-  margin: 20px 0;
-}
 .el-form {
   padding: 0 10%;
 }
@@ -472,17 +453,11 @@ export default {
   border-radius: 6px;
   cursor: pointer;
   position: relative;
+  left: 50%;
+  transform: translate(-50%, 0);
   overflow: hidden;
 }
 .avatar-uploader .el-upload:hover {
   border-color: #ff7979;
-}
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
-  text-align: center;
 }
 </style>

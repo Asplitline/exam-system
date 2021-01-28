@@ -44,15 +44,15 @@
           :collapse-transition="false"
           router
         >
-          <el-menu-item index="/contest">
+          <el-menu-item index="/contest" @click="saveActiveMenu('/contest')">
             <i class="iconfont icon-computer"></i>
             <span slot="title">测评管理</span>
           </el-menu-item>
-          <el-menu-item index="2">
+          <el-menu-item index="/problem" @click="saveActiveMenu('/problem')">
             <i class="icon-list iconfont"></i>
             <span slot="title">题目管理</span>
           </el-menu-item>
-          <el-menu-item index="3">
+          <el-menu-item index="/subject" @click="saveActiveMenu('/subject')">
             <i class="icon-book iconfont"></i>
             <span slot="title">科目管理</span>
           </el-menu-item>
@@ -145,7 +145,7 @@ export default {
 }
 
 .iconfont {
-  margin-right: 20px;
+  margin-right: 10px;
   font-size: 18px;
 }
 
@@ -169,5 +169,10 @@ export default {
 .toggle-menu:hover {
   color: blue;
   letter-spacing: 0.5em;
+}
+
+.el-menu-item {
+  text-align: center;
+  letter-spacing: 0.3em;
 }
 </style>

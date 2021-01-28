@@ -39,3 +39,15 @@ html, body, #app {
     top: 30px;
     background-color: #bbb;
 }
+
+.el-breadcrumb {
+    font-size: 18px !important;
+}
+
+.mixInp {
+    margin: 20px 0;
+}
+
+.el-pagination {
+    margin-top: 20px;
+}
