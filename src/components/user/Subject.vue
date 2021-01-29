@@ -174,10 +174,11 @@ export default {
         }
       )
       if (status === 200) {
-        const { list, pageSize: size, total } = data
+        const { list, pageSize: size, total, pageNum: page } = data
         this.subjectList = list
         this.total = total
-        Object.assign(this.query, { size, total })
+        this.query = { page, size }
+        window.sessionStorage.setItem('total', total)
       }
     },
     // 选择当前页
