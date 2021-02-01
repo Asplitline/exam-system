@@ -22,6 +22,8 @@
             prefix-icon="el-icon-lock"
             v-model="loginForm.password"
             type="password"
+            @keyup.enter.native="$event.target.blur"
+            @blur="submitForm('loginFormRef')"
           ></el-input>
         </el-form-item>
         <el-form-item class="btns">

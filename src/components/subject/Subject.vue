@@ -49,7 +49,7 @@
           <el-tag
             effect="plain"
             type="info"
-            :class="scope.row.questionNum > 0 ? 'quesNum' : ''"
+            :class="scope.row.questionNum > 0 ? 'myNum' : ''"
           >
             {{ scope.row.questionNum }}
           </el-tag>
@@ -286,11 +286,3 @@ export default {
   }
 }
 </script>
-
-<style lang="less" scoped>
-.quesNum {
-  color: red !important;
-  border-color: red !important;
-  font-weight: 600 !important;
-}
-</style>

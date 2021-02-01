@@ -32,7 +32,7 @@
     </el-row>
     <!-- 考试列表 -->
     <el-table :data="contestList" stripe style="width: 100%" max-height="600">
-      <el-table-column prop="title" label="考试名称" min-width="200">
+      <el-table-column prop="title" label="考试名称" min-width="100">
       </el-table-column>
       <el-table-column prop="startTime" label="开始时间" min-width="200">
         <template v-slot="scope">
@@ -75,6 +75,7 @@
         </template>
       </el-table-column>
     </el-table>
+
     <!-- 考试分页 -->
     <el-pagination
       @size-change="handleSizeChange"
@@ -380,9 +381,11 @@ export default {
       })
     }
   },
-  async mounted() {
-    await this.getSubject()
-    await this.getContest()
+  created() {
+    this.getSubject()
+  },
+  mounted() {
+    this.getContest()
   }
 }
 </script>

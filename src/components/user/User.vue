@@ -27,13 +27,7 @@
       </el-col>
     </el-row>
     <!-- 用户表单 -->
-    <el-table
-      :data="userList"
-      stripe
-      style="width: 100%"
-      class="userList"
-      max-height="600"
-    >
+    <el-table :data="userList" stripe style="width: 100%" max-height="600">
       <el-table-column prop="avatarImgUrl" label="头像">
         <template v-slot:default="scope">
           <el-avatar
@@ -43,7 +37,8 @@
           ></el-avatar>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="姓名" width="100"> </el-table-column>
+      <el-table-column prop="name" label="姓名" min-width="100">
+      </el-table-column>
       <el-table-column prop="username" label="账号" min-width="100">
       </el-table-column>
       <el-table-column prop="qq" label="QQ" min-width="160"> </el-table-column>

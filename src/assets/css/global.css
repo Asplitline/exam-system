@@ -3,6 +3,7 @@ html, body, #app {
     margin: 0;
     padding: 0;
     background-color: #eee;
+    min-width: 1300px;
 }
 
 /* 字穿线 */
@@ -50,4 +51,10 @@ html, body, #app {
 
 .el-pagination {
     margin-top: 20px;
+}
+
+.myNum {
+    color: red !important;
+    border-color: red !important;
+    font-weight: 600 !important;
 }

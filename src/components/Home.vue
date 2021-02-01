@@ -56,7 +56,7 @@
             <i class="icon-book iconfont"></i>
             <span slot="title">科目管理</span>
           </el-menu-item>
-          <el-menu-item index="4">
+          <el-menu-item index="/grade" @click="saveActiveMenu('/grade')">
             <i class="icon-chart iconfont"></i>
             <span slot="title">成绩管理</span>
           </el-menu-item>
@@ -64,11 +64,11 @@
             <i class="icon-user1 iconfont"></i>
             <span slot="title">用户管理</span>
           </el-menu-item>
-          <el-menu-item index="6">
+          <el-menu-item index="/posts" @click="saveActiveMenu('/posts')">
             <i class="icon-planeo iconfont"></i>
             <span slot="title">帖子管理</span>
           </el-menu-item>
-          <el-menu-item index="7">
+          <el-menu-item index="/comments" @click="saveActiveMenu('/comments')">
             <i class="icon-comment iconfont"></i>
             <span slot="title">评论管理</span>
           </el-menu-item>
