@@ -1,32 +1,52 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../components/Login'
+// 后台
+import Admin from '../components/Admin'
+import UserList from '../components/admin/user/User'
+import ContestList from '../components/admin/contest/Contests'
+import SubjectList from '../components/admin/subject/Subject'
+import PostList from '../components/admin/post/Post'
+import CommentList from '../components/admin/comment/Comment'
+import GradeList from '../components/admin/grade/Grade'
+import ProblemList from '../components/admin/problem/Problem'
+// 前台
 import Home from '../components/Home'
-import UserList from '../components/user/User.vue'
-import ContestList from '../components/contest/Contests.vue'
-import SubjectList from '../components/subject/Subject.vue'
-import PostList from '../components/post/Post.vue'
-import CommentList from '../components/comment/Comment.vue'
-import GradeList from '../components/grade/Grade.vue'
-import ProblemList from '../components/problem/Problem.vue'
+import Index from '../components/home/index/Index'
+import ContestIndex from '../components/home/contest/Contest'
+import ShareIndex from '../components/home/share/Share'
+import SubjectIndex from '../components/home/subject/Subject'
+import UserIndex from '../components/home/user/User'
 
 Vue.use(VueRouter)
 
 const router = new VueRouter({
   routes: [
-    { path: '/', redirect: '/login' },
+    { path: '/', redirect: '/index' },
     { path: '/login', component: Login },
+    {
+      path: '/admin',
+      component: Admin,
+      redirect: '/_contest',
+      children: [
+        { path: '/_contest', component: ContestList },
+        { path: '/_problem', component: ProblemList },
+        { path: '/_subject', component: SubjectList },
+        { path: '/_grade', component: GradeList },
+        { path: '/_users', component: UserList },
+        { path: '/_posts', component: PostList },
+        { path: '/_comments', component: CommentList }
+      ]
+    },
     {
       path: '/home',
       component: Home,
       children: [
-        { path: '/contest', component: ContestList },
-        { path: '/problem', component: ProblemList },
-        { path: '/subject', component: SubjectList },
-        { path: '/grade', component: GradeList },
-        { path: '/users', component: UserList },
-        { path: '/posts', component: PostList },
-        { path: '/comments', component: CommentList }
+        { path: '/index', component: Index },
+        { path: '/contest', component: ContestIndex },
+        { path: '/share', component: ShareIndex },
+        { path: '/subject', component: SubjectIndex },
+        { path: '/user', component: UserIndex }
       ]
     }
   ]

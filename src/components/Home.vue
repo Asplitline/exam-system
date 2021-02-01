@@ -1,178 +1,97 @@
 <template>
-  <el-container class="main-container">
-    <el-header>
-      <div>
+  <div class="container">
+    <el-container>
+      <el-header>
         <el-menu
           class="el-menu-demo"
           mode="horizontal"
-          background-color="#1b1c1d"
-          text-color="#fff"
-          active-text-color="#ffd04b"
-        >
-          <el-menu-item
-            ><img src="../assets/manage-logo.png" alt="" class="logo"
-          /></el-menu-item>
-          <el-menu-item class="logo-title"
-            >成都东软学院考试平台控制台</el-menu-item
-          >
-          <el-submenu class="user-info" index="1">
-            <template slot="title">
-              <img src="../assets/jenny.jpg" alt="" class="avatar" />
-              <span v-once>{{ name }}</span>
-            </template>
-            <el-menu-item
-              ><i class="icon-user iconfont"></i>个人中心</el-menu-item
-            >
-            <el-menu-item @click="logout"
-              ><i class="icon-log-out iconfont"></i>退出系统</el-menu-item
-            >
-          </el-submenu>
-        </el-menu>
-      </div>
-
-      <!-- <el-button type="info" @click="logout">退出</el-button> -->
-    </el-header>
-    <el-container>
-      <el-aside :width="isCollapse ? '64px' : '260px'">
-        <div class="toggle-menu" @click="toToggleMenu">|||</div>
-        <el-menu
-          :default-active="activePath"
           background-color="#fff"
-          text-color="#000"
-          active-text-color="#F56C6C"
-          :collapse="isCollapse"
-          :collapse-transition="false"
+          text-color="#304455"
+          active-text-color="#41b883"
+          default-active="/"
           router
         >
-          <el-menu-item index="/contest" @click="saveActiveMenu('/contest')">
-            <i class="iconfont icon-computer"></i>
-            <span slot="title">测评管理</span>
-          </el-menu-item>
-          <el-menu-item index="/problem" @click="saveActiveMenu('/problem')">
-            <i class="icon-list iconfont"></i>
-            <span slot="title">题目管理</span>
-          </el-menu-item>
-          <el-menu-item index="/subject" @click="saveActiveMenu('/subject')">
-            <i class="icon-book iconfont"></i>
-            <span slot="title">科目管理</span>
-          </el-menu-item>
-          <el-menu-item index="/grade" @click="saveActiveMenu('/grade')">
-            <i class="icon-chart iconfont"></i>
-            <span slot="title">成绩管理</span>
-          </el-menu-item>
-          <el-menu-item index="/users" @click="saveActiveMenu('/users')">
-            <i class="icon-user1 iconfont"></i>
-            <span slot="title">用户管理</span>
-          </el-menu-item>
-          <el-menu-item index="/posts" @click="saveActiveMenu('/posts')">
-            <i class="icon-planeo iconfont"></i>
-            <span slot="title">帖子管理</span>
-          </el-menu-item>
-          <el-menu-item index="/comments" @click="saveActiveMenu('/comments')">
-            <i class="icon-comment iconfont"></i>
-            <span slot="title">评论管理</span>
-          </el-menu-item>
-        </el-menu>
-      </el-aside>
-      <el-container>
-        <el-main>
-          <router-view></router-view>
-        </el-main>
-      </el-container>
+          <el-menu-item class="logo"
+            ><img src="../assets/manage-logo.png" alt="" height="50"
+          /></el-menu-item>
+          <el-menu-item index="/">首页</el-menu-item>
+          <el-menu-item index="/contest">在线评测</el-menu-item>
+          <el-menu-item index="/subject">科目学习</el-menu-item>
+          <el-menu-item index="/share">分享中心</el-menu-item>
+          <el-submenu class="userInfo">
+            <template slot="title">你好</template>
+            <el-menu-item index="/user">个人信息</el-menu-item>
+          </el-submenu>
+        </el-menu></el-header
+      >
+      <el-main> <router-view></router-view></el-main>
+      <el-footer class="mfooter">
+        <el-row :gutter="20">
+          <el-col :span="5" :offset="4"
+            ><div class="grid-content bg-purple">
+              <h2>项目介绍</h2>
+              <p>
+                在线考试系统是一个在线测试学习系统，并用于辅助课程教学和学生学习。
+              </p>
+            </div></el-col
+          >
+          <el-col :span="5"
+            ><div class="grid-content bg-purple">
+              <h2>联系我们</h2>
+              <p>如有问题请发邮件到<a>1231@456.com</a></p>
+            </div></el-col
+          >
+          <el-col :span="8"
+            ><div class="grid-content bg-purple">
+              <p>© 2020 NSU All Rights Reserved</p>
+              <p>
+                网站版本：v1.0.0 Beta #20200109 服务器时间：2021-01-10 14:51:12
+              </p>
+              <p>
+                站长统计 | 今日IP[91] | 今日PV[4511] | 昨日IP[133] |
+                昨日PV[10109] | 当前在线[1]
+              </p>
+            </div></el-col
+          >
+        </el-row>
+      </el-footer>
     </el-container>
-  </el-container>
+  </div>
 </template>
+
 <script>
-export default {
-  data() {
-    return {
-      isCollapse: false,
-      activePath: '',
-      name: window.sessionStorage.getItem('name')
-    }
-  },
-  methods: {
-    logout() {
-      window.sessionStorage.clear()
-      this.$router.push('/login')
-    },
-    toToggleMenu() {
-      this.isCollapse = !this.isCollapse
-    },
-    saveActiveMenu(url) {
-      window.sessionStorage.setItem('activeMenu', url)
-    }
-  },
-  created() {
-    this.activePath = window.sessionStorage.getItem('activeMenu')
-  }
-}
+export default {}
 </script>
 
 <style lang="less" scoped>
-.main-container {
-  height: 100%;
+.container {
+  display: flex;
+  flex-flow: column;
+  min-height: 100%;
+  .mfooter {
+    background-color: #333;
+    color: #fff;
+    font-size: 14px;
+    p {
+      line-height: 22px;
+    }
+  }
 }
 
 .el-header {
-  padding: 0 0;
-  .logo {
-    width: 50px;
-    height: 50px;
-    pointer-events: none;
-  }
-  .logo-title {
-    font-size: 20px;
-  }
-  .user-info {
-    float: right;
-    .avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-    }
-  }
-  .iconfont {
-    color: #fff;
-    margin-right: 20px;
-  }
+  padding: 0;
 }
 
-.el-aside {
-  box-shadow: 0 10px 10px #000;
-  height: 100%;
-  background-color: #fff;
+.el-main {
+  flex: 1;
 }
-
-.iconfont {
-  margin-right: 10px;
-  font-size: 18px;
+.userInfo {
+  float: right !important;
 }
+</style>
 
-.el-submenu,
-.el-menu-item {
-  span {
-    font-size: 16px;
-  }
-}
-
-.toggle-menu {
-  width: 100%;
-  color: #6c5ce7;
-  text-align: center;
-  padding: 10px 0;
-  letter-spacing: 0.2em;
-  cursor: pointer;
-  transition: letter-spacing 0.5s;
-}
-
-.toggle-menu:hover {
-  color: blue;
-  letter-spacing: 0.5em;
-}
-
-.el-menu-item {
-  text-align: center;
-  letter-spacing: 0.3em;
+<style>
+.logo:hover {
+  background-color: transparent !important;
 }
 </style>

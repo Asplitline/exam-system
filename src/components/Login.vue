@@ -22,8 +22,7 @@
             prefix-icon="el-icon-lock"
             v-model="loginForm.password"
             type="password"
-            @keyup.enter.native="$event.target.blur"
-            @blur="submitForm('loginFormRef')"
+            @keyup.enter.native="submitForm('loginFormRef')"
           ></el-input>
         </el-form-item>
         <el-form-item class="btns">
@@ -72,7 +71,8 @@ export default {
             this.$message.success('登录成功')
             window.sessionStorage.setItem('token', data.id)
             window.sessionStorage.setItem('name', data.username)
-            this.$router.push('/home')
+            if (data.level === 2) this.$router.push('/admin')
+            else this.$router.push('/home')
           }
         } else {
           return false
