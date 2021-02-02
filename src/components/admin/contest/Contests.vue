@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="split-line">
-      <span><i class="iconfont icon-computer"></i>测评管理</span>
+      <span><i class="iconfont icon-computer"></i>测评列表</span>
     </div>
     <!-- 面包导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -63,18 +63,24 @@
         </template>
       </el-table-column>
       <el-table-column label="操作" min-width="100">
-        <template v-slot="scope">
+        <template v-slot="{ row }">
+          <el-button
+            icon="el-icon-search"
+            type="success"
+            @click="showProblemById(row.id, row.title)"
+            circle
+          ></el-button>
           <el-button
             type="primary"
             icon="el-icon-edit"
             circle
-            @click="editContestDialog(scope.row)"
+            @click="editContestDialog(row)"
           ></el-button>
           <el-button
             type="danger"
             icon="el-icon-delete"
             circle
-            @click="deleteContestDialog(scope.row.id)"
+            @click="deleteContestDialog(row.id)"
           ></el-button>
         </template>
       </el-table-column>
@@ -91,6 +97,7 @@
       :total="total"
     >
     </el-pagination>
+
     <!-- 添加考试对话框 -->
     <el-dialog
       :visible.sync="isAddContestDialog"
@@ -381,6 +388,10 @@ export default {
           this.$message.error('请求失败')
         }
       })
+    },
+    // 显示试卷题目列表
+    showProblemById(id, title) {
+      this.$router.push(`/_contest/problems/${id}/${title}`)
     }
   },
   created() {

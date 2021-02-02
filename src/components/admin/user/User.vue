@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="split-line">
-      <span> <i class="icon-user1 iconfont"></i> 用户管理</span>
+      <span> <i class="icon-user1 iconfont"></i> 用户列表</span>
     </div>
     <!-- 面包导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
