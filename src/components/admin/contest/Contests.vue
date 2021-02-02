@@ -16,6 +16,7 @@
           placeholder="请输入考试名称"
           class="input-with-select"
           v-model.trim="query.keyword"
+          clearable
         >
           <el-button
             slot="append"
@@ -110,7 +111,7 @@
             v-model="addContestForm.subjectId"
           >
             <el-option
-              v-for="(val, key) in subjects"
+              v-for="(val, key) in miniSubjects"
               :key="key"
               :label="val"
               :value="key"
@@ -313,7 +314,6 @@ export default {
     },
     // 删除考试
     deleteContestDialog(id) {
-      console.log(id)
       this.$confirm('此操作将永久删除考试, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -329,10 +329,10 @@ export default {
               this.$message.success('删除成功')
               this.getContest()
             } else {
-              this.$http.error('删除失败')
+              this.$message.error('删除失败')
             }
           } else {
-            this.$http.error('删除失败')
+            this.$message.error('删除失败')
           }
         })
         .catch(() => {
@@ -350,10 +350,9 @@ export default {
     // 显示修改对话框
     editContestDialog(data) {
       this.isEditContestDialog = true
-      // 进行深拷贝
-      this.editContestForm = JSON.parse(JSON.stringify(data))
+      // 处理数据，进行深拷贝
+      this.editContestForm = this.toConvert(data)
       this.editContestForm.date = [data.startTime, data.endTime]
-      // const res = await this.$http.get('')
     },
     // 提交修改对话框
     submitEditContest() {

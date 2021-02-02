@@ -12,12 +12,13 @@
     <!-- 搜索框 -->
     <el-row class="mixInp" :gutter="20">
       <el-col :span="6">
-        <el-input placeholder="请输入内容" v-model="query.keyword">
+        <el-input placeholder="请输入内容" v-model="query.keyword" clearable>
           <el-select
             v-model="selectIndex"
             slot="prepend"
             placeholder="请选择"
             class="input-with-select"
+            style="width: 100px"
           >
             <el-option label="文章名" :value="1"></el-option>
             <el-option label="作者ID" :value="2"></el-option>
@@ -167,10 +168,4 @@ export default {
 </script>
 
 <style lang="less" scoped>
-</style>
-
-<style>
-.el-select .el-input {
-  width: 110px;
-}
 </style>

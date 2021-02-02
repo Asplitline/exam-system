@@ -19,3 +19,8 @@ Vue.prototype.bindSrc = function (src) {
 function pad0 (data, len = 2) {
     return ('00000000000' + data).substr(-len)
 }
+
+// 进行深拷贝
+Vue.prototype.toConvert = function (data) {
+    return JSON.parse(JSON.stringify(data))
+}

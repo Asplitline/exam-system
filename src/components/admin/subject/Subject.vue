@@ -16,6 +16,7 @@
           placeholder="请输入课程名称"
           class="input-with-select"
           v-model.trim="query.keyword"
+          clearable
         >
           <el-button
             slot="append"

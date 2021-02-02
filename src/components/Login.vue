@@ -37,6 +37,7 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
   data() {
@@ -71,6 +72,7 @@ export default {
             this.$message.success('登录成功')
             window.sessionStorage.setItem('token', data.id)
             window.sessionStorage.setItem('name', data.username)
+            window.sessionStorage.setItem('avatar', data.avatarImgUrl)
             if (data.level === 2) this.$router.push('/admin')
             else this.$router.push('/home')
           }

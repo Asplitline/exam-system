@@ -17,7 +17,7 @@
           >
           <el-submenu class="user-info" index="1">
             <template slot="title">
-              <img src="../assets/jenny.jpg" alt="" class="avatar" />
+              <img :src="bindSrc(avatar)" alt="" class="avatar" />
               <span v-once>{{ name }}</span>
             </template>
             <el-menu-item
@@ -29,7 +29,6 @@
           </el-submenu>
         </el-menu>
       </div>
-
       <!-- <el-button type="info" @click="logout">退出</el-button> -->
     </el-header>
     <el-container>
@@ -44,31 +43,34 @@
           :collapse-transition="false"
           router
         >
-          <el-menu-item index="/_contest" @click="saveActiveMenu('/contest')">
+          <el-menu-item index="/_contest" @click="saveActiveMenu('/_contest')">
             <i class="iconfont icon-computer"></i>
             <span slot="title">测评管理</span>
           </el-menu-item>
-          <el-menu-item index="/_problem" @click="saveActiveMenu('/problem')">
+          <el-menu-item index="/_problem" @click="saveActiveMenu('/_problem')">
             <i class="icon-list iconfont"></i>
             <span slot="title">题目管理</span>
           </el-menu-item>
-          <el-menu-item index="/_subject" @click="saveActiveMenu('/subject')">
+          <el-menu-item index="/_subject" @click="saveActiveMenu('/_subject')">
             <i class="icon-book iconfont"></i>
             <span slot="title">科目管理</span>
           </el-menu-item>
-          <el-menu-item index="/_grade" @click="saveActiveMenu('/grade')">
+          <el-menu-item index="/_grade" @click="saveActiveMenu('/_grade')">
             <i class="icon-chart iconfont"></i>
             <span slot="title">成绩管理</span>
           </el-menu-item>
-          <el-menu-item index="/_users" @click="saveActiveMenu('/users')">
+          <el-menu-item index="/_users" @click="saveActiveMenu('/_users')">
             <i class="icon-user1 iconfont"></i>
             <span slot="title">用户管理</span>
           </el-menu-item>
-          <el-menu-item index="/_posts" @click="saveActiveMenu('/posts')">
+          <el-menu-item index="/_posts" @click="saveActiveMenu('/_posts')">
             <i class="icon-planeo iconfont"></i>
             <span slot="title">帖子管理</span>
           </el-menu-item>
-          <el-menu-item index="/_comments" @click="saveActiveMenu('/comments')">
+          <el-menu-item
+            index="/_comments"
+            @click="saveActiveMenu('/_comments')"
+          >
             <i class="icon-comment iconfont"></i>
             <span slot="title">评论管理</span>
           </el-menu-item>
@@ -88,7 +90,8 @@ export default {
     return {
       isCollapse: false,
       activePath: '',
-      name: window.sessionStorage.getItem('name')
+      name: window.sessionStorage.getItem('name'),
+      avatar: window.sessionStorage.getItem('avatar')
     }
   },
   methods: {

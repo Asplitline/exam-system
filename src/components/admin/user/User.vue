@@ -16,6 +16,7 @@
           placeholder="请输入内容"
           v-model="search"
           class="input-with-select"
+          clearable
         >
           <el-button slot="append" icon="el-icon-search"></el-button>
         </el-input>
