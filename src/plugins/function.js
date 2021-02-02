@@ -1,15 +1,27 @@
 import Vue from 'vue'
 
+// TODO>> 应该用过滤器实现
 // 格式化日期
-Vue.prototype.formatDate = function (date) {
+// Vue.prototype.formatDate = function (date) {
+//     date = new Date(date)
+//     const year = date.getFullYear()
+//     const month = pad0(date.getMonth() + 1)
+//     const day = pad0(date.getDate())
+//     const hour = pad0(date.getHours())
+//     const minute = pad0(date.getMinutes())
+//     return year + '-' + month + '-' + day + '   ' + hour + ':' + minute
+// }
+
+Vue.filter('formatDate', date => {
     date = new Date(date)
     const year = date.getFullYear()
     const month = pad0(date.getMonth() + 1)
     const day = pad0(date.getDate())
     const hour = pad0(date.getHours())
     const minute = pad0(date.getMinutes())
-    return year + '-' + month + '-' + day + '   ' + hour + ':' + minute
-}
+    const second = pad0(date.getSeconds())
+    return `${year}-${month}-${day} ${hour}:${minute}:${second}`
+})
 
 // 获取图片地址
 Vue.prototype.bindSrc = function (src) {

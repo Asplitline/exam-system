@@ -12,7 +12,12 @@
     <!-- 搜索框 -->
     <el-row class="mixInp" :gutter="20">
       <el-col :span="6">
-        <el-input placeholder="请输入内容" v-model="query.keyword" clearable>
+        <el-input
+          placeholder="请输入内容"
+          v-model="query.keyword"
+          clearable
+          @clear="getPost(selectIndex)"
+        >
           <el-select
             v-model="selectIndex"
             slot="prepend"
@@ -32,25 +37,29 @@
       </el-col>
     </el-row>
     <el-table stripe style="width: 100%" :data="postList">
-      <el-table-column prop="title" label="标题" min-width="220">
+      <el-table-column prop="title" label="标题" min-width="180">
       </el-table-column>
       <el-table-column prop="authorId" label="发布者"> </el-table-column>
-      <el-table-column prop="createTime" label="创建时间">
-        <template v-slot="scope">
-          {{ formatDate(scope.row.createTime) }}
+      <el-table-column prop="createTime" label="创建时间" min-width="120">
+        <template v-slot="{ row }">
+          {{ row.createTime | formatDate }}
         </template>
       </el-table-column>
-      <el-table-column prop="updateTime" label="编辑时间">
-        <template v-slot="scope">
-          {{ formatDate(scope.row.updateTime) }}
+      <el-table-column prop="updateTime" label="编辑时间" min-width="120">
+        <template v-slot="{ row }">
+          {{ row.updateTime | formatDate }}
         </template>
       </el-table-column>
-      <el-table-column prop="lastReplyTime" label="最后一次回复时间">
-        <template v-slot="scope">
-          {{ formatDate(scope.row.lastReplyTime) }}
+      <el-table-column
+        prop="lastReplyTime"
+        label="最后一次回复时间"
+        min-width="120"
+      >
+        <template v-slot="{ row }">
+          {{ row.lastReplyTime | formatDate }}
         </template>
       </el-table-column>
-      <el-table-column prop="replyNum" label="回帖数量">
+      <el-table-column prop="replyNum" label="回帖数量" min-width="80">
         <template v-slot:default="scope">
           <el-tag
             effect="plain"
@@ -61,7 +70,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" min-width="80">
         <template v-slot="scope">
           <el-button type="primary" icon="el-icon-edit" circle></el-button>
           <el-button

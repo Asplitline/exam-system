@@ -15,13 +15,14 @@
         <el-input
           placeholder="请输入考试名称"
           class="input-with-select"
-          v-model.trim="query.keyword"
+          v-model="query.keyword"
           clearable
+          @clear="getContest()"
         >
           <el-button
             slot="append"
             icon="el-icon-search"
-            @click="getContest"
+            @click="getContest()"
           ></el-button>
         </el-input>
       </el-col>
@@ -33,21 +34,23 @@
     </el-row>
     <!-- 考试列表 -->
     <el-table :data="contestList" stripe style="width: 100%" max-height="600">
-      <el-table-column prop="title" label="考试名称" min-width="100">
+      <el-table-column prop="title" label="考试名称" min-width="150">
       </el-table-column>
-      <el-table-column prop="startTime" label="开始时间" min-width="200">
-        <template v-slot="scope">
-          {{ formatDate(scope.row.startTime) }}
+      <el-table-column prop="startTime" label="开始时间" min-width="150">
+        <template v-slot="{ row }">
+          <!-- {{ formatDate(scope.row.startTime) }} -->
+          {{ row.startTime | formatDate }}
         </template>
       </el-table-column>
-      <el-table-column prop="endTime" label="结束时间" min-width="200">
-        <template v-slot="scope">
-          {{ formatDate(scope.row.endTime) }}
+      <el-table-column prop="endTime" label="结束时间" min-width="150">
+        <template v-slot="{ row }">
+          <!-- {{ formatDate(scope.row.endTime) }} -->
+          {{ row.endTime | formatDate }}
         </template>
       </el-table-column>
-      <el-table-column prop="subjectId" label="考试科目" min-width="100">
-        <template v-slot:default="scope">
-          {{ findSubJectById(scope.row.subjectId) }}
+      <el-table-column prop="subjectId" label="考试科目" min-width="120">
+        <template v-slot:default="{ row }">
+          {{ findSubJectById(row.subjectId) }}
         </template>
       </el-table-column>
       <el-table-column prop="state" label="当前状态" min-width="100">
@@ -59,7 +62,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" min-width="200">
+      <el-table-column label="操作" min-width="100">
         <template v-slot="scope">
           <el-button
             type="primary"
@@ -233,10 +236,10 @@ export default {
         }
       )
       if (status === 200) {
-        const { total, list, pageNum: page, pageSize: size } = data
+        const { total, list, pageSize: size } = data
         this.contestList = list
         this.handleContestState()
-        this.query = { page, size }
+        Object.assign(this.query, size)
         this.total = total
       }
     },

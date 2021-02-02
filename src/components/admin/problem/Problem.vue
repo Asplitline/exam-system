@@ -17,11 +17,12 @@
           class="input-with-select"
           v-model="query.keyword"
           clearable
+          @clear="getProblem()"
         >
           <el-button
             slot="append"
             icon="el-icon-search"
-            @click="getProblem"
+            @click="getProblem()"
           ></el-button>
         </el-input>
       </el-col>
@@ -33,18 +34,18 @@
     </el-row>
     <!-- 题目表单 -->
     <el-table :data="problemList" stripe style="width: 100%" max-height="600">
-      <el-table-column prop="id" label="题号" min-width="40"></el-table-column>
+      <el-table-column prop="id" label="题号" min-width="60"></el-table-column>
       <el-table-column
         prop="title"
         label="题目"
-        min-width="200"
+        min-width="300"
       ></el-table-column>
       <el-table-column prop="sujectId" label="课程" min-width="100">
         <template v-slot="{ row }">
           {{ miniSubjects[row.subjectId] }}
         </template>
       </el-table-column>
-      <el-table-column prop="questionType" label="题型">
+      <el-table-column prop="questionType" label="题型" min-width="100">
         <template v-slot="{ row }">
           <span v-if="row.questionType === 0">单选题</span>
           <span v-else-if="row.questionType === 1">多选题</span>
@@ -52,12 +53,12 @@
           <span v-else-if="row.questionType === 3">编程题</span>
         </template>
       </el-table-column>
-      <el-table-column prop="difficulty" label="难度">
+      <el-table-column prop="difficulty" label="难度" min-width="100">
         <template v-slot="{ row }">
           <el-rate v-model="row.difficulty" disabled> </el-rate>
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" min-width="100">
         <template v-slot="{ row }">
           <el-button
             type="primary"

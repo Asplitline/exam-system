@@ -15,13 +15,14 @@
         <el-input
           placeholder="请输入课程名称"
           class="input-with-select"
-          v-model.trim="query.keyword"
+          v-model="query.keyword"
           clearable
+          @clear="getSubject()"
         >
           <el-button
             slot="append"
             icon="el-icon-search"
-            @click="getSubject"
+            @click="getSubject()"
           ></el-button>
         </el-input>
       </el-col>
@@ -34,18 +35,18 @@
     <!-- 考试列表 -->
     <el-table stripe style="width: 100%" max-height="600" :data="subjectList">
       <el-table-column label="#" prop="id" min-width="40"> </el-table-column>
-      <el-table-column label="课程名称" prop="name"> </el-table-column>
-      <el-table-column label="创建时间" prop="createTime">
-        <template v-slot:default="scope">
-          {{ formatDate(scope.row.createTime) }}
+      <el-table-column label="课程名称" prop="name" min-width="100"> </el-table-column>
+      <el-table-column label="创建时间" prop="createTime" min-width="150">
+        <template v-slot:default="{ row }">
+          {{ row.createTime | formatDate }}
         </template>
       </el-table-column>
-      <el-table-column label="更新时间" prop="updateTime">
-        <template v-slot:default="scope">
-          {{ formatDate(scope.row.updateTime) }}
+      <el-table-column label="更新时间" prop="updateTime" min-width="150">
+        <template v-slot:default="{ row }">
+          {{ row.updateTime | formatDate }}
         </template>
       </el-table-column>
-      <el-table-column label="题目数量" prop="questionNum" min-width="40">
+      <el-table-column label="题目数量" prop="questionNum" min-width="80">
         <template v-slot:default="scope">
           <el-tag
             effect="plain"
@@ -175,10 +176,10 @@ export default {
         }
       )
       if (status === 200) {
-        const { list, pageSize: size, total, pageNum: page } = data
+        const { list, pageSize: size, total } = data
         this.subjectList = list
         this.total = total
-        this.query = { page, size }
+        Object.assign(this.query, size)
         window.sessionStorage.setItem('total', total)
       }
     },

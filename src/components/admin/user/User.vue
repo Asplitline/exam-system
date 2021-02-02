@@ -17,6 +17,7 @@
           v-model="search"
           class="input-with-select"
           clearable
+          @clear="getUsers()"
         >
           <el-button slot="append" icon="el-icon-search"></el-button>
         </el-input>
@@ -40,12 +41,12 @@
       </el-table-column>
       <el-table-column prop="name" label="姓名" min-width="100">
       </el-table-column>
-      <el-table-column prop="username" label="账号" min-width="100">
+      <el-table-column prop="username" label="账号" min-width="120">
       </el-table-column>
-      <el-table-column prop="qq" label="QQ" min-width="160"> </el-table-column>
-      <el-table-column prop="phone" label="手机" min-width="160">
+      <el-table-column prop="qq" label="QQ" min-width="120"> </el-table-column>
+      <el-table-column prop="phone" label="手机" min-width="120">
       </el-table-column>
-      <el-table-column prop="email" label="邮箱" min-width="160">
+      <el-table-column prop="email" label="邮箱" min-width="120">
       </el-table-column>
       <el-table-column prop="level" label="身份" min-width="80">
         <template v-slot:default="scope">
@@ -56,7 +57,7 @@
           >
         </template>
       </el-table-column>
-      <el-table-column prop="state" label="状态" min-width="100">
+      <el-table-column prop="state" label="状态" min-width="80">
         <template v-slot:default="scope">
           <el-switch
             v-model="scope.row.state"
@@ -71,7 +72,7 @@
           </el-switch>
         </template>
       </el-table-column>
-      <el-table-column label="操作" min-width="200">
+      <el-table-column label="操作" min-width="100">
         <template v-slot:default="scope">
           <el-button
             type="primary"
