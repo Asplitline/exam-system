@@ -42,8 +42,20 @@
       <el-table-column prop="score" label="分值" min-width="100">
       </el-table-column>
       <el-table-column label="操作" min-width="150">
-        <el-button type="primary" icon="el-icon-edit" circle></el-button>
-        <el-button type="danger" icon="el-icon-delete" circle></el-button>
+        <template v-slot="{ row }">
+          <el-button
+            type="primary"
+            icon="el-icon-edit"
+            circle
+            @click="showEditProblemDrawer(row)"
+          ></el-button>
+          <el-button
+            type="danger"
+            icon="el-icon-delete"
+            circle
+            @click="deleteProblemDialog(row.id)"
+          ></el-button>
+        </template>
       </el-table-column>
     </el-table>
     <!-- 添加题目 -->
@@ -157,6 +169,117 @@
         </div>
       </div>
     </el-drawer>
+    <!-- 修改题目 -->
+    <el-drawer
+      title="添加题目"
+      :visible.sync="isEditProblemDrawer"
+      direction="ltr"
+      ref="editProblemDrawer"
+      class="myDrawer"
+      :wrapperClosable="false"
+      @close="closeDrawer('editProblemForm')"
+    >
+      <div class="demo-drawer__content">
+        <el-form
+          :model="editProblemForm"
+          :rules="problemRules"
+          ref="editProblemForm"
+          label-width="100px"
+          size="medium"
+          hide-required-asterisk
+        >
+          <el-form-item label="题目分类">
+            <el-select
+              placeholder="选择题目类型"
+              v-model="editProblemForm.subjectId"
+            >
+              <el-option
+                v-for="(val, key) in miniSubjects"
+                :key="key"
+                :value="Number(key)"
+                :label="val"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="题目标题" prop="title"
+            ><el-input v-model.trim="editProblemForm.title"></el-input>
+          </el-form-item>
+          <el-form-item label="题目内容" prop="content"
+            ><el-input
+              type="textarea"
+              v-model.trim="editProblemForm.content"
+              :rows="4"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="题目选项" prop="questionType">
+            <el-select
+              placeholder="选择题目类型"
+              v-model="editProblemForm.questionType"
+            >
+              <el-option label="单选" :value="0"></el-option>
+              <el-option label="多选" :value="1"></el-option>
+              <el-option label="问答" :value="2"></el-option>
+              <el-option label="编程" :value="3"></el-option>
+            </el-select>
+          </el-form-item>
+          <!-- 只能用 v-if -->
+          <div v-if="isShowAddSelect">
+            <el-form-item label="A选项" prop="optionA"
+              ><el-input v-model="editProblemForm.optionA"></el-input>
+            </el-form-item>
+            <el-form-item label="B选项" prop="optionB"
+              ><el-input v-model="editProblemForm.optionB"></el-input>
+            </el-form-item>
+            <el-form-item label="C选项" prop="optionC"
+              ><el-input v-model="editProblemForm.optionC"></el-input>
+            </el-form-item>
+            <el-form-item label="D选项" prop="optionD"
+              ><el-input v-model="editProblemForm.optionD"></el-input>
+            </el-form-item>
+          </div>
+          <el-form-item label="题目答案" prop="answer">
+            <el-input
+              type="textarea"
+              :rows="4"
+              v-model="editProblemForm.answer"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="题目解析" prop="parse">
+            <el-input
+              type="textarea"
+              :rows="4"
+              v-model="editProblemForm.parse"
+            ></el-input
+          ></el-form-item>
+          <el-form-item label="题目难度" prop="difficulty">
+            <el-radio-group v-model="editProblemForm.difficulty">
+              <el-radio-button label="1"></el-radio-button>
+              <el-radio-button label="2"></el-radio-button>
+              <el-radio-button label="3"></el-radio-button>
+              <el-radio-button label="4"></el-radio-button>
+              <el-radio-button label="5"></el-radio-button>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="题目分值" prop="score"
+            ><el-input
+              v-model.number="editProblemForm.score"
+              type="number"
+              min="1"
+              max="50"
+            ></el-input>
+          </el-form-item>
+        </el-form>
+        <div class="demo-drawer__footer btns">
+          <el-button type="primary" @click="isEditProblemDrawer = false"
+            >取消</el-button
+          >
+          <el-button type="success" @click="submitForm('editProblemForm')"
+            >修改</el-button
+          >
+        </div>
+      </div>
+    </el-drawer>
   </div>
 </template>
 
@@ -180,7 +303,9 @@ export default {
     return {
       cProblemList: [],
       addProblemForm: {},
+      editProblemForm: {},
       isAddProblemDrawer: false,
+      isEditProblemDrawer: false,
       miniSubjects: {},
       // 添加表单验证规则
       problemRules: {
@@ -257,24 +382,72 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (!valid) return
-        Object.assign(this.addProblemForm, { contestId: Number(this.id) })
-        // console.log(this.addProblemForm)
-        const { data, status } = await this.$http.post(
-          '/question/api/addQuestion',
-          this.addProblemForm
-        )
-        if (status === 200) {
-          if (data.success) {
-            this.$message.success('添加成功')
-            this.isAddProblemDrawer = false
-          } else this.$message.error('添加失败')
-        } else {
-          this.$message.warning('请求失败')
+        if (formName === 'editProblemForm') {
+          this.handleSubmit(
+            '/question/api/updateQuestion',
+            this.editProblemForm,
+            1
+          )
+        } else if (formName === 'addProblemForm') {
+          this.handleSubmit('/question/api/addQuestion', this.addProblemForm, 0)
         }
       })
     },
+    //  0-添加 1-修改
+    async handleSubmit(url, formData, flag) {
+      Object.assign(formData, { contestId: this.id })
+      const { data, status } = await this.$http.post(url, formData)
+      if (status === 200) {
+        if (data.success) {
+          if (flag === 0) {
+            // 添加
+            this.$message.success('添加成功')
+            this.isAddProblemDrawer = false
+          } else {
+            this.$message.success('修改成功')
+            this.isEditProblemDrawer = false
+          }
+          this.getProblemById()
+        } else this.$message.error(`${flag ? '修改' : '添加'}失败`)
+      } else {
+        this.$message.warning('请求失败')
+      }
+    },
     // 清空表单
-    closeDrawer() {}
+    closeDrawer(formName) {
+      this.$refs[formName].resetFields()
+    },
+    // 获取修改表单
+    showEditProblemDrawer(data) {
+      const temp = this.toConvert(data)
+      this.editProblemForm = temp
+      this.isEditProblemDrawer = true
+    },
+    // 删除题目
+    async deleteProblemDialog(id) {
+      this.$confirm('此操作将永久删除该题目, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'error',
+        center: true
+      })
+        .then(async () => {
+          const { status, data } = await this.$http.delete(
+            '/question/api/deleteQuestion/' + id
+          )
+          if (status === 200) {
+            if (data.success) {
+              this.$message.success('删除成功')
+              this.getProblemById()
+            } else this.$message.error('删除失败')
+          } else {
+            this.$message.warning('请求错误')
+          }
+        })
+        .catch(() => {
+          this.$message.warning('已取消删除')
+        })
+    }
   },
   computed: {
     // 计算总分
