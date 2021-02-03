@@ -79,9 +79,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
 .el-main {
-
 }
 .sub-main {
   position: relative;
