@@ -6,34 +6,34 @@
     <!-- 面包导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>成绩管理</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/_grade' }">成绩管理</el-breadcrumb-item>
       <el-breadcrumb-item>{{ title }}</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 搜索框 -->
     <el-row class="mixInp" :gutter="20"> </el-row>
-    <el-table :data="contestList" stripe style="width: 100%" max-height="600">
+    <el-table :data="students" stripe style="width: 100%" max-height="600">
       <el-table-column
-        prop="title"
+        prop="studentId"
         label="学号"
         min-width="150"
       ></el-table-column>
+      <el-table-column prop="studentId" label="姓名" min-width="150">
+        <template v-slot="{ row }">
+          {{ getNameById(row.studentId) }}
+        </template>
+      </el-table-column>
       <el-table-column
-        prop="title"
-        label="姓名"
-        min-width="150"
-      ></el-table-column>
-      <el-table-column
-        prop="title"
+        prop="autoResult"
         label="选择题分数"
         min-width="150"
       ></el-table-column>
       <el-table-column
-        prop="title"
+        prop="manulResult"
         label="主观题分数"
         min-width="150"
       ></el-table-column>
       <el-table-column
-        prop="title"
+        prop="result"
         label="总分"
         min-width="150"
       ></el-table-column>
@@ -45,7 +45,49 @@
 export default {
   props: ['id', 'title'],
   data() {
-    return {}
+    return {
+      students: [],
+      users: {},
+      query: {
+        size: 1000,
+        page: 0
+      }
+    }
+  },
+  methods: {
+    async getUsersByContestId() {
+      const { data, status } = await this.$http.get(
+        '/grade/api/pageGradeByContestId',
+        {
+          params: {
+            keyword: this.id
+          }
+        }
+      )
+      if (status === 200) {
+        this.students = data.list
+      }
+    },
+    async getUsers() {
+      const { data, status } = await this.$http.post(
+        '/account/pageAccount',
+        this.query
+      )
+      if (status === 200) {
+        const { list } = data
+        list.forEach((item) => {
+          this.users[item.id] = item.name
+        })
+      }
+    },
+    getNameById(id) {
+      console.log(id, this.users[id])
+      return this.users[id] || '已注销'
+    }
+  },
+  created() {
+    this.getUsers()
+    this.getUsersByContestId()
   }
 }
 </script>

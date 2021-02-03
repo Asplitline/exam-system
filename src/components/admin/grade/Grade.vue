@@ -63,17 +63,17 @@
       </el-table-column>
       <el-table-column label="操作" min-width="200">
         <template v-slot="{ row }">
+          <!-- :disabled="row.state !== 3" -->
           <el-button
             type="success"
             icon="el-icon-search"
-            :disabled="row.state !== 3"
             circle
             @click="goShowGrade(row.id, row.title)"
           ></el-button>
+          <!-- :disabled="row.state === 3" -->
           <el-button
             type="primary"
             circle
-            :disabled="row.state === 3"
             @click="goCorrectGrade(row.id, row.title)"
             ><i class="el-icon-edit"></i
           ></el-button>
