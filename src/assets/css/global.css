@@ -6,6 +6,15 @@ html, body, #app {
     min-width: 1300px;
 }
 
+ul {
+    padding: 0;
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
 /* 字穿线 */
 
 .split-line {
@@ -57,4 +66,9 @@ html, body, #app {
     color: red !important;
     border-color: red !important;
     font-weight: 600 !important;
+}
+
+.w {
+    width: 1200px;
+    margin: 0 auto;
 }
