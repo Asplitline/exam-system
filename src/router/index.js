@@ -10,8 +10,10 @@ import PostList from '../components/admin/post/Post'
 import CommentList from '../components/admin/comment/Comment'
 import GradeList from '../components/admin/grade/Grade'
 import ProblemList from '../components/admin/problem/Problem'
-
+// ----
 import CProblemList from '../components/admin/contest/CProblems'
+import CGradeList from '../components/admin/grade/CorrectGrade'
+import SGradeList from '../components/admin/grade/SearchGrade'
 // 前台
 import Home from '../components/Home'
 import Index from '../components/home/index/Index'
@@ -38,7 +40,9 @@ const router = new VueRouter({
         { path: '/_users', component: UserList },
         { path: '/_posts', component: PostList },
         { path: '/_comments', component: CommentList },
-        { path: '/_contest/problems/:id/:title', component: CProblemList, props: true }
+        { path: '/_contest/problems/:id/:title', component: CProblemList, props: true },
+        { path: '/_grade/correct/:id/:title', component: CGradeList, props: true },
+        { path: '/_grade/show/:id/:title', component: SGradeList, props: true }
       ]
     },
     {

@@ -57,8 +57,8 @@
         <template v-slot="scope">
           <el-tag
             effect="dark"
-            :type="['', '', 'success', 'danger'][scope.row.state]"
-            >{{ ['未开始', '未开始', '进行中', '已结束'][scope.row.state] }}
+            :type="['', 'success', 'danger'][scope.row.current]"
+            >{{ ['未开始', '进行中', '已结束'][scope.row.current] }}
           </el-tag>
         </template>
       </el-table-column>
@@ -352,9 +352,9 @@ export default {
     // 处理考试状态
     handleContestState() {
       this.contestList.forEach((item) => {
-        if (item.startTime > Date.now()) item.state = 1
-        else if (item.endTime < Date.now()) item.state = 3
-        else item.state = 2
+        if (item.startTime > Date.now()) item.current = 0
+        else if (item.endTime < Date.now()) item.current = 2
+        else item.current = 1
       })
     },
     // 显示修改对话框
