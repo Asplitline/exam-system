@@ -72,7 +72,6 @@
       </el-table-column>
       <el-table-column label="操作" min-width="80">
         <template v-slot="scope">
-          <el-button type="primary" icon="el-icon-edit" circle></el-button>
           <el-button
             type="danger"
             icon="el-icon-delete"

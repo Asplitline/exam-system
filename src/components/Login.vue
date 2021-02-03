@@ -1,9 +1,9 @@
 <template>
   <div class="login_container">
     <div class="login_box">
-      <div class="avatar_box">
+      <!-- <div class="avatar_box">
         <img src="../assets/logo.png" alt="" />
-      </div>
+      </div> -->
       <el-form
         class="login_form"
         :model="loginForm"
@@ -73,6 +73,7 @@ export default {
             window.sessionStorage.setItem('token', data.id)
             window.sessionStorage.setItem('name', data.username)
             window.sessionStorage.setItem('avatar', data.avatarImgUrl)
+            window.sessionStorage.setItem('activeMenu', '/_contest')
             if (data.level === 2) this.$router.push('/admin')
             else this.$router.push('/home')
           }

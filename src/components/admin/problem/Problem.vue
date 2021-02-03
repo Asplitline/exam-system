@@ -92,7 +92,7 @@
       :visible.sync="isAddProblemDrawer"
       direction="rtl"
       ref="addProblemDrawer"
-      class="addDrawer"
+      class="myDrawer"
       :wrapperClosable="false"
       @close="closeDrawer('addProblemForm')"
     >
@@ -201,7 +201,7 @@
       :visible.sync="isEditProblemDrawer"
       direction="ltr"
       ref="editProblemDrawer"
-      class="addDrawer"
+      class="myDrawer"
       :wrapperClosable="false"
       @close="closeDrawer('editProblemForm')"
     >
@@ -400,6 +400,8 @@ export default {
     submitAddForm() {
       this.$refs.addProblemForm.validate(async (valid) => {
         if (!valid) return
+        // console.log(this.addProblemForm)
+        // this.addProblemForm.contestId = 7
         const { data, status } = await this.$http.post(
           '/question/api/addQuestion',
           this.addProblemForm
@@ -524,8 +526,19 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-.el-drawer {
+<style lang="less">
+/* 内容溢出可滑动 */
+.el-drawer.rtl,
+.el-drawer.ltr {
+  overflow: auto !important;
+}
+
+/* 隐藏侧边滑动控件 */
+.el-drawer__container ::-webkit-scrollbar {
+  display: none;
+}
+
+.myDrawer {
   .el-form {
     padding-right: 10%;
     .el-form-item {
@@ -538,17 +551,5 @@ export default {
     margin-bottom: 16px;
     text-align: center;
   }
-}
-</style>
-<style>
-/* 内容溢出可滑动 */
-.el-drawer.rtl,
-.el-drawer.ltr {
-  overflow: auto !important;
-}
-
-/* 隐藏侧边滑动控件 */
-.el-drawer__container ::-webkit-scrollbar {
-  display: none;
 }
 </style>
