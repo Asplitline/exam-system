@@ -13,6 +13,14 @@ Vue.config.productionTip = false
 // 配置基础路径
 axios.defaults.baseURL = 'http://127.0.0.1:8088/'
 
+// 请求拦截
+axios.interceptors.request.use(conf => {
+  return conf
+})
+// 相应拦截
+axios.interceptors.response.use(conf => {
+  return conf
+})
 Vue.prototype.$http = axios
 
 new Vue({

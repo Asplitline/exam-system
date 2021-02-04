@@ -15,7 +15,7 @@
           <el-menu-item index="/contest"> 在线评测</el-menu-item>
           <el-menu-item index="/subject">科目学习</el-menu-item>
           <el-menu-item index="/share">分享中心</el-menu-item>
-          <el-submenu class="userInfo">
+          <el-submenu class="userInfo" index>
             <template slot="title">你好</template>
             <el-menu-item index="/user">个人信息</el-menu-item>
           </el-submenu>

@@ -35,7 +35,8 @@
     <!-- 考试列表 -->
     <el-table stripe style="width: 100%" max-height="600" :data="subjectList">
       <el-table-column label="#" prop="id" min-width="40"> </el-table-column>
-      <el-table-column label="课程名称" prop="name" min-width="100"> </el-table-column>
+      <el-table-column label="课程名称" prop="name" min-width="100">
+      </el-table-column>
       <el-table-column label="创建时间" prop="createTime" min-width="150">
         <template v-slot:default="{ row }">
           {{ row.createTime | formatDate }}
@@ -258,11 +259,18 @@ export default {
         this.editSubjectForm = data
       }
     },
-    // 修改科目
+    // 提交修改科目
     submitEditSubject() {
       this.isEditSubjectDiaglog = false
       this.$refs.editSubjectForm.validate(async (valid) => {
         if (!valid) return false
+        // const res = await this.$http.get(
+        //   '/question/api/getQuestionsBySubjectId',
+        //   {
+        //     params: { subjectId: this.editSubjectForm.id }
+        //   }
+        // )
+        // this.editSubjectForm.questionNum = res.data
         const { data, status } = await this.$http.post(
           '/subject/api/updateSubject',
           this.editSubjectForm
@@ -283,7 +291,7 @@ export default {
       this.editSubjectForm.imgUrl = file.raw.name
     }
   },
-  mounted() {
+  created() {
     this.getSubject()
   }
 }

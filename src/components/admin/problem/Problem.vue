@@ -400,8 +400,6 @@ export default {
     submitAddForm() {
       this.$refs.addProblemForm.validate(async (valid) => {
         if (!valid) return
-        // console.log(this.addProblemForm)
-        // this.addProblemForm.contestId = 7
         const { data, status } = await this.$http.post(
           '/question/api/addQuestion',
           this.addProblemForm
@@ -487,6 +485,7 @@ export default {
     submitEditForm() {
       this.$refs.editProblemForm.validate(async (valid) => {
         if (!valid) return
+        console.log(this.editProblemForm)
         const success = await this.$http.post(
           '/question/api/updateQuestion',
           this.editProblemForm

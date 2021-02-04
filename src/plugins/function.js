@@ -36,3 +36,24 @@ function pad0 (data, len = 2) {
 Vue.prototype.toConvert = function (data) {
     return JSON.parse(JSON.stringify(data))
 }
+
+Vue.prototype.getMiniSubject = async function () {
+    const size = sessionStorage.getItem('total') || 30
+    const miniSubjects = {}
+    const { data, status } = await this.$http.get(
+        '/subject/api/pageSubjects',
+        {
+            params: {
+                size
+            }
+        }
+    )
+    if (status === 200) {
+        data.list.map(({ name, id }) => {
+            miniSubjects[id] = name
+        })
+    } else {
+        this.$message.error('请求失败')
+    }
+    return miniSubjects
+}

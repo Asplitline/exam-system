@@ -12,7 +12,7 @@
     <!-- 搜索框 -->
     <el-row class="mixInp">
       <el-button type="success" plain @click="isAddProblemDrawer = true"
-        >添加考试</el-button
+        >添加题目</el-button
       >
       <div>
         <el-tag type="danger"
