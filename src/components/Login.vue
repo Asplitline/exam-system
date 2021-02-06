@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import { currentUser } from '../plugins/globalvar'
 export default {
   data() {
     return {
@@ -74,6 +75,7 @@ export default {
             window.sessionStorage.setItem('name', data.username)
             window.sessionStorage.setItem('avatar', data.avatarImgUrl)
             window.sessionStorage.setItem('activeMenu', '/_contest')
+            currentUser._setCurrentUser(data)
             if (data.level === 2) this.$router.push('/admin')
             else this.$router.push('/home')
           }

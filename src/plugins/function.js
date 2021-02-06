@@ -37,6 +37,7 @@ Vue.prototype.toConvert = function (data) {
     return JSON.parse(JSON.stringify(data))
 }
 
+// 获取简化版科目科目表
 Vue.prototype.getMiniSubject = async function () {
     const size = sessionStorage.getItem('total') || 30
     const miniSubjects = {}

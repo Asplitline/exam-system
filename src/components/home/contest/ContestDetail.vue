@@ -8,107 +8,152 @@
     <el-divider></el-divider>
     <el-container>
       <el-main>
-        <el-card
-          class="answer-area"
-          v-for="(item, index) in problemList"
-          :key="item.id"
-          :class="index + 1 === currentIndex ? '' : 'hidden-s'"
-        >
-          <el-divider class="answer-title">
-            <i class="el-icon-question">题目描述</i>
-          </el-divider>
-          <div class="desc">
-            <span class="qType" v-if="item.questionType === 0">(单选)</span>
-            <span class="qType" v-else-if="item.questionType === 1"
-              >(多选)</span
+        <el-form :model="answerCardForm" ref="answerCardForm" class="cardForm">
+          <el-form-item
+            v-for="(item, index) in answerCardForm.problemList"
+            :key="item.id"
+            :prop="'problemList.' + index + '.value'"
+            :rules="[{ required: true, message: '', trigger: 'blur' }]"
+          >
+            <el-card
+              class="answer-area"
+              :class="index + 1 === currentIndex ? '' : 'hidden-s'"
             >
-            <span class="qType" v-else-if="item.questionType === 2"
-              >(问答)</span
-            >
-            <span class="qType" v-else>(编程)</span>
-            <span class="qContent">{{ item.content }}</span>
-            <span class="qScore"> ({{ item.score }}分)</span>
-          </div>
-          <el-divider class="answer-title">
-            <i class="el-icon-edit">作答区域</i>
-          </el-divider>
-          <div class="answer-content">
-            <!-- 单选 -->
-            <div class="select" v-if="item.questionType === 0">
-              <el-radio v-model="select" label="1" border>{{
-                item.optionA
-              }}</el-radio>
-              <el-radio v-model="select" label="2" border>{{
-                item.optionB
-              }}</el-radio>
-              <el-radio v-model="select" label="3" border>{{
-                item.optionC
-              }}</el-radio>
-              <el-radio v-model="select" label="4" border>{{
-                item.optionD
-              }}</el-radio>
-            </div>
-            <!-- 多选 -->
-            <div class="select-mut" v-else-if="item.questionType === 1">
-              <el-checkbox v-model="selectM" label="1" border>{{
-                item.optionA
-              }}</el-checkbox>
-              <el-checkbox v-model="selectM" label="2" border>{{
-                item.optionB
-              }}</el-checkbox>
-              <el-checkbox v-model="selectM" label="3" border>{{
-                item.optionC
-              }}</el-checkbox>
-              <el-checkbox v-model="selectM" label="4" border>{{
-                item.optionD
-              }}</el-checkbox>
-            </div>
-            <!-- 问答 + 代码 -->
-            <div class="ques" v-else>
-              <el-input
-                type="textarea"
-                :rows="10"
-                placeholder="请输入内容"
-                v-model="ques"
-              >
-              </el-input>
-            </div>
-          </div>
-        </el-card>
+              <el-divider class="answer-title">
+                <i class="el-icon-question">题目描述</i>
+              </el-divider>
+              <div class="desc">
+                <span class="qType" v-if="item.questionType === 0">(单选)</span>
+                <span class="qType" v-else-if="item.questionType === 1"
+                  >(多选)</span
+                >
+                <span class="qType" v-else-if="item.questionType === 2"
+                  >(问答)</span
+                >
+                <span class="qType" v-else>(编程)</span>
+                <span class="qContent">{{ item.content }}</span>
+                <span class="qScore"> ({{ item.score }}分)</span>
+              </div>
+              <el-divider class="answer-title">
+                <i class="el-icon-edit">作答区域</i>
+              </el-divider>
+              <div class="answer-content">
+                <!-- {{ item.value }} -->
+                <!-- 单选 -->
+                <div class="select" v-if="item.questionType === 0">
+                  <el-radio
+                    label="A"
+                    v-model="item.value"
+                    @change="handleVal(index, item.value)"
+                    border
+                    >{{ item.optionA }}</el-radio
+                  >
+                  <el-radio
+                    label="B"
+                    v-model="item.value"
+                    @change="handleVal(index, item.value)"
+                    border
+                    >{{ item.optionB }}</el-radio
+                  >
+                  <el-radio
+                    label="C"
+                    v-model="item.value"
+                    @change="handleVal(index, item.value)"
+                    border
+                    >{{ item.optionC }}</el-radio
+                  >
+                  <el-radio
+                    label="D"
+                    v-model="item.value"
+                    @change="handleVal(index, item.value)"
+                    border
+                    >{{ item.optionD }}</el-radio
+                  >
+                </div>
+                <!-- 多选 -->
+                <div class="select-mut" v-else-if="item.questionType === 1">
+                  <el-checkbox-group
+                    v-model="item.value"
+                    @change="handleVal(index, item.value)"
+                  >
+                    <el-checkbox label="A" border>{{
+                      item.optionA
+                    }}</el-checkbox>
+                    <el-checkbox label="B" border>{{
+                      item.optionB
+                    }}</el-checkbox>
+                    <el-checkbox label="C" border>{{
+                      item.optionC
+                    }}</el-checkbox>
+                    <el-checkbox label="D" border>{{
+                      item.optionD
+                    }}</el-checkbox>
+                  </el-checkbox-group>
+                </div>
+                <!-- 问答 + 代码 -->
+                <div class="ques" v-else>
+                  <el-input
+                    type="textarea"
+                    :rows="10"
+                    placeholder="请输入内容"
+                    v-model="item.value"
+                    @change="handleVal(index, item.value)"
+                  >
+                  </el-input>
+                </div>
+              </div>
+            </el-card>
+          </el-form-item>
+        </el-form>
       </el-main>
       <el-aside width="240px">
         <el-card class="box-card" body-style="padding:10px">
           <dl>
-            <dd><span>考生学号:</span><span>admin</span></dd>
-            <dd><span>当前考生:</span><span>管理员</span></dd>
-            <dd><span>剩余时间:</span><span>101:23:47:55</span></dd>
-            <dd><span>开始时间:</span><span>2021-01-10 08:35:00</span></dd>
-            <dd><span>结束时间:</span><span>2021-04-22 15:50:00</span></dd>
-            <dd><span class="last">总分:</span><span>5</span></dd>
+            <dd>
+              <span>考生学号:</span><span>{{ cUser.id }}</span>
+            </dd>
+            <dd>
+              <span>当前考生:</span><span>{{ cUser.name }}</span>
+            </dd>
+            <dd>
+              <span>剩余时间:</span
+              ><span class="surplus">{{ surplusTime }}</span>
+            </dd>
+            <dd>
+              <span>开始时间:</span
+              ><span>{{ cContest.startTime | formatDate }}</span>
+            </dd>
+            <dd>
+              <span>结束时间:</span
+              ><span>{{ cContest.endTime | formatDate }}</span>
+            </dd>
+            <dd>
+              <span class="last">总分:</span
+              ><span>{{ cContest.totalScore }}</span>
+            </dd>
           </dl>
         </el-card>
         <el-card class="aside-bottom">
           <div class="select-problem">
             <button
-              class="problem-noactive"
+              class="problem"
               v-for="index in problemNum"
               :key="index"
-              :class="{ 'problem-current': index === currentIndex }"
+              :class="{
+                'problem-current': index === currentIndex,
+                'problem-active': existArray[index]
+              }"
               @click="showProblem(index)"
             >
               {{ index }}
             </button>
-            <!-- <button class="problem-noactive">3</button>
-            <button class="problem-current">15</button>
-            <button class="problem">15</button>  -->
-            <!-- button 占位 -->
             <button
               class="problem-fill"
               v-for="index in fillNum"
               :key="index + 'sss'"
             ></button>
           </div>
-          <el-button type="success">交卷</el-button>
+          <el-button type="success" @click="submitCard">交卷</el-button>
         </el-card>
       </el-aside>
     </el-container>
@@ -116,6 +161,7 @@
 </template>
 
 <script>
+import { currentContest, currentUser } from '../../../plugins/globalvar'
 export default {
   props: ['id', 'name'],
   data() {
@@ -124,7 +170,15 @@ export default {
       selectM: [],
       ques: '',
       problemList: [],
-      currentIndex: 1
+      currentIndex: 1,
+      answerCardForm: {
+        problemList: []
+      },
+      existArray: [],
+      cUser: {},
+      cContest: {},
+      surplusTime: '',
+      timer: ''
     }
   },
   methods: {
@@ -138,18 +192,63 @@ export default {
         }
       )
       if (status === 200) {
-        this.problemList = data
+        // BUG>>
+        // 动态循环添加表单项，目前只会指定单个字段，
+        // 单选框，文本域默认为string，但是多选框默认为array
+        // 目前解决：强制值为array，但是不合理
+        // 期待解决：动态循环添加表单项，能够添加多个字段
+        data.forEach((item) => {
+          this.answerCardForm.problemList.push(
+            Object.assign(item, { value: [] })
+          )
+        })
       } else {
         this.$message.warning('请求失败')
       }
     },
     showProblem(id) {
       this.currentIndex = id
+      this.$refs.answerCardForm.clearValidate()
+    },
+    submitCard() {
+      this.$refs.answerCardForm.validate((valid) => {
+        if (!valid) return this.$message.error('还有未写题目')
+        const answer = []
+        this.answerCardForm.problemList.forEach((item) => {
+          answer.push(item.value)
+        })
+        console.log(answer.join('__'))
+      })
+    },
+    showActive(index) {
+      return this.existArray[index]
+    },
+    // 题目有无内容判断
+    handleVal(index, val) {
+      this.existArray[index + 1] = val.length > 0
+    },
+    handleSurplus() {
+      const now = Date.now()
+      const end = new Date(this.cContest.endTime).getTime()
+      let diff = end > now ? end - now : 0
+      if (diff > 0) {
+        diff /= 1000
+        const d = Math.floor(diff / 60 / 60 / 24)
+        const h = Math.floor((diff / 60 / 60) % 24)
+        const m = Math.floor((diff / 60) % 60)
+        const s = Math.floor(diff % 60)
+        this.surplusTime = `${this.pad0(d)} ${this.pad0(h)}:${this.pad0(
+          m
+        )}:${this.pad0(s)}`
+      }
+    },
+    pad0(val, len = 2) {
+      return ('000000000000' + val).substr(-len)
     }
   },
   computed: {
     problemNum() {
-      return this.problemList.length
+      return this.answerCardForm.problemList.length
     },
     fillNum() {
       return this.problemNum % 5 === 0 ? 0 : 5 - (this.problemNum % 5)
@@ -157,6 +256,18 @@ export default {
   },
   created() {
     this.getProblem()
+    this.cUser = currentUser._getCurrentUser()
+    this.cContest = currentContest._getCurrentContest()
+    console.log(this.cContest)
+    console.log(this.cUser)
+  },
+  mounted() {
+    console.log('start')
+    this.timer = setInterval(this.handleSurplus, 1000)
+  },
+  beforeDestroy() {
+    console.log('clear')
+    clearInterval(this.timer)
   }
 }
 </script>
@@ -238,8 +349,8 @@ export default {
     width: 34px;
     height: 28px;
     margin-bottom: 10px;
-    border: 2px solid #2ecc71;
-    color: #2ecc71;
+    border: 2px solid #ccc;
+    color: #ccc;
     outline: none;
     background-color: transparent;
     border-radius: 4px;
@@ -250,11 +361,11 @@ export default {
   [class^='problem']:hover {
     transform: scale(1.2);
   }
-  .problem-noactive {
-    color: #ccc;
-    border-color: #ccc;
+  .problem.problem-active {
+    color: #2ecc71;
+    border-color: #2ecc71;
   }
-  .problem-current {
+  .problem.problem-current {
     color: #fff;
     background-color: #2ecc71;
     border-color: #2ecc71;
@@ -265,6 +376,22 @@ export default {
 }
 
 .hidden-s {
+  display: none;
+}
+
+.cardForm {
+  .el-form-item {
+    margin-bottom: 0;
+  }
+}
+
+.surplus {
+  color: red;
+}
+</style>
+
+<style lang="less">
+.cardForm .el-form-item__error {
   display: none;
 }
 </style>
