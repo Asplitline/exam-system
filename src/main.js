@@ -1,7 +1,7 @@
 import Vue from 'vue'
-import Vuex from 'vuex'
 import App from './App.vue'
 import router from './router'
+import store from './store'
 import './assets/css/global.css'
 import './plugins/element'
 import './plugins/function'
@@ -25,6 +25,7 @@ axios.interceptors.response.use(conf => {
 Vue.prototype.$http = axios
 
 new Vue({
+  store,
   router,
   render: h => h(App)
 }).$mount('#app')
