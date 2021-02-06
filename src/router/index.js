@@ -25,6 +25,9 @@ import UserIndex from '../components/home/user/User'
 import SProblemList from '../components/home/subject/sProblemList'
 import SProblemDetail from '../components/home/subject/sProblemDetail'
 import cContestDetail from '../components/home/contest/ContestDetail'
+
+import sPostDetail from '../components/home/share/postDetail'
+import sPostSubmit from '../components/home/share/sPostSubmit'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -59,7 +62,9 @@ const router = new VueRouter({
         { path: '/user', component: UserIndex },
         { path: '/subject/:id/:name', component: SProblemList, props: true },
         { path: '/sProblem/:id/:name', component: SProblemDetail, props: true },
-        { path: '/contest/:id/:name', component: cContestDetail, props: true }
+        { path: '/contest/:id/:name', component: cContestDetail, props: true },
+        { path: '/share/post/:id', component: sPostDetail, props: true },
+        { path: '/share/sPostSubmit', component: sPostSubmit }
       ]
     }
   ]
