@@ -18,6 +18,7 @@
           <el-submenu class="userInfo" index>
             <template slot="title">你好</template>
             <el-menu-item index="/user">个人信息</el-menu-item>
+            <el-menu-item index="/user">退出系统</el-menu-item>
           </el-submenu>
         </el-menu></el-header
       >
@@ -39,7 +40,6 @@ export default {}
   display: flex;
   flex-flow: column;
   min-height: 100%;
-  // background-color: transparent;
   background-color: #fcfdff;
   .el-footer {
     background-color: #333;

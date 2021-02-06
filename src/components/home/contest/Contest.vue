@@ -26,9 +26,7 @@
         </el-table-column>
         <el-table-column label="操作" min-width="100">
           <template v-slot="{ row }">
-            <el-button
-              type="primary"
-              @click="goContestDetail(row.id, row.title)"
+            <el-button type="primary" @click="goContestDetail(row)"
               >进入考试</el-button
             >
           </template>
@@ -39,6 +37,7 @@
 </template>
 
 <script>
+import { currentContest } from '../../../plugins/globalvar'
 export default {
   data() {
     return {
@@ -68,8 +67,9 @@ export default {
         this.$message.warning('请求失败')
       }
     },
-    goContestDetail(id, title) {
-      this.$router.push(`/contest/${id}/${title}`)
+    goContestDetail(data) {
+      currentContest._setCurrentContest(data)
+      this.$router.push(`/contest/${data.id}/${data.title}`)
     }
   },
   async created() {
