@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-highlight>
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>分享中心</el-breadcrumb-item>
@@ -14,9 +14,12 @@
       class="postAlert"
     >
     </el-alert>
-    <quill-editor ref="myQuillEditor" v-model="content" />
+    <el-input placeholder="请输入内容" v-model="title" class="postTitle">
+      <template slot="prepend">标题</template>
+    </el-input>
+    <quill-editor ref="myQuillEditor" v-model="content" :options="options" />
 
-    <el-button class="submitPost" type="danger" @click="getContent()" plain>
+    <el-button class="submitPost" type="danger" @click="getContent" plain>
       提交
     </el-button>
   </div>
@@ -26,26 +29,89 @@
 export default {
   data() {
     return {
-      content: ''
+      content: '',
+      title: '',
+      user: {},
+      options: {
+        theme: 'snow',
+        placeholder: '请输入内容',
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'], // 加粗，斜体，下划线，删除线
+            ['blockquote', 'code-block'], //引用，代码块
+            [{ header: 1 }, { header: 2 }], // 几级标题
+            [{ list: 'ordered' }, { list: 'bullet' }], // 有序列表，无序列表
+            [{ script: 'sub' }, { script: 'super' }], // 下角标，上角标
+            [{ indent: '-1' }, { indent: '+1' }], // 缩进
+            //[{ direction: "rtl" }], // 文字输入方向
+            [{ size: ['small', false, 'large', 'huge'] }], // 字体大小
+            [{ header: [1, 2, 3, 4, 5, 6, false] }], // 标题
+            [{ color: [] }, { background: [] }], // 颜色选择
+            [{ font: [] }], // 字体
+            [{ align: [] }], // 居中
+            ['clean'], //清除样式
+            [('link', 'image', 'video')] //控制能上传的内容
+          ]
+        }
+      }
     }
   },
   methods: {
-    // onEditorBlur(quill) {
-    //   console.log('editor blur!', quill)
-    // },
-    // onEditorFocus(quill) {
-    //   console.log('editor focus!', quill)
-    // },
-    // onEditorReady(quill) {
-    //   console.log('editor ready!', quill)
-    // },
-    // onEditorChange({ quill, html, text }) {
-    //   console.log('editor change!', quill, html, text)
-    //   this.content = html
-    // }
-    getContent() {
-      console.log(this.content)
+    onEditorBlur({ html, text }) {
+      console.log(html, text)
+    },
+    async getContent() {
+      const temp = {
+        textContent: this.editor.getText().trim(),
+        htmlContent: this.content.trim(),
+        authorId: this.user.id,
+        title: this.title.trim()
+      }
+      if (this.validate(temp)) {
+        const { data, status } = await this.$http.post(
+          '/post/api/addPost',
+          temp
+        )
+        if (status === 200) {
+          if (data.success) {
+            this.$message.success('添加成功')
+            this.title = ''
+            this.content = ''
+            window.history.go(-1)
+          }
+        } else {
+          this.$message.error('添加失败')
+        }
+      }
+    },
+    // 校验文章
+    validate(data) {
+      if (data.title.length === 0) {
+        this.$notify.error({
+          title: '错误',
+          dangerouslyUseHTMLString: true,
+          message: '<strong style="color:red;">标题</strong>不能为空'
+        })
+        return false
+      }
+      if (data.textContent.length === 0) {
+        this.$notify.error({
+          title: '错误',
+          dangerouslyUseHTMLString: true,
+          message: '<strong style="color:red;">内容</strong>不能为空'
+        })
+        return false
+      }
+      return true
     }
+  },
+  computed: {
+    editor() {
+      return this.$refs.myQuillEditor.quill
+    }
+  },
+  created() {
+    this.user = this.$store.state.currentUser
   }
 }
 </script>
@@ -73,4 +139,15 @@ export default {
     font-size: 15px;
   }
 }
+.postTitle {
+  border-radius: 6px;
+  margin-bottom: 20px;
+  outline: none;
+}
+.postTitle.el-input.el-input-group.el-input-group--prepend {
+  width: 500px;
+}
+</style>
+
+<style lang="less">
 </style>

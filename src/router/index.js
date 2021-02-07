@@ -63,7 +63,7 @@ const router = new VueRouter({
         { path: '/subject/:id/:name', component: SProblemList, props: true },
         { path: '/sProblem/:id/:name', component: SProblemDetail, props: true },
         { path: '/contest/:id/:name', component: cContestDetail, props: true },
-        { path: '/share/post/:id', component: sPostDetail, props: true },
+        { path: '/share/post/:id/:uid', component: sPostDetail, props: true },
         { path: '/share/sPostSubmit', component: sPostSubmit }
       ]
     }

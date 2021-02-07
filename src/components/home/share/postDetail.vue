@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div v-highlight>
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>分享中心</el-breadcrumb-item>
-      <el-breadcrumb-item>金山WPS服务端开发工程师面试经历</el-breadcrumb-item>
+      <el-breadcrumb-item>{{ post.title }}</el-breadcrumb-item>
     </el-breadcrumb>
     <el-divider></el-divider>
     <el-container class="postDetail">
@@ -14,13 +14,17 @@
               <el-avatar
                 shape="square"
                 :size="50"
-                src="https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png"
+                :src="bindSrc(user.avatarImgUrl)"
               ></el-avatar>
             </el-col>
             <el-col :span="12">
               <div class="content">
-                <a href=""><h4>小王</h4> </a>
-                <span class="createDate">2020-04-27 10:19:29发表</span>
+                <a href=""
+                  ><h4>{{ user.name }}</h4>
+                </a>
+                <span class="createDate"
+                  >{{ post.createTime | formatDate }}发表</span
+                >
               </div>
               <p class="icons">
                 <i class="el-icon-chat-dot-round">2</i>
@@ -33,38 +37,19 @@
 
         <div class="postContent">
           <el-card shadow="always">
-            <h1>A header</h1>
-            <p>
-              Te eum doming eirmod, nominati pertinacia argumentum ad his. Ex
-              eam alia facete scriptorem, est autem aliquip detraxit at. Usu
-              ocurreret referrentur at, cu epicurei appellantur vix. Cum ea
-              laoreet recteque electram, eos choro alterum definiebas in.
-            </p>
-            <p>
-              Vim dolorum definiebas an. Mei ex natum rebum iisque. Audiam
-              quaerendum eu sea, pro omittam definiebas ex. Te est latine
-              definitiones. Quot wisi nulla ex duo. Vis sint solet expetenda ne,
-              his te phaedrum referrentur consectetuer. Id vix fabulas oporteat,
-              ei quo vide phaedrum, vim vivendum maiestatis in. Eu quo homero
-              blandit intellegebat. Incorrupte consequuntur mei id.
-            </p>
-            <p>
-              Mei ut facer dolores adolescens, no illum aperiri quo, usu odio
-              brute at. Qui te porro electram, ea dico facete utroque quo.
-              Populo quodsi te eam, wisi everti eos ex, eum elitr altera utamur
-              at. Quodsi convenire mnesarchum eu per, quas minimum postulant per
-              id.
-            </p>
+            <div v-html="post.htmlContent"></div>
           </el-card>
         </div>
         <el-divider> </el-divider>
         <p class="replyTitle">
-          <i class="el-icon-chat-dot-round"></i>回复<span>(4)</span>
+          <i class="el-icon-chat-dot-round"></i>回复<span
+            >({{ post.replyNum }})</span
+          >
         </p>
         <div class="postRely">
           <div class="comment">
             <div class="content">
-              <el-row>
+              <el-row v-for="(item, index) in comment" :key="item.id">
                 <el-col :span="1">
                   <el-avatar
                     shape="square"
@@ -73,31 +58,51 @@
                   ></el-avatar>
                 </el-col>
                 <el-col :span="16" class="info">
-                  <a href="javascript:;" class="author">Matt </a>
-                  <span class="replyDate">2020-05-04 18:36:03</span>
-                  <div class="text">How artistic!</div>
-                  <a href="javascript:;" class="actions">回复</a>
-                  <div class="replyControl">
-                    <el-input
-                      type="textarea"
-                      placeholder="请输入内容"
-                      v-model="textarea1"
-                      :rows="3"
-                      resize="none"
-                    >
-                    </el-input>
-                    <el-button
-                      type="success"
-                      icon="el-icon-edit"
-                      size="mini"
-                      style="margin-top: 6px; float: right"
-                      >提交</el-button
-                    >
-                  </div>
+                  <a href="javascript:;" class="author"
+                    >{{ getUsernameById(item.userId) }}
+                  </a>
+                  <span class="replyDate"></span>
+                  <div class="text">{{ item.content }}</div>
+                  <a
+                    href="javascript:;"
+                    class="actions"
+                    @click="showTextarea(item.id)"
+                    >回复</a
+                  >
+                  <transition name="fade">
+                    <div class="replyArea" v-show="currentIndex === item.id">
+                      <el-input
+                        type="textarea"
+                        placeholder="请输入内容"
+                        v-model="comment[index].replyValue"
+                        :rows="2"
+                        resize="none"
+                        @blur="closeReply"
+                      >
+                      </el-input>
+                      <div class="btns">
+                        <el-button
+                          type="info"
+                          icon="el-icon-close"
+                          size="mini"
+                          @click="closeReply"
+                        >
+                          取消
+                        </el-button>
+                        <el-button
+                          type="success"
+                          icon="el-icon-edit"
+                          size="mini"
+                          @click="addReply(item.id, comment[index].replyValue)"
+                          >回复</el-button
+                        >
+                      </div>
+                    </div>
+                  </transition>
                 </el-col>
               </el-row>
             </div>
-            <div class="comments" :span="20">
+            <!-- <div class="comments" :span="20" >
               <div class="content">
                 <el-row>
                   <el-col :span="1">
@@ -115,8 +120,39 @@
                   </el-col>
                 </el-row>
               </div>
-            </div>
+            </div> -->
           </div>
+        </div>
+
+        <div class="commentArea">
+          <el-input
+            type="textarea"
+            :rows="4"
+            placeholder="请输入内容"
+            resize="none"
+            v-model="commentValue"
+            @focus="isShowBtns = true"
+            @blur="isShowBtns = false"
+          >
+          </el-input>
+          <transition name="fade">
+            <div class="btns" v-show="isShowBtns">
+              <el-button
+                type="info"
+                icon="el-icon-close"
+                size="mini"
+                @click="isShowBtns = true"
+                >取消</el-button
+              >
+              <el-button
+                type="primary"
+                icon="el-icon-edit"
+                size="mini"
+                @click="addComment"
+                >评论</el-button
+              >
+            </div>
+          </transition>
         </div>
       </el-main>
     </el-container>
@@ -124,7 +160,100 @@
 </template>
 
 <script>
-export default {}
+import { mapGetters } from 'vuex'
+export default {
+  props: ['id', 'uid'],
+  data() {
+    return {
+      user: {},
+      post: {},
+      comment: [],
+      commentValue: '',
+      currentIndex: 0,
+      isShowBtns: false,
+      userId: 0
+    }
+  },
+  methods: {
+    // 根据id获取文章评论
+    async getCommentById() {
+      const { data, status } = await this.$http.post(
+        `/reply/api/getCommentsByPostId?postId=${this.id}`
+      )
+      if (status === 200) {
+        this.comment = data
+      }
+    },
+    // 显示回复框
+    showTextarea(id) {
+      this.currentIndex = id
+    },
+    // 根据id获得用户名称
+    getUsernameById(id) {
+      return this.getUserById(id) && this.getUserById(id).name
+    },
+    // 显示评论按钮
+    showBtns() {
+      this.isShowBtns = true
+    },
+    // 添加评论
+    async addComment() {
+      this.commentValue = this.commentValue.trim()
+      if (this.commentValue.length) {
+        const { data, status } = await this.$http.post(
+          '/reply/api/addComment',
+          {
+            postId: Number(this.id),
+            userId: this.$store.state.currentUser.id,
+            content: this.commentValue
+          }
+        )
+        if (status === 200) {
+          if (data.success) {
+            this.getCommentById()
+          }
+          this.commentValue = ''
+        } else {
+          this.$message.warning('请求失败')
+        }
+      }
+    },
+    // 添加回复
+    async addReply(commentId, val) {
+      val = val.trim()
+      if (val.length) {
+        const { data, status } = await this.$http.post('/reply/api/addReply', {
+          postId: Number(this.id),
+          userId: this.userId,
+          commentId: commentId,
+          content: val
+        })
+        if (status === 200) {
+          if (data.success) {
+            this.getCommentById()
+          }
+          val = ''
+        } else {
+          this.$message.warning('请求失败')
+        }
+      }
+    },
+    // 取消回复
+    closeReply() {
+      this.currentIndex = 0
+      this.replyValue = ''
+    }
+  },
+  computed: {
+    ...mapGetters(['getUserById', 'getCurrentPost'])
+  },
+  created() {
+    this.post = this.getCurrentPost(Number(this.id))
+    this.user = this.getUserById(Number(this.uid))
+    this.userId = this.$store.state.currentUser.id
+    this.getCommentById()
+  }
+}
 </script>
 
 <style lang="less" scoped>
@@ -179,10 +308,32 @@ export default {}
     .actions {
       color: #e74c3c;
     }
+    .el-row {
+      margin-bottom: 20px;
+    }
   }
   .comments {
     margin-top: 6px;
     margin-left: 40px;
   }
+}
+
+.commentArea,
+.replyArea {
+  width: 600px;
+  .btns {
+    float: right;
+    margin: 10px 10px 0 0;
+    bottom: -40px;
+  }
+}
+
+// 动画
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.6s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>

@@ -166,8 +166,6 @@ export default {
   props: ['id', 'name'],
   data() {
     return {
-      select: [],
-      selectM: [],
       ques: '',
       problemList: [],
       currentIndex: 1,
@@ -217,7 +215,7 @@ export default {
         this.answerCardForm.problemList.forEach((item) => {
           answer.push(item.value)
         })
-        console.log(answer.join('__'))
+        console.log(answer.join('_~_'))
       })
     },
     showActive(index) {

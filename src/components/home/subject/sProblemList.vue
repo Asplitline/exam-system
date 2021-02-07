@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 export default {
   props: ['id', 'name'],
   data() {
@@ -66,6 +67,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['initProblemList']),
     // 获取题目清单
     async getProblemById() {
       const { status, data } = await this.$http('/question/api/pageQuestion', {
@@ -75,6 +77,7 @@ export default {
         const { list, total } = data
         this.problemList = list
         this.total = total
+        this.initProblemList(this.problemList)
       } else {
         this.$message.warning('请求失败')
       }

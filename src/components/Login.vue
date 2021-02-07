@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { currentUser } from '../plugins/globalvar'
+import { mapActions, mapMutations } from 'vuex'
 export default {
   data() {
     return {
@@ -60,6 +60,8 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['setUserList']),
+    ...mapMutations(['initUser', 'initUserList']),
     // 表单验证
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
@@ -75,7 +77,12 @@ export default {
             window.sessionStorage.setItem('name', data.username)
             window.sessionStorage.setItem('avatar', data.avatarImgUrl)
             window.sessionStorage.setItem('activeMenu', '/_contest')
-            currentUser._setCurrentUser(data)
+            window.sessionStorage.setItem('userInfo', { userInfo: data })
+            // 设置用户列表
+            this.setUserList(data.id)
+            // 设置当前登录用户
+            this.initUser(data)
+            this.initUserList()
             if (data.level === 2) this.$router.push('/admin')
             else this.$router.push('/home')
           }

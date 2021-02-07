@@ -18,7 +18,7 @@
           <el-submenu class="userInfo" index>
             <template slot="title">你好</template>
             <el-menu-item index="/user">个人信息</el-menu-item>
-            <el-menu-item index="/user">退出系统</el-menu-item>
+            <el-menu-item @click="logout">退出系统</el-menu-item>
           </el-submenu>
         </el-menu></el-header
       >
@@ -33,9 +33,13 @@
 
 <script>
 export default {
-  mounted() {
-    console.log(this.$store.state)
-  }
+  methods: {
+    logout() {
+      window.sessionStorage.clear()
+      this.$router.push('/login')
+    }
+  },
+  mounted() {}
 }
 </script>
 

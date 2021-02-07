@@ -15,19 +15,24 @@
             ><h1><i class="el-icon-question"></i>题目标题</h1></el-divider
           >
           <p class="title">
-            下列哪一个 Transact-SQL 语句能够实现收回 user2 查询基本表 T
-            的权限？（ ）
+            {{ problem.title }}
           </p>
         </el-card>
         <el-card>
           <el-divider
             ><h1><i class="el-icon-info"></i>题目内容</h1></el-divider
           >
-          <div class="select">
-            <p>A.REVOKE UPDATE ON T</p>
-            <p>B.GRANT SELECT ON T TO user2</p>
-            <p>C.DENY SELECT ON T TO user2</p>
-            <p>D.REVOKE SELECT ON T FROM user2</p>
+          <div
+            class="select"
+            v-if="problem.questionType === 0 || problem.questionType === 1"
+          >
+            <p>A、{{ problem.optionA }}</p>
+            <p>B、{{ problem.optionB }}</p>
+            <p>C、{{ problem.optionC }}</p>
+            <p>D、{{ problem.optionD }}</p>
+          </div>
+          <div v-else>
+            <p>{{ problem.content }}</p>
           </div>
         </el-card>
         <el-card>
@@ -42,8 +47,7 @@
                 </div>
                 <div class="parse">
                   <el-divider>答案解析</el-divider>
-                  DENY：在安全系统中创建一项，以拒绝给当前数据库内的安全帐户授予权限并防止安全帐户通过其组或角色成员资格继承权限。
-                  REVOKE：删除以前在当前数据库内的用户上授予或拒绝的权限。
+                  {{ problem.parse }}
                 </div>
               </el-collapse-item></el-collapse
             >
@@ -53,17 +57,29 @@
       <el-aside width="260px">
         <el-card class="box-card" body-style="padding:10px">
           <dl>
-            <dd><span>题目类型</span><span>单选题</span></dd>
+            <dd>
+              <span>题目类型</span><span>{{ selectType }}</span>
+            </dd>
             <dd><span>上传者:</span><span>admin</span></dd>
             <dd>
               <span>题目难度:</span>
               <span>
-                <el-rate disabled text-color="#ff9900" v-model="value">
+                <el-rate
+                  disabled
+                  text-color="#ff9900"
+                  v-model="problem.difficulty"
+                >
                 </el-rate>
               </span>
             </dd>
-            <dd><span>发布时间:</span><span>2020-02-18 12:02:35 </span></dd>
-            <dd><span>更新时间</span><span>2020-04-02 17:40:55 </span></dd>
+            <dd>
+              <span>发布时间:</span
+              ><span>{{ problem.createTime | formatDate }} </span>
+            </dd>
+            <dd>
+              <span>更新时间</span
+              ><span>{{ problem.updateTime | formatDate }} </span>
+            </dd>
           </dl>
         </el-card>
       </el-aside>
@@ -72,16 +88,26 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   props: ['id', 'name'],
   data() {
     return {
-      value: 5
+      value: 5,
+      problem: {}
     }
   },
-  methods: {
-    getProblem() {}
-  }
+  methods: {},
+  computed: {
+    ...mapGetters(['getCurrentProblem']),
+    selectType() {
+      return ['单选题', '多选题', '问答题', '编程题'][this.problem.questionType]
+    }
+  },
+  created() {
+    this.problem = this.getCurrentProblem(Number(this.id))
+  },
+  mounted() {}
 }
 </script>
 <style lang="less" scoped>

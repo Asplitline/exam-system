@@ -39,38 +39,18 @@
             ><i class="el-icon-edit-outline"></i>我要发布</el-button
           >
           <ul>
-            <li class="postdesc">
-              <a href="#/share/post/7"
-                ><h3>金山WPS服务端开发工程师面试经历</h3></a
+            <li class="postdesc" v-for="item in postList" :key="item.id">
+              <a @click="goPostById(item.id, item.authorId)" href="javascript:;"
+                ><h3>{{ item.title }}</h3></a
               >
-              <p>联合广场 14</p>
               <p>
-                <span class="author">小王</span>
+                <span class="author">{{ getName(item.authorId) }}</span>
                 <span class="createDate"
-                  >2020-04-27 10:19:29发表在 <em>[我要提问]</em></span
+                  >{{ item.createTime | formatDate }}发表在
+                  <em>[我要提问]</em></span
                 >
                 <span class="replyDate"
-                  >最后回复时间: <em>2020-12-15 18:15:47</em>
-                </span>
-              </p>
-              <p class="icons">
-                <i class="el-icon-chat-dot-round">2</i>
-                <i class="icon-dianzan iconfont">2</i>
-                <i class="el-icon-view">123</i>
-              </p>
-            </li>
-            <li class="postdesc">
-              <a href="javascript:;"
-                ><h3>金山WPS服务端开发工程师面试经历</h3></a
-              >
-              <p>联合广场 14</p>
-              <p>
-                <span class="author">小王</span>
-                <span class="createDate"
-                  >2020-04-27 10:19:29发表在 <em>[我要提问]</em></span
-                >
-                <span class="replyDate"
-                  >最后回复时间: <em>2020-12-15 18:15:47</em>
+                  >最后回复时间: <em>{{ item.lastReplyTime | formatDate }}</em>
                 </span>
               </p>
               <p class="icons">
@@ -80,6 +60,15 @@
               </p>
             </li>
           </ul>
+          <!-- 分页 -->
+          <el-pagination
+            layout="prev, pager, next"
+            :total="total"
+            :page-size="query.size"
+            @current-change="handleCurrent"
+            v-if="total"
+          >
+          </el-pagination>
         </el-card>
       </el-main>
     </el-container>
@@ -87,16 +76,61 @@
 </template>
 
 <script>
+import { mapMutations, mapGetters } from 'vuex'
 export default {
   data() {
     return {
-      activeName: 'first'
+      postList: [],
+      userList: [],
+      activeName: 'first',
+      query: {
+        page: 1,
+        size: 10,
+        keyword: null
+      },
+      total: 0
     }
   },
   methods: {
+    ...mapMutations(['initPostList']),
+    // 获取文章
+    async getPostList() {
+      const { data, status } = await this.$http('/post/api/pagePosts', {
+        params: this.query
+      })
+      if (status === 200) {
+        const { list, total } = data
+        this.total = total
+        this.postList = list
+        this.initPostList(list)
+      } else {
+        this.$message.warning('请求失败')
+      }
+    },
+    // 提交文章
     goPostSubmit() {
       this.$router.push('/share/sPostSubmit')
+    },
+    // 跳转到文章详情
+    goPostById(id, uid) {
+      this.$router.push(`/share/post/${id}/${uid}`)
+    },
+    // 根据id获取用户名
+    getName(id) {
+      return this.getUserById(id).name
+    },
+    // 当前页
+    handleCurrent(currentIndex) {
+      this.query.page = currentIndex
+      this.getPostList()
     }
+  },
+  computed: {
+    ...mapGetters(['getUserById'])
+  },
+  created() {
+    this.getPostList()
+    this.userList = this.$store.state.userList
   }
 }
 </script>
@@ -127,6 +161,12 @@ export default {
   letter-spacing: 0.1em;
   padding: 10px 0;
   border-bottom: 1px dashed #ccc;
+  a {
+    color: rgb(0, 0, 238);
+    &:hover {
+      color: red;
+    }
+  }
   em {
     font-style: normal;
   }
