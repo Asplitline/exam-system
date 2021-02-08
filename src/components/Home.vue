@@ -9,7 +9,7 @@
           :default-active="active"
         >
           <el-menu-item class="logo"
-            ><img src="../assets/manage-logo.png" alt="" height="50"
+            ><img src="../assets/logo.png" alt="" height="50"
           /></el-menu-item>
           <el-menu-item index="/">首页</el-menu-item>
           <el-menu-item index="/contest"> 在线评测</el-menu-item>
@@ -17,12 +17,13 @@
           <el-menu-item index="/share">分享中心</el-menu-item>
           <el-submenu class="userInfo" index>
             <template slot="title">
-              <el-avatar
-                src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
-              ></el-avatar>
+              <el-avatar :src="bindSrc(user.avatarImgUrl)"></el-avatar>
               {{ user.name }}
             </template>
             <el-menu-item index="/user">个人信息</el-menu-item>
+            <el-menu-item index="/user">更改密码</el-menu-item>
+            <el-menu-item index="/user">考试记录</el-menu-item>
+            <el-menu-item index="/user">我的发帖</el-menu-item>
             <el-menu-item @click="logout">退出系统</el-menu-item>
           </el-submenu>
         </el-menu></el-header

@@ -62,7 +62,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['initCurrentContest']),
+    ...mapMutations(['initCurrentContest', 'initContestList']),
     // 获取考试列表
     async getContest() {
       const { data, status } = await this.$http.get(
@@ -74,6 +74,7 @@ export default {
       if (status === 200) {
         const { list, total } = data
         this.total = total
+        this.initContestList(list)
         list.forEach((item) => {
           item.state = this.handleContestState(item.startTime, item.endTime)
         })

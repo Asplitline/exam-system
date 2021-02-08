@@ -7,15 +7,17 @@
             shape="square"
             :size="240"
             fit="cover"
-            src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+            :src="bindSrc(user.avatarImgUrl)"
           ></el-avatar>
         </el-card>
         <el-card>
-          <a href=""><h4 class="name">管理员</h4></a>
-          <span class="school"
-            ><i class="el-icon-collection">成都东软学院 </i></span
+          <a href=""
+            ><h4 class="name">{{ user.name }}</h4></a
           >
-          <p class="desc">只会Hello World的程序员</p>
+          <span class="school"
+            ><i class="el-icon-s-promotion">{{ user.email }} </i></span
+          >
+          <p class="desc">{{ user.email && '暂时没有任何信息' }}</p>
         </el-card>
         <el-card class="box-card" body-style="padding: 0">
           <a
@@ -65,40 +67,46 @@
               <el-form-item label="姓名" prop="name">
                 <el-input v-model="userForm.name"> </el-input>
               </el-form-item>
-              <el-form-item label="学号" prop="name">
-                <el-input v-model="userForm.name"> </el-input>
+              <el-form-item label="学号" prop="id">
+                <el-input v-model="userForm.id" disabled> </el-input>
               </el-form-item>
-              <el-form-item label="QQ" prop="name">
-                <el-input v-model="userForm.name"> </el-input>
+              <el-form-item label="QQ" prop="qq">
+                <el-input v-model="userForm.qq"> </el-input>
               </el-form-item>
-              <el-form-item label="手机号码" prop="name">
-                <el-input v-model="userForm.name"> </el-input>
+              <el-form-item label="手机号码" prop="phone">
+                <el-input v-model="userForm.phone"> </el-input>
               </el-form-item>
-              <el-form-item label="上传头像" prop="name">
+              <el-form-item label="上传头像" prop="avatar">
                 <el-upload
                   class="avatar-uploader"
-                  action="https://jsonplaceholder.typicode.com/posts/"
+                  :action="bindSrc('uploadfile')"
                   :show-file-list="false"
+                  :size="50"
+                  :on-success="handleAvatarSuccess"
+                  name="files"
                 >
                   <img
-                    v-if="userForm.imageUrl"
-                    :src="userForm.imageUrl"
+                    v-if="userForm.avatarImgUrl"
+                    :src="bindSrc(userForm.avatarImgUrl)"
                     class="avatar"
                   />
                 </el-upload>
               </el-form-item>
-              <el-form-item label="自我描述" prop="name">
+              <el-form-item label="自我描述" prop="description">
                 <el-input
                   type="textarea"
                   :rows="3"
                   placeholder="请输入内容"
-                  v-model="userForm.name"
+                  v-model="userForm.description"
                   resize="none"
                 >
                 </el-input>
               </el-form-item>
               <el-form-item>
-                <el-button class="submitBtn" type="primary"
+                <el-button
+                  class="submitBtn"
+                  type="primary"
+                  @click="submitUserInfo"
                   ><i class="el-icon-edit"></i>确认修改</el-button
                 >
               </el-form-item>
@@ -109,9 +117,8 @@
             <el-divider content-position="left"
               ><i class="el-icon-edit-outline">更改密码</i></el-divider
             >
-            <!-- <el-form
+            <el-form
               :model="pwdForm"
-              :rules="pwdRules"
               ref="pwdForm"
               label-width="100px"
               label-position="left"
@@ -124,7 +131,7 @@
                 <el-input v-model="pwdForm.newPwd" type="password"> </el-input>
               </el-form-item>
               <el-form-item label="确认密码" prop="confirmPassword">
-                <el-input v-model="pwdForm.cofirmPwd" type="password">
+                <el-input v-model="pwdForm.confirmPwd" type="password">
                 </el-input>
               </el-form-item>
               <el-form-item>
@@ -135,29 +142,6 @@
                   ><i class="el-icon-edit"></i>确认修改</el-button
                 >
               </el-form-item>
-            </el-form> -->
-            <el-form
-              :model="pwdForm"
-              status-icon
-              :rules="pwdRules"
-              ref="pwdForm"
-              label-width="100px"
-              class="demo-ruleForm"
-            >
-              <el-form-item label="密码" prop="pass">
-                <el-input
-                  type="password"
-                  v-model="pwdForm.pass"
-                  autocomplete="off"
-                ></el-input>
-              </el-form-item>
-              <el-form-item label="确认密码" prop="checkPass">
-                <el-input
-                  type="password"
-                  v-model="pwdForm.checkPass"
-                  autocomplete="off"
-                ></el-input>
-              </el-form-item>
             </el-form>
           </div>
           <!-- 考试记录 -->
@@ -165,16 +149,29 @@
             <el-divider content-position="left"
               ><i class="el-icon-document">考试记录</i></el-divider
             >
-            <el-table :data="contestTable" border style="width: 100%">
+            <el-table :data="gradeList" border style="width: 100%">
               <el-table-column prop="date" label="考试名称" width="180">
+                <template v-slot="{ row }">
+                  {{ row.contestName }}
+                </template>
               </el-table-column>
-              <el-table-column prop="name" label="考试科目" width="180">
+              <!-- <el-table-column prop="name" label="考试科目" width="180">
+              </el-table-column> -->
+              <el-table-column prop="createTime" label="考试开始时间">
+                <template v-slot="{ row }">
+                  {{ row.createTime | formatDate }}
+                </template>
               </el-table-column>
-              <el-table-column prop="address" label="考试开始时间">
+              <el-table-column prop="finishTime" label="考试结束时间">
+                <template v-slot="{ row }">
+                  {{ row.finishTime | formatDate }}
+                </template>
               </el-table-column>
-              <el-table-column prop="address" label="考试结束时间">
+              <el-table-column prop="result" label="成绩">
+                <template v-slot="{ row }">
+                  {{ row.result }}
+                </template>
               </el-table-column>
-              <el-table-column prop="address" label="成绩"> </el-table-column>
             </el-table>
           </div>
           <!-- 我的发帖 -->
@@ -201,48 +198,50 @@
 </template>
 
 <script>
+// BUG>> 表单验证有问题
+import { mapGetters, mapMutations } from 'vuex'
 export default {
+  props: ['id'],
   data() {
-    // 密码不能为空
-    var validatePass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入密码'))
-      } else {
-        if (this.pwdForm.oldPwd !== '') {
-          this.$refs.pwdForm.validateField('newPassword')
-        }
-        callback()
-      }
+    // 验证邮箱
+    var checkEmail = (rule, value, callback) => {
+      const regEmail = /^\w+@\w+(\.\w+)+$/
+      if (regEmail.test(value)) return callback()
+      callback(new Error('邮箱不合法'))
     }
-    var validateCPass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请再次输入密码'))
-      } else if (value !== this.pwdForm.newPwd) {
-        callback(new Error('两次输入密码不一致!'))
-      } else {
-        callback()
-      }
+    // 验证手机
+    var checkPhone = (rule, value, callback) => {
+      const regPhone = /^1[34578]\d{9}$/
+      if (regPhone.test(value)) return callback()
+      callback(new Error('手机号码不合法'))
     }
     return {
       user: {},
       userForm: {},
-      userFormRules: {},
+      userFormRules: {
+        name: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+        qq: [{ required: true, message: '请填入qq号', trigger: 'blur' }],
+        phone: [
+          { required: true, message: '请填入手机号码', trigger: 'blur' },
+          { validator: checkPhone, trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: '请填入电子邮箱', trigger: 'blur' },
+          { validator: checkEmail, trigger: 'blur' }
+        ]
+      },
       pwdForm: {
         oldPwd: '',
         newPwd: '',
-        cofirmPwd: ''
-      },
-      pwdRules: {
-        oldPassword: [{ validator: validatePass, trigger: 'blur' }],
-        newPassword: [{ validator: validatePass, trigger: 'blur' }],
-        confirmPassword: [{ validator: validateCPass, trigger: 'blur' }]
+        confirmPwd: ''
       },
       activeIndex: 1,
       contestTable: [],
       postList: [],
+      gradeList: [],
       contestQuery: {
-        page: 1,
-        size: 10,
+        pageNum: 1,
+        pageSize: 10,
         studentId: null
       },
       postQuery: {
@@ -253,6 +252,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['initUser']),
     async getCommentById() {
       switch (this.activeIndex) {
         case 1:
@@ -269,12 +269,58 @@ export default {
           break
       }
     },
-    handleUserInfo() {},
+    // 修改用户信息
+    handleUserInfo() {
+      this.userForm = this.toConvert(this.user)
+    },
+    // 提交用户信息
+    submitUserInfo() {
+      this.$refs.userForm.validate(async (valid) => {
+        if (!valid) return
+        const { data, status } = await this.$http.put(
+          '/account/updateIgnoreNull',
+          this.userForm
+        )
+        if (status === 200) {
+          if (data.success) {
+            this.initUser(this.userForm)
+            this.user = this.toConvert(this.userForm)
+            this.$message.success('修改成功')
+          } else {
+            this.$message.error('修改失败')
+          }
+        } else {
+          this.$message.warning('请求失败')
+        }
+      })
+    },
     // 修改密码
     async handlePassword() {
-      if (await this.isTruePassword()) {
+      const isTrue = await this.isTruePassword()
+      if (isTrue) {
+        if (this.pwdForm.newPwd === this.pwdForm.confirmPwd) {
+          const temp = this.toConvert(this.user)
+          Object.assign(temp, { password: this.pwdForm.confirmPwd })
+          const { data, status } = await this.$http.put(
+            '/account/updateIgnoreNull',
+            temp
+          )
+          if (status === 200) {
+            if (data.success) {
+              this.$message.success('修改成功')
+              this.$refs.pwdForm.resetFields()
+            } else {
+              this.$message.error('修改失败')
+            }
+          } else {
+            this.$message.warning('请求失败')
+          }
+          console.log(res)
+        } else {
+          this.$message.error('两次密码不一致')
+        }
       } else {
-        console.log('密码错误')
+        this.$message.error('密码错误')
       }
     },
     // 验证密码
@@ -290,10 +336,21 @@ export default {
     },
     // 获取考试
     async handleContest() {
-      const res = await this.$http.get('/post/api/pagePostByAuthorId', {
-        params: this.contestQuery
-      })
-      console.log(res)
+      const { data, status } = await this.$http.get(
+        '/grade/api/pageGradeByStudentId',
+        {
+          params: this.contestQuery
+        }
+      )
+      if (status === 200) {
+        this.gradeList = data.grades
+        this.gradeList.forEach((item) => {
+          // console.log(item.contestId, this.getContestById(item.contestId).title)
+          item.contestName = this.getContestById(item.contestId).title || '未知'
+        })
+      } else {
+        this.$message.warning('请求失败')
+      }
     },
     // 获取用户列表
     async handlePost() {
@@ -318,12 +375,20 @@ export default {
 
     goPost(pid) {
       this.$router.push(`/share/post/${pid}/${this.user.id}`)
+    },
+
+    handleAvatarSuccess(res, file) {
+      this.userForm.avatarImgUrl = file.raw.name
     }
+  },
+  computed: {
+    ...mapGetters(['getContestById'])
   },
   created() {
     this.user = this.$store.state.currentUser
     this.contestQuery.studentId = this.user.id
     this.postQuery.keyword = this.user.id
+    this.getCommentById()
   }
 }
 </script>
@@ -386,6 +451,9 @@ export default {
       width: 160px;
       height: 160px;
     }
+    .avatar-uploader .el-upload {
+      border: none;
+    }
   }
 }
 
@@ -427,6 +495,15 @@ export default {
   .postDesc {
     padding: 10px;
     border-bottom: 1px dashed #ccc;
+  }
+}
+</style>
+
+
+<style lang="less">
+.mainForm {
+  .avatar-uploader .el-upload {
+    border: none;
   }
 }
 </style>

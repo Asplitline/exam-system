@@ -10,6 +10,7 @@ const store = new Vuex.Store({
         problemList: [],
         postList: [],
         userList: JSON.parse(sessionStorage.getItem('userList')),
+        contestList: JSON.parse(sessionStorage.getItem('contestList')),
         currentUser: JSON.parse(sessionStorage.getItem('userInfo')),
         currentContest: JSON.parse(sessionStorage.getItem('contestInfo'))
     },
@@ -23,6 +24,10 @@ const store = new Vuex.Store({
         initUserList (state, list) {
             sessionStorage.setItem('userList', JSON.stringify(list))
             state.userList = list
+        },
+        initContestList (state, list) {
+            sessionStorage.setItem('contestList', JSON.stringify(list))
+            state.contestList = list
         },
         initUser (state, data) {
             sessionStorage.setItem('userInfo', JSON.stringify(data))
@@ -42,6 +47,9 @@ const store = new Vuex.Store({
         },
         getUserById: state => id => {
             return state.userList.find(item => item.id === id)
+        },
+        getContestById: state => id => {
+            return state.contestList.find(item => item.id === id)
         }
     },
     actions: {

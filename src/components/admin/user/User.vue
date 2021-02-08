@@ -166,7 +166,7 @@
             class="avatar-uploader"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
-            action="http://127.0.0.1:8088/uploadfile"
+            :action="bindSrc('uploadfile')"
             name="files"
           >
             <img :src="bindSrc(editUserFormData.avatarImgUrl)" class="avatar" />

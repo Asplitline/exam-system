@@ -10,7 +10,7 @@
           active-text-color="#ffd04b"
         >
           <el-menu-item
-            ><img src="../assets/manage-logo.png" alt="" class="logo"
+            ><img src="../assets/logo.png" alt="" class="logo"
           /></el-menu-item>
           <el-menu-item class="logo-title"
             >成都东软学院考试平台控制台</el-menu-item
