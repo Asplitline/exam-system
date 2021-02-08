@@ -17,6 +17,7 @@
         <el-button type="danger" icon="el-icon-check" plain>完成批改</el-button>
       </div>
     </el-row>
+    <!-- 学生表 -->
     <el-table :data="students" stripe style="width: 100%" max-height="600">
       <el-table-column
         prop="studentId"
@@ -52,14 +53,63 @@
         </template>
       </el-table-column>
       <el-table-column prop="title" label="操作" min-width="150">
-        <el-tooltip content="修改试卷" placement="top" enterable="false">
-          <el-button type="danger" icon="el-icon-edit" circle></el-button>
-        </el-tooltip>
-        <el-tooltip content="提交成绩" placement="top" enterable="false">
-          <el-button type="success" icon="el-icon-check" circle></el-button>
-        </el-tooltip>
+        <template v-slot="{ row }">
+          <el-tooltip content="修改试卷" placement="top">
+            <el-button
+              type="danger"
+              icon="el-icon-edit"
+              circle
+              @click="showAnswerCard(row)"
+            ></el-button>
+          </el-tooltip>
+          <el-tooltip content="提交成绩" placement="top" :enterable="false">
+            <el-button type="success" icon="el-icon-check" circle></el-button>
+          </el-tooltip>
+        </template>
       </el-table-column>
     </el-table>
+    <!-- 批改表单 -->
+    <el-dialog title="提示" :visible.sync="isDialogCorrect" width="30%">
+      <el-form
+        :model="miniProblem"
+        :rules="correctRules"
+        ref="correctForm"
+        label-width="100px"
+      >
+        <el-form-item label="题号" prop="name">
+          <el-input v-model="miniProblem.name" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="考生答案" prop="name">
+          <el-input
+            type="textarea"
+            v-model="miniProblem.sAnswer"
+            resize="none"
+            :autosize="{ minRows: 2, maxRows: 6 }"
+            disabled
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item label="参考答案" prop="answer">
+          <el-input
+            type="textarea"
+            v-model="miniProblem.answer"
+            resize="none"
+            :autosize="{ minRows: 2, maxRows: 6 }"
+            disabled
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="分值" prop="score">
+          <el-input v-model="miniProblem.score" disabled></el-input>
+        </el-form-item>
+      </el-form>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="isDialogCorrect = false">取 消</el-button>
+        <el-button type="primary" @click="isDialogCorrect = false"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -68,12 +118,16 @@ export default {
   props: ['id', 'title'],
   data() {
     return {
+      isDialogCorrect: false,
       students: [],
       users: {},
       query: {
         size: 1000,
         page: 0
-      }
+      },
+      problem: [],
+      correctForm: {},
+      correctRules: {}
     }
   },
   methods: {
@@ -90,6 +144,7 @@ export default {
         this.students = data.list
       }
     },
+    // 获取用户列表
     async getUsers() {
       const { data, status } = await this.$http.post(
         '/account/pageAccount',
@@ -103,16 +158,50 @@ export default {
       }
     },
     getNameById(id) {
-      console.log(id, this.users[id])
       return this.users[id] || '已注销'
+    },
+    // 获取问题
+    async getProblemById() {
+      const { data, status } = await this.$http.get(
+        '/question/api/getQuestionsByContestId/',
+        {
+          params: {
+            contestId: this.id
+          }
+        }
+      )
+      if (status === 200) {
+        this.problem = data
+        console.log(this.miniProblem)
+      } else {
+        this.$message.warning('请求失败')
+      }
+    },
+    // 显示答题卡
+    showAnswerCard(data) {
+      const arr = data.answerJson.split('_~_')
+      this.problem.forEach((item, index) => {
+        if (item.questionType > 1) {
+          item.sAnswer = arr[index]
+        }
+      })
+      this.isDialogCorrect = true
+    }
+    // 考生答案
+  },
+  computed: {
+    miniProblem() {
+      return this.problem.filter((item) => item.questionType > 1)
     }
   },
   created() {
     this.getUsers()
     this.getUsersByContestId()
+    this.getProblemById()
   }
 }
 </script>
+
 <style lang="less" scoped>
 .finish-correct {
   float: right;
