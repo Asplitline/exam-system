@@ -53,6 +53,7 @@ const router = new VueRouter({
     },
     {
       path: '/home',
+      redirect: '/index',
       component: Home,
       children: [
         { path: '/index', component: Index },
@@ -73,6 +74,19 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.path === '/login') next()
   const token = window.sessionStorage.getItem('token')
+  if (to.path !== '/index') {
+    window.sessionStorage.setItem('isIndex', false)
+  } else {
+    window.sessionStorage.setItem('isIndex', true)
+  }
+  switch (to.path) {
+    case '/index':
+    case '/contest':
+    case '/subject':
+    case '/share':
+      window.sessionStorage.setItem('currentMenu', to.path)
+      break
+  }
   if (!token) {
     next('/login')
   }

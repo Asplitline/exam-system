@@ -1,13 +1,12 @@
 <template>
   <div>
-    <el-breadcrumb separator="/">
-      <el-breadcrumb-item>首页</el-breadcrumb-item>
-      <el-breadcrumb-item>在线测评</el-breadcrumb-item>
-      <el-breadcrumb-item>{{ name }}</el-breadcrumb-item>
-    </el-breadcrumb>
-    <el-divider></el-divider>
     <el-container>
       <el-main>
+        <el-card
+          ><span class="el-icon-time surplus">
+            考试倒计时 - {{ surplusTime }}</span
+          ></el-card
+        >
         <el-form :model="answerCardForm" ref="answerCardForm" class="cardForm">
           <el-form-item
             v-for="(item, index) in answerCardForm.problemList"
@@ -116,10 +115,6 @@
               <span>当前考生:</span><span>{{ cUser.name }}</span>
             </dd>
             <dd>
-              <span>剩余时间:</span
-              ><span class="surplus">{{ surplusTime }}</span>
-            </dd>
-            <dd>
               <span>开始时间:</span
               ><span>{{ cContest.startTime | formatDate }}</span>
             </dd>
@@ -161,7 +156,6 @@
 </template>
 
 <script>
-import { currentContest, currentUser } from '../../../plugins/globalvar'
 export default {
   props: ['id', 'name'],
   data() {
@@ -180,6 +174,7 @@ export default {
     }
   },
   methods: {
+    // 获取题目列表
     async getProblem() {
       const { data, status } = await this.$http.get(
         '/question/api/getQuestionsByContestId',
@@ -204,18 +199,36 @@ export default {
         this.$message.warning('请求失败')
       }
     },
+    // 题目切换
     showProblem(id) {
       this.currentIndex = id
       this.$refs.answerCardForm.clearValidate()
     },
+    // 提交答题卡
     submitCard() {
-      this.$refs.answerCardForm.validate((valid) => {
+      this.$refs.answerCardForm.validate(async (valid) => {
         if (!valid) return this.$message.error('还有未写题目')
         const answer = []
         this.answerCardForm.problemList.forEach((item) => {
           answer.push(item.value)
         })
-        console.log(answer.join('_~_'))
+        // const obj = {}
+        const { data, status } = await this.$http.post(
+          '/grade/api/submitContest',
+          {
+            answerJson: answer.join('_~_'),
+            studentId: this.cUser.id,
+            contestId: this.cContest.id,
+            finisheTime: new Date()
+          }
+        )
+        if (status === 200) {
+          if (data.success) {
+            this.loading()
+          }
+        } else {
+          this.$message.warning('请求失败')
+        }
       })
     },
     showActive(index) {
@@ -225,6 +238,7 @@ export default {
     handleVal(index, val) {
       this.existArray[index + 1] = val.length > 0
     },
+    // 考试倒计时
     handleSurplus() {
       const now = Date.now()
       const end = new Date(this.cContest.endTime).getTime()
@@ -235,32 +249,47 @@ export default {
         const h = Math.floor((diff / 60 / 60) % 24)
         const m = Math.floor((diff / 60) % 60)
         const s = Math.floor(diff % 60)
-        this.surplusTime = `${this.pad0(d)} ${this.pad0(h)}:${this.pad0(
+        this.surplusTime = `${this.pad0(d)} 天 ${this.pad0(h)}时${this.pad0(
           m
-        )}:${this.pad0(s)}`
+        )}分${this.pad0(s)}秒`
       }
     },
+    // 时间补0
     pad0(val, len = 2) {
       return ('000000000000' + val).substr(-len)
+    },
+    loading() {
+      const loading = this.$loading({
+        lock: true,
+        text: '正在提交答题卡',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      setTimeout(() => {
+        loading.close()
+        this.$message.success('成功提交')
+        window.history.go(-1)
+      }, 1000)
     }
   },
   computed: {
+    // 题目数量
     problemNum() {
       return this.answerCardForm.problemList.length
     },
+    // 空位数量
     fillNum() {
       return this.problemNum % 5 === 0 ? 0 : 5 - (this.problemNum % 5)
     }
   },
   created() {
     this.getProblem()
-    this.cUser = currentUser._getCurrentUser()
-    this.cContest = currentContest._getCurrentContest()
-    console.log(this.cContest)
-    console.log(this.cUser)
+    this.cUser = this.$store.state.currentUser
+    this.cContest = this.$store.state.currentContest
   },
   mounted() {
     console.log('start')
+    this.handleSurplus()
     this.timer = setInterval(this.handleSurplus, 1000)
   },
   beforeDestroy() {
@@ -384,7 +413,8 @@ export default {
 }
 
 .surplus {
-  color: red;
+  color: #db2828;
+  font-size: 26px;
 }
 </style>
 

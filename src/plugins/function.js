@@ -58,3 +58,12 @@ Vue.prototype.getMiniSubject = async function () {
     }
     return miniSubjects
 }
+
+Vue.prototype.toUrlParams = function (form) {
+    let params = []
+    for (const key in form) {
+        params.push(key + '=' + form[key])
+    }
+    params = params.join('&')
+    return params
+}

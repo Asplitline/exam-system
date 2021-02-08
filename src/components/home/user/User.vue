@@ -109,27 +109,54 @@
             <el-divider content-position="left"
               ><i class="el-icon-edit-outline">更改密码</i></el-divider
             >
-            <el-form
-              :model="userForm"
-              :rules="userFormRules"
-              ref="userForm"
+            <!-- <el-form
+              :model="pwdForm"
+              :rules="pwdRules"
+              ref="pwdForm"
               label-width="100px"
               label-position="left"
               v-if="activeIndex === 2"
             >
-              <el-form-item label="旧密码" prop="name">
-                <el-input v-model="userForm.name"> </el-input>
+              <el-form-item label="旧密码" prop="oldPassword">
+                <el-input v-model="pwdForm.oldPwd" type="password"> </el-input>
               </el-form-item>
-              <el-form-item label="新密码" prop="name">
-                <el-input v-model="userForm.name"> </el-input>
+              <el-form-item label="新密码" prop="newPassword">
+                <el-input v-model="pwdForm.newPwd" type="password"> </el-input>
               </el-form-item>
-              <el-form-item label="确认密码" prop="name">
-                <el-input v-model="userForm.name"> </el-input>
+              <el-form-item label="确认密码" prop="confirmPassword">
+                <el-input v-model="pwdForm.cofirmPwd" type="password">
+                </el-input>
               </el-form-item>
               <el-form-item>
-                <el-button class="submitBtn" type="primary"
+                <el-button
+                  class="submitBtn"
+                  type="primary"
+                  @click="handlePassword"
                   ><i class="el-icon-edit"></i>确认修改</el-button
                 >
+              </el-form-item>
+            </el-form> -->
+            <el-form
+              :model="pwdForm"
+              status-icon
+              :rules="pwdRules"
+              ref="pwdForm"
+              label-width="100px"
+              class="demo-ruleForm"
+            >
+              <el-form-item label="密码" prop="pass">
+                <el-input
+                  type="password"
+                  v-model="pwdForm.pass"
+                  autocomplete="off"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="确认密码" prop="checkPass">
+                <el-input
+                  type="password"
+                  v-model="pwdForm.checkPass"
+                  autocomplete="off"
+                ></el-input>
               </el-form-item>
             </el-form>
           </div>
@@ -150,23 +177,21 @@
               <el-table-column prop="address" label="成绩"> </el-table-column>
             </el-table>
           </div>
+          <!-- 我的发帖 -->
           <div v-else class="userComment">
             <el-divider content-position="left"
               ><i class="icon-comment iconfont">我的发帖</i></el-divider
             >
-            <div class="postDesc">
-              <a href="javascript:;"><h4>springboot为什么这么火</h4></a>
-              <a class="comment" href="javascript:;"
-                ><i class="el-icon-chat-dot-round">4</i></a
+            <div class="postDesc" v-for="item in postList" :key="item.id">
+              <a href="javascript:;" @click="goPost(item.id)"
+                ><h4>{{ item.title }}</h4></a
               >
-              <span class="updateTime">发布于: 2020-05-02 17:13:04</span>
-            </div>
-            <div class="postDesc">
-              <a href="javascript:;"><h4>springboot为什么这么火</h4></a>
               <a class="comment" href="javascript:;"
-                ><i class="el-icon-chat-dot-round">4</i></a
+                ><i class="el-icon-chat-dot-round">{{ item.replyNum }}</i></a
               >
-              <span class="updateTime">发布于: 2020-05-02 17:13:04</span>
+              <span class="createTime"
+                >发布于: {{ item.createTime | formatDate }}</span
+              >
             </div>
           </div>
         </el-card>
@@ -178,17 +203,127 @@
 <script>
 export default {
   data() {
+    // 密码不能为空
+    var validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'))
+      } else {
+        if (this.pwdForm.oldPwd !== '') {
+          this.$refs.pwdForm.validateField('newPassword')
+        }
+        callback()
+      }
+    }
+    var validateCPass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'))
+      } else if (value !== this.pwdForm.newPwd) {
+        callback(new Error('两次输入密码不一致!'))
+      } else {
+        callback()
+      }
+    }
     return {
+      user: {},
       userForm: {},
       userFormRules: {},
+      pwdForm: {
+        oldPwd: '',
+        newPwd: '',
+        cofirmPwd: ''
+      },
+      pwdRules: {
+        oldPassword: [{ validator: validatePass, trigger: 'blur' }],
+        newPassword: [{ validator: validatePass, trigger: 'blur' }],
+        confirmPassword: [{ validator: validateCPass, trigger: 'blur' }]
+      },
       activeIndex: 1,
-      contestTable: []
+      contestTable: [],
+      postList: [],
+      contestQuery: {
+        page: 1,
+        size: 10,
+        studentId: null
+      },
+      postQuery: {
+        page: 1,
+        size: 10,
+        keyword: null
+      }
     }
   },
   methods: {
+    async getCommentById() {
+      switch (this.activeIndex) {
+        case 1:
+          this.handleUserInfo()
+          break
+        case 2:
+          // this.handlePassword()
+          break
+        case 3:
+          this.handleContest()
+          break
+        case 4:
+          this.handlePost()
+          break
+      }
+    },
+    handleUserInfo() {},
+    // 修改密码
+    async handlePassword() {
+      if (await this.isTruePassword()) {
+      } else {
+        console.log('密码错误')
+      }
+    },
+    // 验证密码
+    async isTruePassword() {
+      const { data } = await this.$http.post(
+        '/account/api/login',
+        this.toUrlParams({
+          username: this.user.username,
+          password: this.pwdForm.oldPwd
+        })
+      )
+      return data.success
+    },
+    // 获取考试
+    async handleContest() {
+      const res = await this.$http.get('/post/api/pagePostByAuthorId', {
+        params: this.contestQuery
+      })
+      console.log(res)
+    },
+    // 获取用户列表
+    async handlePost() {
+      const { data, status } = await this.$http.get(
+        '/post/api/pagePostByAuthorId',
+        {
+          params: this.postQuery
+        }
+      )
+      if (status === 200) {
+        const { list } = data
+        this.postList = list
+      } else {
+        this.$message.warning('请求失败')
+      }
+    },
+
     setCurrent(index) {
       this.activeIndex = index
+      this.getCommentById()
+    },
+
+    goPost(pid) {
+      this.$router.push(`/share/post/${pid}/${this.user.id}`)
     }
+  },
+  created() {
+    this.user = this.$store.state.currentUser
+    this.contestQuery.studentId = this.user.id
+    this.postQuery.keyword = this.user.id
   }
 }
 </script>
@@ -270,14 +405,21 @@ export default {
   }
   a {
     color: #45aaf2;
+    h4 {
+      font-size: 22px;
+      margin: 10px 0;
+    }
   }
   a.comment {
     color: #666;
+    i {
+      letter-spacing: 0.5em;
+    }
   }
   a:hover {
     color: red;
   }
-  .updateTime {
+  .createTime {
     float: right;
     font-size: 14px;
     color: #999;
@@ -286,6 +428,5 @@ export default {
     padding: 10px;
     border-bottom: 1px dashed #ccc;
   }
-
 }
 </style>

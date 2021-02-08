@@ -93,15 +93,15 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
-    },
-    toUrlParams(form) {
-      let params = []
-      for (const key in form) {
-        params.push(key + '=' + form[key])
-      }
-      params = params.join('&')
-      return params
     }
+    // toUrlParams(form) {
+    //   let params = []
+    //   for (const key in form) {
+    //     params.push(key + '=' + form[key])
+    //   }
+    //   params = params.join('&')
+    //   return params
+    // }
   }
 }
 </script>

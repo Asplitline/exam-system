@@ -1,12 +1,12 @@
 <template>
-  <div class="container">
+  <div class="container" :class="{ mainIndex: isIndex }">
     <el-container>
-      <el-header>
+      <el-header v-show="!isIndex">
         <el-menu
           class="el-menu-demo w"
           mode="horizontal"
-          default-active="/"
           router
+          :default-active="active"
         >
           <el-menu-item class="logo"
             ><img src="../assets/manage-logo.png" alt="" height="50"
@@ -16,14 +16,20 @@
           <el-menu-item index="/subject">科目学习</el-menu-item>
           <el-menu-item index="/share">分享中心</el-menu-item>
           <el-submenu class="userInfo" index>
-            <template slot="title">你好</template>
+            <template slot="title">
+              <el-avatar
+                src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
+              ></el-avatar>
+              {{ user.name }}
+            </template>
             <el-menu-item index="/user">个人信息</el-menu-item>
             <el-menu-item @click="logout">退出系统</el-menu-item>
           </el-submenu>
         </el-menu></el-header
       >
-      <el-main class="w"> <router-view></router-view></el-main>
-      <el-footer style="height: 100px">
+      <el-main :class="{ w: !isIndex }"> <router-view></router-view></el-main>
+
+      <el-footer style="height: 100px" class="footer">
         <p class="call-me"><a href="">关于我们</a>|<a href="">联系我们</a></p>
         <p class="copy-right">© 2020 NSU All Rights Reserved</p>
       </el-footer>
@@ -33,13 +39,28 @@
 
 <script>
 export default {
+  data() {
+    return {
+      user: {},
+      isIndex: false,
+      active: ''
+    }
+  },
   methods: {
     logout() {
       window.sessionStorage.clear()
       this.$router.push('/login')
     }
   },
-  mounted() {}
+  created() {
+    this.user = this.$store.state.currentUser
+    this.active = window.sessionStorage.getItem('currentMenu')
+    this.isIndex = window.sessionStorage.getItem('isIndex') === 'true'
+  },
+  updated() {
+    this.active = window.sessionStorage.getItem('currentMenu')
+    this.isIndex = window.sessionStorage.getItem('isIndex') === 'true'
+  }
 }
 </script>
 
@@ -83,8 +104,22 @@ export default {
 .el-main {
   flex: 1;
 }
+
 .userInfo {
   float: right !important;
+}
+
+.el-menu-item {
+  text-align: center;
+  letter-spacing: 0.2em;
+}
+
+// 主页样式
+.mainIndex {
+  background-image: linear-gradient(to top right, #12cbc4, #0652dd);
+  .footer {
+    background-color: transparent;
+  }
 }
 </style>
 

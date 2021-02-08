@@ -49,8 +49,8 @@
                   <el-divider>答案解析</el-divider>
                   {{ problem.parse }}
                 </div>
-              </el-collapse-item></el-collapse
-            >
+              </el-collapse-item>
+            </el-collapse>
           </div>
         </el-card>
       </el-main>
@@ -164,9 +164,5 @@ export default {
   dd > span:last-child {
     padding-left: 20px;
   }
-}
-
-.el-collapse-item {
-  transition: all 0.5 linear;
 }
 </style>

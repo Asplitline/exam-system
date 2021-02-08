@@ -26,8 +26,18 @@
         </el-table-column>
         <el-table-column label="操作" min-width="100">
           <template v-slot="{ row }">
-            <el-button type="primary" @click="goContestDetail(row)"
+            <el-button type="info" disabled size="mini" v-if="row.state === 1"
+              >未开始</el-button
+            >
+            <el-button
+              v-else-if="row.state === 2"
+              type="primary"
+              @click="goContestDetail(row)"
+              size="mini"
               >进入考试</el-button
+            >
+            <el-button type="danger" size="mini" disabled v-else
+              >已结束</el-button
             >
           </template>
         </el-table-column>
@@ -37,7 +47,7 @@
 </template>
 
 <script>
-import { currentContest } from '../../../plugins/globalvar'
+import { mapMutations } from 'vuex'
 export default {
   data() {
     return {
@@ -52,6 +62,8 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['initCurrentContest']),
+    // 获取考试列表
     async getContest() {
       const { data, status } = await this.$http.get(
         '/contest/api/pageContest',
@@ -62,14 +74,29 @@ export default {
       if (status === 200) {
         const { list, total } = data
         this.total = total
+        list.forEach((item) => {
+          item.state = this.handleContestState(item.startTime, item.endTime)
+        })
         this.contestList = list
       } else {
         this.$message.warning('请求失败')
       }
     },
+    // 进入考试
     goContestDetail(data) {
-      currentContest._setCurrentContest(data)
+      this.initCurrentContest(data)
       this.$router.push(`/contest/${data.id}/${data.title}`)
+    },
+    // 更新考试状态
+    handleContestState(start, end) {
+      const now = Date.now()
+      if (start > now) {
+        return 1
+      } else if (start <= now && now <= end) {
+        return 2
+      } else if (start >= end) {
+        return 3
+      }
     }
   },
   async created() {
