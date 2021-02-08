@@ -315,7 +315,6 @@ export default {
           } else {
             this.$message.warning('请求失败')
           }
-          console.log(res)
         } else {
           this.$message.error('两次密码不一致')
         }
@@ -498,7 +497,6 @@ export default {
   }
 }
 </style>
-
 
 <style lang="less">
 .mainForm {
