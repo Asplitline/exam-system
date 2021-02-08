@@ -416,6 +416,7 @@ export default {
   color: #db2828;
   font-size: 26px;
 }
+
 </style>
 
 <style lang="less">
