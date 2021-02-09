@@ -148,6 +148,3 @@ export default {
   width: 500px;
 }
 </style>
-
-<style lang="less">
-</style>

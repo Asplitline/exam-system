@@ -426,6 +426,7 @@ export default {
   width: 100%;
 }
 </style>
+
 <style>
 /*  开关文字 */
 .el-table .el-switch__label.is-active {

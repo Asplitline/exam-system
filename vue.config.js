@@ -11,7 +11,8 @@ module.exports = {
                 'vue-router': 'VueRouter',
                 axios: 'axios',
                 'vue-quill-editor': 'VueQuillEditor',
-                'highlight.js': 'hljs'
+                'highlight.js': 'hljs',
+                "element-ui": "ElementUI"
             })
             config.plugin('html').tap(args => {
                 args[0].isProd = true
@@ -20,7 +21,7 @@ module.exports = {
         })
         // 配置开发阶段出口
         config.when(process.env.NODE_ENV === 'development', config => {
-            config.entry('app').clear().add('./src/main-dev.js')
+            config.entry('app').clear().add('./src/main.dev.js')
             // 定制首页样式
             config.plugin('html').tap(args => {
                 args[0].isProd = false

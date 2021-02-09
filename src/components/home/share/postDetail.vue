@@ -327,7 +327,6 @@ export default {
     bottom: -40px;
   }
 }
-
 // 动画
 .fade-enter-active,
 .fade-leave-active {
