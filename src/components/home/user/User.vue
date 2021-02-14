@@ -117,6 +117,7 @@
             <el-divider content-position="left"
               ><i class="el-icon-edit-outline">更改密码</i></el-divider
             >
+            <!-- :rules="pwdFormRules" -->
             <el-form
               :model="pwdForm"
               ref="pwdForm"
@@ -124,13 +125,13 @@
               label-position="left"
               v-if="activeIndex === 2"
             >
-              <el-form-item label="旧密码" prop="oldPassword">
+              <el-form-item label="旧密码" prop="oldPwd">
                 <el-input v-model="pwdForm.oldPwd" type="password"> </el-input>
               </el-form-item>
-              <el-form-item label="新密码" prop="newPassword">
+              <el-form-item label="新密码" prop="newPwd">
                 <el-input v-model="pwdForm.newPwd" type="password"> </el-input>
               </el-form-item>
-              <el-form-item label="确认密码" prop="confirmPassword">
+              <el-form-item label="确认密码" prop="confirmPwd">
                 <el-input v-model="pwdForm.confirmPwd" type="password">
                 </el-input>
               </el-form-item>
@@ -230,11 +231,18 @@ export default {
           { validator: checkEmail, trigger: 'blur' }
         ]
       },
-      pwdForm: {
-        oldPwd: '',
-        newPwd: '',
-        confirmPwd: ''
-      },
+      pwdForm: {},
+      // pwdFormRules: {
+      //   oldPwd: [
+      //     { required: true, message: '旧密码不能为空', trigger: 'blur' }
+      //   ],
+      //   newPwd: [
+      //     { required: true, message: '新密码不能为空', trigger: 'blur' }
+      //   ],
+      //   confirmPwd: [
+      //     { required: true, message: '两次密码不一致', trigger: 'blur' }
+      //   ]
+      // },
       activeIndex: 1,
       contestTable: [],
       postList: [],
@@ -299,16 +307,19 @@ export default {
       const isTrue = await this.isTruePassword()
       if (isTrue) {
         if (this.pwdForm.newPwd === this.pwdForm.confirmPwd) {
-          const temp = this.toConvert(this.user)
-          Object.assign(temp, { password: this.pwdForm.confirmPwd })
-          const { data, status } = await this.$http.put(
-            '/account/updateIgnoreNull',
-            temp
+          const { status, data } = await this.$http.get(
+            '/account/changePassword',
+            {
+              params: {
+                id: this.user.id,
+                password: this.pwdForm.confirmPwd
+              }
+            }
           )
           if (status === 200) {
             if (data.success) {
               this.$message.success('修改成功')
-              this.$refs.pwdForm.resetFields()
+              this.pwdForm = []
             } else {
               this.$message.error('修改失败')
             }

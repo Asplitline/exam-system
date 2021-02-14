@@ -1,5 +1,6 @@
 <template>
   <div v-highlight>
+    <!-- 面包屑 -->
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>分享中心</el-breadcrumb-item>
@@ -8,6 +9,7 @@
     <el-divider></el-divider>
     <el-container class="postDetail">
       <el-main>
+        <!-- 文章描述 -->
         <div class="postdesc">
           <el-row>
             <el-col :span="2">
@@ -34,13 +36,14 @@
             </el-col>
           </el-row>
         </div>
-
+        <!-- 文章内容 -->
         <div class="postContent">
           <el-card shadow="always">
             <div v-html="post.htmlContent"></div>
           </el-card>
         </div>
         <el-divider> </el-divider>
+        <!-- 评论区域 -->
         <p class="replyTitle">
           <i class="el-icon-chat-dot-round"></i>回复<span
             >({{ post.replyNum }})</span
@@ -69,6 +72,7 @@
                     @click="showTextarea(item.id)"
                     >回复</a
                   >
+
                   <transition name="fade">
                     <div class="replyArea" v-show="currentIndex === item.id">
                       <el-input
@@ -101,26 +105,29 @@
                   </transition>
                 </el-col>
               </el-row>
-            </div>
-            <!-- <div class="comments" :span="20" >
-              <div class="content">
-                <el-row>
-                  <el-col :span="1">
-                    <el-avatar
-                      shape="square"
-                      :size="36"
-                      src="https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png"
-                    ></el-avatar>
-                  </el-col>
-                  <el-col :span="16" class="info">
-                    <a href="javascript:;" class="author">Matt </a>
-                    <span class="replyDate">2020-05-04 18:36:03</span>
-                    <div class="text">How artistic!</div>
-                    <a href="javascript:;" class="actions">回复</a>
-                  </el-col>
-                </el-row>
+              <div class="comments" :span="20">
+                <div class="content">
+                  {{ comment.replies }}
+                  <!-- <el-row v-for="item in comment.replies" :key="item.id">
+                    <el-col :span="1">
+                      <el-avatar
+                        shape="square"
+                        :size="36"
+                        src="https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png"
+                      ></el-avatar>
+                    </el-col>
+                    <el-col :span="16" class="info">
+                      <a href="javascript:;" class="author"
+                        >{{ item.userId }}
+                      </a>
+                      <span class="replyDate">{{ item.createTime }}</span>
+                      <div class="text">{{ item.content }}</div>
+                      <a href="javascript:;" class="actions">回复</a>
+                    </el-col>
+                  </el-row> -->
+                </div>
               </div>
-            </div> -->
+            </div>
           </div>
         </div>
 
@@ -181,6 +188,9 @@ export default {
         `/reply/api/getCommentsByPostId?postId=${this.id}`
       )
       if (status === 200) {
+        data.forEach(async (item) => {
+          item.replies = await this.getRelyByCommentId(item.id)
+        })
         this.comment = data
       }
     },
@@ -242,6 +252,16 @@ export default {
     closeReply() {
       this.currentIndex = 0
       this.replyValue = ''
+    },
+    // 获取评论下回复
+    async getRelyByCommentId(id) {
+      // 3
+      const res = await this.$http.get('/reply/getReplysByCommentId', {
+        params: {
+          commentId: id
+        }
+      })
+      return res.data
     }
   },
   computed: {

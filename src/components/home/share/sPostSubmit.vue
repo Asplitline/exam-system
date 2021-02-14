@@ -1,11 +1,13 @@
 <template>
   <div v-highlight>
+    <!-- 面包屑 -->
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>分享中心</el-breadcrumb-item>
       <el-breadcrumb-item>文章发布</el-breadcrumb-item>
     </el-breadcrumb>
     <el-divider></el-divider>
+    <!-- 注意事项 -->
     <el-alert
       type="warning"
       title="请注意帖子的言语措辞,如果出现恶意中伤别人,诽谤他人,帖子将被删除,发帖人将会被惩罚。"
@@ -14,9 +16,11 @@
       class="postAlert"
     >
     </el-alert>
+    <!-- 标题 -->
     <el-input placeholder="请输入内容" v-model="title" class="postTitle">
       <template slot="prepend">标题</template>
     </el-input>
+    <!-- 富文本 -->
     <quill-editor ref="myQuillEditor" v-model="content" :options="options" />
 
     <el-button class="submitPost" type="danger" @click="getContent" plain>

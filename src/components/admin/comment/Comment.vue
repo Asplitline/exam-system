@@ -93,6 +93,7 @@ export default {
     getUserNameById(id) {
       return this.getUserById(id) && this.getUserById(id).name
     },
+    // 删除评论
     async deleteCommentById(id) {
       this.$confirm('此操作将永久删除评论, 是否继续?', '提示', {
         confirmButtonText: '确定',

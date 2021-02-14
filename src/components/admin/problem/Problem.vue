@@ -400,6 +400,7 @@ export default {
     submitAddForm() {
       this.$refs.addProblemForm.validate(async (valid) => {
         if (!valid) return
+        this.addProblemForm.state = 1
         const { data, status } = await this.$http.post(
           '/question/api/addQuestion',
           this.addProblemForm
