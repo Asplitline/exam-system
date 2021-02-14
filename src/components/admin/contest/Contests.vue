@@ -188,7 +188,7 @@
       ></el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="isEditContestDialog = false">取 消</el-button>
-        <el-button type="primary" @click="submitEditContest()">添 加</el-button>
+        <el-button type="primary" @click="submitEditContest()">修 改</el-button>
       </span>
     </el-dialog>
   </div>

@@ -46,7 +46,7 @@
         <!-- 评论区域 -->
         <p class="replyTitle">
           <i class="el-icon-chat-dot-round"></i>回复<span
-            >({{ post.replyNum }})</span
+            >({{ comment.length }})</span
           >
         </p>
         <div class="postRely">
@@ -57,12 +57,12 @@
                   <el-avatar
                     shape="square"
                     :size="36"
-                    src="https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png"
+                    :src="bindSrc(getUserById(item.userId).avatar)"
                   ></el-avatar>
                 </el-col>
-                <el-col :span="16" class="info">
+                <el-col :span="23" class="info">
                   <a href="javascript:;" class="author"
-                    >{{ getUsernameById(item.userId) }}
+                    >{{ getUserById(item.userId).name }}
                   </a>
                   <span class="replyDate"></span>
                   <div class="text">{{ item.content }}</div>
@@ -72,7 +72,6 @@
                     @click="showTextarea(item.id)"
                     >回复</a
                   >
-
                   <transition name="fade">
                     <div class="replyArea" v-show="currentIndex === item.id">
                       <el-input
@@ -81,8 +80,8 @@
                         v-model="comment[index].replyValue"
                         :rows="2"
                         resize="none"
-                        @blur="closeReply"
                       >
+                        @blur="closeReply"
                       </el-input>
                       <div class="btns">
                         <el-button
@@ -103,12 +102,33 @@
                       </div>
                     </div>
                   </transition>
+                  <div class="comments">
+                    <el-row v-for="reply in item.replies" :key="reply.id">
+                      <el-col :span="1">
+                        <el-avatar
+                          shape="square"
+                          :size="36"
+                          :src="bindSrc(getUserById(reply.userId).avatar)"
+                        ></el-avatar>
+                      </el-col>
+                      <el-col class="info" :span="15">
+                        <a href="javascript:;" class="author"
+                          >{{ getUserById(reply.userId).name }}
+                        </a>
+                        <span class="replyDate">{{
+                          reply.createTime | formatDate
+                        }}</span>
+                        <div class="text">{{ reply.content }}</div>
+                        <!-- <a href="javascript:;" class="actions">回复</a> -->
+                      </el-col>
+                    </el-row>
+                  </div>
                 </el-col>
               </el-row>
-              <div class="comments" :span="20">
+              <!-- <div class="comments" :span="20">
                 <div class="content">
                   {{ comment.replies }}
-                  <!-- <el-row v-for="item in comment.replies" :key="item.id">
+                  <el-row v-for="item in comment.replies" :key="item.id">
                     <el-col :span="1">
                       <el-avatar
                         shape="square"
@@ -124,9 +144,9 @@
                       <div class="text">{{ item.content }}</div>
                       <a href="javascript:;" class="actions">回复</a>
                     </el-col>
-                  </el-row> -->
+                  </el-row>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -199,8 +219,16 @@ export default {
       this.currentIndex = id
     },
     // 根据id获得用户名称
-    getUsernameById(id) {
-      return this.getUserById(id) && this.getUserById(id).name
+    getUserById(id) {
+      const tempUser = this.cGetUserById(id)
+      console.log({
+        name: tempUser && tempUser.name,
+        avatar: tempUser && (tempUser.avatarImgUrl || 'headimg_placeholder.png')
+      })
+      return {
+        name: tempUser && tempUser.name,
+        avatar: tempUser && (tempUser.avatarImgUrl || 'headimg_placeholder.png')
+      }
     },
     // 显示评论按钮
     showBtns() {
@@ -240,7 +268,8 @@ export default {
         })
         if (status === 200) {
           if (data.success) {
-            this.getCommentById()
+            await this.getCommentById()
+            this.closeReply()
           }
           val = ''
         } else {
@@ -265,7 +294,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getUserById', 'getCurrentPost'])
+    ...mapGetters({
+      cGetUserById: 'getUserById',
+      getCurrentPost: 'getCurrentPost'
+    })
   },
   created() {
     this.post = this.getCurrentPost(Number(this.id))
@@ -334,17 +366,23 @@ export default {
   }
   .comments {
     margin-top: 6px;
-    margin-left: 40px;
+  }
+  .text {
+    width: 350px;
   }
 }
 
 .commentArea,
 .replyArea {
+  position: relative;
   width: 600px;
+  margin-bottom: 30px;
   .btns {
-    float: right;
+    position: absolute;
+    right: 0;
+    bottom: -35px;
     margin: 10px 10px 0 0;
-    bottom: -40px;
+    z-index: 99;
   }
 }
 // 动画
