@@ -1,13 +1,13 @@
 <template>
   <div>
     <div class="split-line">
-      <span><i class="iconfont icon-computer"></i>测评列表</span>
+      <span><i class="iconfont icon-computer"></i>考试列表</span>
     </div>
     <!-- 面包导航 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>测评管理</el-breadcrumb-item>
-      <el-breadcrumb-item>测评列表</el-breadcrumb-item>
+      <el-breadcrumb-item>考试管理</el-breadcrumb-item>
+      <el-breadcrumb-item>考试列表</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 搜索框 -->
     <el-row class="mixInp" :gutter="20">
@@ -62,7 +62,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" min-width="100">
+      <el-table-column label="操作" min-width="200">
         <template v-slot="{ row }">
           <el-button
             icon="el-icon-search"
@@ -305,6 +305,7 @@ export default {
           if (data.success) {
             this.isAddContestDialog = false
             this.$message.success('添加成功')
+            this.getContest()
           } else {
             this.$message.error('添加失败')
           }

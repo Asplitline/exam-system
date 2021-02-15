@@ -50,18 +50,18 @@
       </el-table-column>
       <el-table-column prop="state" label="当前状态" min-width="100">
         <template v-slot="{ row }">
-          <el-tag effect="dark" type="success" v-if="row.state === 1"
+          <el-tag effect="dark" type="success" v-if="row.current === 0"
             >{{ '未开始' }}
           </el-tag>
-          <el-tag effect="dark" type="warning" v-else-if="row.state === 2"
-            >{{ '批改中' }}
+          <el-tag effect="dark" type="warning" v-else-if="row.current === 1"
+            >{{ '进行中' }}
           </el-tag>
-          <el-tag effect="dark" type="danger" v-else-if="row.state === 3"
+          <el-tag effect="dark" type="danger" v-else-if="row.current === 2"
             >{{ '已结束' }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" min-width="200">
+      <el-table-column label="操作" min-width="100">
         <template v-slot="{ row }">
           <el-button
             :disabled="row.state !== 3"
@@ -145,6 +145,7 @@ export default {
         const { total, list, pageSize: size } = data
         this.contestList = list
         Object.assign(this.query, size)
+        this.handleContestState()
         this.total = total
       }
     },
@@ -164,6 +165,14 @@ export default {
     },
     goCorrectGrade(id, title) {
       this.$router.push(`/_grade/correct/${id}/${title}`)
+    },
+    // 处理考试状态
+    handleContestState() {
+      this.contestList.forEach((item) => {
+        if (item.startTime > Date.now()) item.current = 0
+        else if (item.endTime < Date.now()) item.current = 2
+        else item.current = 1
+      })
     }
   },
   created() {

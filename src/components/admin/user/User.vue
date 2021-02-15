@@ -57,7 +57,7 @@
           >
         </template>
       </el-table-column>
-      <el-table-column prop="state" label="状态" min-width="80">
+      <el-table-column prop="state" label="状态" min-width="100">
         <template v-slot:default="scope">
           <el-switch
             v-model="scope.row.state"
@@ -72,7 +72,7 @@
           </el-switch>
         </template>
       </el-table-column>
-      <el-table-column label="操作" min-width="100">
+      <el-table-column label="操作" min-width="150">
         <template v-slot:default="scope">
           <el-button
             type="primary"

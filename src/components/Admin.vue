@@ -45,7 +45,7 @@
         >
           <el-menu-item index="/_contest" @click="saveActiveMenu('/_contest')">
             <i class="iconfont icon-computer"></i>
-            <span slot="title">测评管理</span>
+            <span slot="title">考试管理</span>
           </el-menu-item>
           <el-menu-item index="/_problem" @click="saveActiveMenu('/_problem')">
             <i class="icon-list iconfont"></i>
@@ -84,6 +84,7 @@
     </el-container>
   </el-container>
 </template>
+
 <script>
 export default {
   data() {

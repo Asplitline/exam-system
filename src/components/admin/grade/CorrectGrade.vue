@@ -111,10 +111,8 @@
             <el-input v-model="item.value"></el-input>
           </div>
         </el-form-item>
-
         <h4 class="sumScore">总分：{{ totalScore }}</h4>
       </el-form>
-
       <span slot="footer" class="dialog-footer">
         <el-button @click="isDialogCorrect = false">取 消</el-button>
         <el-button type="primary" @click="submitCorrect">确 定</el-button>
@@ -212,6 +210,7 @@ export default {
           {
             manulResult: this.totalScore,
             contestId: this.id,
+            result: this.currentCard.autoResult + this.totalScore,
             id: this.currentCard.id
           }
         )
@@ -257,6 +256,12 @@ export default {
         .catch(() => {
           this.$message.warning('已取消提交')
         })
+    },
+    // 计算总分
+    totalResult(id) {
+      this.answerCard.miniProblem.forEach((item) => {
+        if (item.id === id) console.log(item)
+      })
     }
   },
   computed: {
