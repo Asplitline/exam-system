@@ -143,6 +143,7 @@ export default {
     }
   },
   methods: {
+    // 根据id获取答题卡
     async getUsersByContestId() {
       const { data, status } = await this.$http.get(
         '/grade/api/pageGradeByContestId',
@@ -210,7 +211,7 @@ export default {
           {
             manulResult: this.totalScore,
             contestId: this.id,
-            result: this.currentCard.autoResult + this.totalScore,
+            autoResult: this.currentCard.autoResult,
             id: this.currentCard.id
           }
         )

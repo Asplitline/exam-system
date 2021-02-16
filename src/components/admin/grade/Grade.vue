@@ -160,9 +160,11 @@ export default {
       this.query.page = currentPage
       this.getContest()
     },
+    // 跳转到成绩列表
     goShowGrade(id, title) {
       this.$router.push(`/_grade/show/${id}/${title}`)
     },
+    // 跳转到批改页面
     goCorrectGrade(id, title) {
       this.$router.push(`/_grade/correct/${id}/${title}`)
     },
