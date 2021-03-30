@@ -2,15 +2,9 @@
   <div class="container" :class="{ mainIndex: isIndex }">
     <el-container>
       <el-header v-show="!isIndex">
-        <el-menu
-          class="el-menu-demo w"
-          mode="horizontal"
-          router
-          :default-active="active"
-        >
-          <el-menu-item class="logo"
-            ><img src="../assets/logo.png" alt="" height="50"
-          /></el-menu-item>
+        <el-menu class="el-menu-demo w" mode="horizontal" router :default-active="active">
+          <el-menu-item class="logo"><img src="../assets/logo.png" alt="" height="50" />
+          </el-menu-item>
           <el-menu-item index="/">首页</el-menu-item>
           <el-menu-item index="/contest"> 在线评测</el-menu-item>
           <el-menu-item index="/subject">科目学习</el-menu-item>
@@ -26,9 +20,11 @@
             <el-menu-item index="/user">我的发帖</el-menu-item>
             <el-menu-item @click="logout">退出系统</el-menu-item>
           </el-submenu>
-        </el-menu></el-header
-      >
-      <el-main :class="{ w: !isIndex }"> <router-view></router-view></el-main>
+        </el-menu>
+      </el-header>
+      <el-main :class="{ w: !isIndex }">
+        <router-view></router-view>
+      </el-main>
 
       <el-footer style="height: 100px" class="footer">
         <p class="call-me"><a href="">关于我们</a>|<a href="">联系我们</a></p>
@@ -39,6 +35,12 @@
 </template>
 
 <script>
+/**
+ * 考试中心
+ * 题目练习
+ * 交流区
+ * 个人信息
+ */
 export default {
   data() {
     return {

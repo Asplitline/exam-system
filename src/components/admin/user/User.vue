@@ -1,120 +1,59 @@
 <template>
-  <div>
-    <div class="split-line">
-      <span> <i class="icon-user1 iconfont"></i> 用户列表</span>
-    </div>
-    <!-- 面包导航 -->
-    <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-      <el-breadcrumb-item>用户列表</el-breadcrumb-item>
-    </el-breadcrumb>
-    <!-- 搜索框 -->
-    <el-row class="mixInp" :gutter="20">
-      <el-col :span="6">
-        <el-input
-          placeholder="请输入内容"
-          v-model="search"
-          class="input-with-select"
-          clearable
-          @clear="getUsers()"
-        >
-          <el-button slot="append" icon="el-icon-search"></el-button>
-        </el-input>
-      </el-col>
-      <el-col :span="4">
-        <el-button type="success" @click="addUserDialog()" plain
-          >添加用户</el-button
-        >
-      </el-col>
-    </el-row>
-    <!-- 用户表单 -->
-    <el-table :data="userList" stripe style="width: 100%" max-height="600">
-      <el-table-column prop="avatarImgUrl" label="头像">
-        <template v-slot:default="scope">
-          <el-avatar
-            shape="square"
-            :size="60"
-            :src="bindSrc(scope.row.avatarImgUrl)"
-          ></el-avatar>
-        </template>
-      </el-table-column>
-      <el-table-column prop="name" label="姓名" min-width="100">
-      </el-table-column>
-      <el-table-column prop="username" label="账号" min-width="120">
-      </el-table-column>
-      <el-table-column prop="qq" label="QQ" min-width="120"> </el-table-column>
-      <el-table-column prop="phone" label="手机" min-width="120">
-      </el-table-column>
-      <el-table-column prop="email" label="邮箱" min-width="120">
-      </el-table-column>
-      <el-table-column prop="level" label="身份" min-width="80">
-        <template v-slot:default="scope">
-          <el-tag
-            :type="['', 'success', 'danger'][scope.row.level]"
-            effect="dark"
-            >{{ levels[scope.row.level] }}</el-tag
-          >
-        </template>
-      </el-table-column>
-      <el-table-column prop="state" label="状态" min-width="100">
-        <template v-slot:default="scope">
-          <el-switch
-            v-model="scope.row.state"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-            :active-value="0"
-            :inactive-value="1"
-            active-text="开"
-            inactive-text="关"
-            @change="userStateChange(scope.row)"
-          >
-          </el-switch>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" min-width="150">
-        <template v-slot:default="scope">
-          <el-button
-            type="primary"
-            icon="el-icon-edit"
-            @click="editUserDialog(scope.row.id)"
-            circle
-          ></el-button>
-          <el-button
-            type="danger"
-            icon="el-icon-delete"
-            @click="deleteUserDialog(scope.row.id)"
-            circle
-          ></el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+  <div class="user">
+    <el-card>
+      <!-- 面包导航 -->
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item :to="{ path: 'index' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{path:'user'}">用户</el-breadcrumb-item>
+        <el-breadcrumb-item>用户列表</el-breadcrumb-item>
+      </el-breadcrumb>
+      <!-- 搜索模块 -->
+      <topSearch :data="query.keyword" @t-enter="handleEnter(fetchUser,$event)"
+        @t-close="handleClose(fetchUser)" text="用户" />
+      <!-- 用户表单 -->
+      <el-table :data=" userList" stripe style="width: 100%" max-height="600">
+        <el-table-column prop="avatarImgUrl" label="头像">
+          <template v-slot:default="{row}">
+            <el-avatar shape="square" :size="40" :src="bindURL(row.avatarImgUrl)">
+            </el-avatar>
+          </template>
+        </el-table-column>
+        <el-table-column prop="name" label="姓名" min-width="100">
+        </el-table-column>
+        <el-table-column prop="username" label="账号" min-width="120">
+        </el-table-column>
+        <el-table-column prop="qq" label="QQ" min-width="120"> </el-table-column>
+        <el-table-column prop="phone" label="手机" min-width="120">
+        </el-table-column>
+        <el-table-column prop="email" label="邮箱" min-width="120">
+        </el-table-column>
+        <el-table-column prop="level" label="身份" min-width="80">
+          <template v-slot:default="scope">
+            <el-tag :type="['', 'success', 'danger'][scope.row.level]" effect="dark">
+              {{ levels[scope.row.level] }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" min-width="150">
+          <template v-slot="{row}">
+            <el-link :underline="false" type="primary">修改</el-link>
+            <el-link :underline="false" type="danger"
+              @click="deleteById(_deleteUser,fetchUser,row.id,'用户')">删除</el-link>
+          </template>
+        </el-table-column>
+      </el-table>
 
-    <!-- 分页 -->
-    <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="query.page"
-      :page-sizes="[1, 2, 5, 10]"
-      :page-size="query.size"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="total"
-    >
-    </el-pagination>
+      <!-- 分页 -->
+      <el-pagination @size-change="handleSizeChange(fetchUser,$event)"
+        @current-change="handleCurrentChange(fetchUser,$event)" :current-page="query.page"
+        :page-sizes="[1, 2, 5, 10]" :page-size="query.size"
+        layout="total, sizes, prev, pager, next, jumper" :total="total">
+      </el-pagination>
 
+    </el-card>
     <!-- 添加用户对话框 -->
-    <el-dialog
-      :visible.sync="isAddUserDialog"
-      width="30%"
-      @close="closeUserDialog"
-    >
-      <el-form
-        :model="addUserFormData"
-        :rules="addUserRules"
-        ref="addUserForm"
-        label-width="80px"
-        :hide-required-asterisk="true"
-      >
+    <el-dialog :visible.sync="isAddUserDialog" width="30%" @close="closeUserDialog">
+      <el-form :model="addUserFormData" :rules="addUserRules" ref="addUserForm"
+        label-width="80px" :hide-required-asterisk="true">
         <el-form-item label="姓名" prop="name">
           <el-input v-model="addUserFormData.name"></el-input>
         </el-form-item>
@@ -122,10 +61,7 @@
           <el-input v-model="addUserFormData.username"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input
-            v-model="addUserFormData.password"
-            type="password"
-          ></el-input>
+          <el-input v-model="addUserFormData.password" type="password"></el-input>
         </el-form-item>
         <el-form-item label="qq" prop="qq">
           <el-input v-model="addUserFormData.qq"></el-input>
@@ -146,37 +82,28 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="isAddUserDialog = false">取 消</el-button>
-        <el-button type="primary" @click="submitAddUser('addUserForm')"
-          >确 定</el-button
-        >
+        <el-button type="primary" @click="submitAddUser('addUserForm')">确 定
+        </el-button>
       </span>
     </el-dialog>
 
     <!-- 修改用户对话框 -->
     <el-dialog :visible.sync="isEditUserDialog" width="30%">
-      <el-form
-        :model="editUserFormData"
-        :rules="editUserRules"
-        ref="editUserForm"
-        label-width="80px"
-      >
+      <el-form :model="editUserFormData" :rules="editUserRules" ref="editUserForm"
+        label-width="80px">
         <!-- 上传头像 -->
         <el-form-item label-width="0">
-          <el-upload
-            class="avatar-uploader"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :action="bindSrc('uploadfile')"
-            name="files"
-          >
+          <el-upload class="avatar-uploader" :show-file-list="false"
+            :on-success="handleAvatarSuccess" :action="bindSrc('uploadfile')"
+            name="files">
             <img :src="bindSrc(editUserFormData.avatarImgUrl)" class="avatar" />
           </el-upload>
         </el-form-item>
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="editUserFormData.name"></el-input>
-        </el-form-item>
         <el-form-item label="账号" prop="username">
           <el-input v-model="editUserFormData.username"></el-input>
+        </el-form-item>
+        <el-form-item label="姓名" prop="name">
+          <el-input v-model="editUserFormData.name"></el-input>
         </el-form-item>
         <el-form-item label="qq" prop="qq">
           <el-input v-model="editUserFormData.qq"></el-input>
@@ -197,37 +124,24 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="isEditUserDialog = false">取 消</el-button>
-        <el-button type="primary" @click="submitEditUser()">修 改</el-button>
+        <el-button type="success" @click="submitEditUser()">修 改</el-button>
       </span>
     </el-dialog>
   </div>
+
 </template>
 
 <script>
+import { aMixin } from '@mixins'
+import { _getUserList, _deleteUser } from '@api'
+import { checkEmail, checkPhone, bindURL } from '@utils'
 export default {
   data() {
-    // 验证邮箱
-    var checkEmail = (rule, value, callback) => {
-      const regEmail = /^\w+@\w+(\.\w+)+$/
-      if (regEmail.test(value)) return callback()
-      callback(new Error('邮箱不合法'))
-    }
-    var checkPhone = (rule, value, callback) => {
-      const regPhone = /^1[34578]\d{9}$/
-      if (regPhone.test(value)) return callback()
-      callback(new Error('手机号码不合法'))
-    }
-    //
     return {
       userList: [],
       bans: ['icon-xianxing-qiyong iconfont', 'icon-ban iconfont'],
       bansIcon: ['noban-icon', 'ban-icon'],
       levels: ['学生', '教师', '管理员'],
-      query: {
-        page: 1, // 当前页
-        size: 10 // 最大页数
-      },
-      total: 1,
       search: '',
       isAddUserDialog: false,
       isEditUserDialog: false,
@@ -267,29 +181,13 @@ export default {
     }
   },
   methods: {
+    bindURL,
+    _deleteUser,
     // 获取用户列表
-    async getUsers() {
-      const { data, status } = await this.$http.post(
-        'account/pageAccount/',
-        this.query
-      )
-      const { list, pageNum: page, pageSize: size, total } = data
-      if (status === 200) {
-        this.userList = list
-        this.query = { page, size }
-        this.total = total
-      }
-    },
-    // 数字换页
-    handleSizeChange(newSize) {
-      this.query.size = newSize
-      this.query.page = 1
-      this.getUsers()
-    },
-    // 点击换页
-    handleCurrentChange(newSize) {
-      this.query.page = newSize
-      this.getUsers()
+    async fetchUser() {
+      const { list, total } = await _getUserList(this.query)
+      this.userList = list
+      this.total = total
     },
     // 用户状态改变对话框
     async userStateChange(userInfo) {
@@ -321,7 +219,7 @@ export default {
           if (data.success) {
             this.isAddUserDialog = false
             this.$message.success(data.message)
-            this.getUsers()
+            this.fetchUser()
           } else {
             this.$message.error(data.message)
             return false
@@ -375,87 +273,22 @@ export default {
         )
         if (data.success) {
           this.$message.success('修改成功')
-          this.getUsers()
+          this.fetchUser()
           this.isEditUserDialog = false
         } else {
           this.$message.error('修改失败')
         }
       })
-    },
-    // 删除用户对话框
-    deleteUserDialog(id) {
-      this.$confirm('此操作将永久删除用户, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'error',
-        center: true
-      })
-        .then(async () => {
-          const { data } = await this.$http.delete('/account/delete/' + id)
-          if (data.success) {
-            this.$message.success('删除成功')
-            this.getUsers()
-          } else {
-            this.$message.error('删除失败')
-          }
-        })
-        .catch(() => {
-          this.$message.warning('已取消删除')
-        })
     }
   },
-  mounted() {
-    this.getUsers()
+  mixins: [aMixin],
+  created() {
+    this.fetchUser()
   }
 }
 </script>
 
 <style lang="less" scoped>
-.ban-icon {
-  color: red;
-}
-.noban-icon {
-  color: #67c23a;
-}
-
-.el-form {
-  padding: 0 10%;
-}
-.el-form-item,
-.el-select {
-  width: 100%;
-}
-</style>
-
-<style>
-/*  开关文字 */
-.el-table .el-switch__label.is-active {
-  color: red;
-}
-/* 表格图片 */
-.el-avatar > img {
-  width: 100%;
-  height: 100%;
-}
-
-/* 上传图片 */
-.el-dialog .avatar {
-  width: 178px;
-  height: 178px;
-  display: inline-block;
-  vertical-align: middle;
-}
-/* 图片上传 */
-.avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  left: 50%;
-  transform: translate(-50%, 0);
-  overflow: hidden;
-}
-.avatar-uploader .el-upload:hover {
-  border-color: #ff7979;
-}
+@import '~@css/variables.less';
+@import '~@css/common.less';
 </style>

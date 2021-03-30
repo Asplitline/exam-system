@@ -1,4 +1,10 @@
+const path = require('path')
+function load (url) {
+    return path.resolve(__dirname, url)
+}
+
 module.exports = {
+    lintOnSave: true,
     chainWebpack: config => {
         // 配置生产阶段
         config.when(process.env.NODE_ENV === 'production', config => {
@@ -28,5 +34,14 @@ module.exports = {
                 return args
             })
         })
+
+        config.resolve.alias
+            .set('@components', load('./src/components'))
+            .set('@static', load('./src/static'))
+            .set('@css', load('./src/assets/css'))
+            .set('@api', load('./src/api'))
+            .set('@mixins', load('./src/mixins'))
+            .set('@utils', load('./src/utils'))
+            .set('@plugins', load('./src/plugins'))
     }
 }

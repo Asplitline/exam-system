@@ -1,81 +1,41 @@
 <template>
+  <!-- 侧边导航 -->
   <el-container class="main-container">
-    <el-header>
-      <div>
-        <el-menu
-          class="el-menu-demo"
-          mode="horizontal"
-          background-color="#1b1c1d"
-          text-color="#fff"
-          active-text-color="#ffd04b"
-        >
-          <el-menu-item
-            ><img src="../assets/logo.png" alt="" class="logo"
-          /></el-menu-item>
-          <el-menu-item class="logo-title"
-            >成都东软学院考试平台控制台</el-menu-item
-          >
-          <el-submenu class="user-info" index="1">
-            <template slot="title">
-              <img :src="bindSrc(avatar)" alt="" class="avatar" />
-              <span v-once>{{ name }}</span>
-            </template>
-            <el-menu-item
-              ><i class="icon-user iconfont"></i>个人中心</el-menu-item
-            >
-            <el-menu-item @click="logout"
-              ><i class="icon-log-out iconfont"></i>退出系统</el-menu-item
-            >
-          </el-submenu>
-        </el-menu>
+    <el-aside :width="isCollapse ? '64px' : '260px'">
+      <div class="logo">
+        <img src="../assets/logo.png" alt="">
+        <span>初中题库管理系统</span>
       </div>
-      <!-- <el-button type="info" @click="logout">退出</el-button> -->
-    </el-header>
-    <el-container>
-      <el-aside :width="isCollapse ? '64px' : '260px'">
-        <div class="toggle-menu" @click="toToggleMenu">|||</div>
-        <el-menu
-          :default-active="activePath"
-          background-color="#fff"
-          text-color="#000"
-          active-text-color="#F56C6C"
-          :collapse="isCollapse"
-          :collapse-transition="false"
-          router
-        >
-          <el-menu-item index="/_contest" @click="saveActiveMenu('/_contest')">
-            <i class="iconfont icon-computer"></i>
-            <span slot="title">考试管理</span>
-          </el-menu-item>
-          <el-menu-item index="/_problem" @click="saveActiveMenu('/_problem')">
-            <i class="icon-list iconfont"></i>
-            <span slot="title">题目管理</span>
-          </el-menu-item>
-          <el-menu-item index="/_subject" @click="saveActiveMenu('/_subject')">
-            <i class="icon-book iconfont"></i>
-            <span slot="title">科目管理</span>
-          </el-menu-item>
-          <el-menu-item index="/_grade" @click="saveActiveMenu('/_grade')">
-            <i class="icon-chart iconfont"></i>
-            <span slot="title">成绩管理</span>
-          </el-menu-item>
-          <el-menu-item index="/_users" @click="saveActiveMenu('/_users')">
-            <i class="icon-user1 iconfont"></i>
-            <span slot="title">用户管理</span>
-          </el-menu-item>
-          <el-menu-item index="/_posts" @click="saveActiveMenu('/_posts')">
-            <i class="icon-planeo iconfont"></i>
-            <span slot="title">帖子管理</span>
-          </el-menu-item>
-          <el-menu-item
-            index="/_comments"
-            @click="saveActiveMenu('/_comments')"
-          >
-            <i class="icon-comment iconfont"></i>
-            <span slot="title">评论管理</span>
-          </el-menu-item>
-        </el-menu>
-      </el-aside>
+      <el-menu :default-active="activePath" text-color="#fff" active-text-color="#92cd18"
+        :collapse="isCollapse" :collapse-transition="false" router>
+        <el-menu-item :index="item.index" @click="saveActiveMenu(item.index)"
+          v-for="item in menuList">
+          <i :class='item.icon'></i>
+          <span slot="title">{{item.content}}</span>
+        </el-menu-item>
+      </el-menu>
+      <a href="javascript:;" class="toggle">|||</a>
+    </el-aside>
+    <!-- 顶部导航 -->
+    <el-container class="content-container">
+      <el-header>
+        <div>
+          <el-menu class="el-menu-demo" mode="horizontal" background-color="#fff"
+            text-color="#000" active-text-color="#0000004d">
+            <el-submenu class="user-info" index="0">
+              <template slot="title">
+                <img
+                  src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+                  alt="" class="avatar" />
+                <span>你好,{{ name }}</span>
+              </template>
+              <el-menu-item><i class="icon-user iconfont"></i>个人中心</el-menu-item>
+              <el-menu-item @click="logout"><i class="icon-log-out iconfont"></i>退出系统
+              </el-menu-item>
+            </el-submenu>
+          </el-menu>
+        </div>
+      </el-header>
       <el-container>
         <el-main>
           <router-view></router-view>
@@ -86,13 +46,23 @@
 </template>
 
 <script>
+/**
+ * 用户管理
+ * 考试管理
+ * 课程管理
+ * 题目管理
+ * 试卷批改
+ * 交流区管理
+ */
+import { menuList } from '@static'
 export default {
   data() {
     return {
       isCollapse: false,
       activePath: '',
       name: window.sessionStorage.getItem('name'),
-      avatar: window.sessionStorage.getItem('avatar')
+      avatar: window.sessionStorage.getItem('avatar'),
+      menuList
     }
   },
   methods: {
@@ -107,6 +77,9 @@ export default {
       window.sessionStorage.setItem('activeMenu', url)
     }
   },
+  updated() {
+    console.log(this.$route)
+  },
   created() {
     this.activePath = window.sessionStorage.getItem('activeMenu')
   }
@@ -115,14 +88,16 @@ export default {
 
 <style lang="less" scoped>
 .main-container {
+  // max-height: 100%;
   height: 100%;
+  background-color: #f5f5f5;
 }
 
 .el-header {
   padding: 0 0;
   .logo {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     pointer-events: none;
   }
   .logo-title {
@@ -130,10 +105,19 @@ export default {
   }
   .user-info {
     float: right;
+    margin-right: 40px;
     .avatar {
       width: 40px;
       height: 40px;
       border-radius: 50%;
+      vertical-align: middle;
+    }
+    span {
+      margin-left: 12px;
+      font-size: 14px;
+      color: #777;
+      letter-spacing: 0.1em;
+      vertical-align: middle;
     }
   }
   .iconfont {
@@ -143,40 +127,74 @@ export default {
 }
 
 .el-aside {
+  position: relative;
   box-shadow: 0 10px 10px #000;
   height: 100%;
-  background-color: #fff;
+  background-color: #2f323a;
+  overflow: visible;
+  .iconfont {
+    color: #fff;
+  }
+  .logo {
+    position: relative;
+    font-size: 0;
+    padding: 10px 0;
+    text-align: center;
+    img {
+      width: 40px;
+      height: 40px;
+      vertical-align: middle;
+    }
+    span {
+      display: inline-block;
+      font-size: 18px;
+      text-indent: 0.5em;
+      line-height: 50px;
+      color: #fff;
+      text-align: center;
+      vertical-align: middle;
+      letter-spacing: 0.1em;
+    }
+  }
+  .el-menu {
+    border-right: none;
+    span {
+      font-size: 16px;
+    }
+  }
+  .el-menu-item {
+    background-color: #2f323a;
+    border-left: 3px solid transparent;
+    text-align: center;
+    letter-spacing: 0.3em;
+    &:hover {
+      border-left: 3px solid #92cd18;
+      background-color: #25272e;
+    }
+  }
+  .toggle {
+    top: 14px;
+    right: -30px;
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 12px;
+    text-align: center;
+    color: #fff;
+    background-color: #25272e;
+    letter-spacing: 0.1em;
+    border-radius: 0 4px 4px 0;
+    transition: all 0.2s ease-in-out;
+    z-index: 1;
+    &:hover {
+      letter-spacing: 0.3em;
+    }
+  }
 }
 
 .iconfont {
   margin-right: 10px;
   font-size: 18px;
-}
-
-.el-submenu,
-.el-menu-item {
-  span {
-    font-size: 16px;
-  }
-}
-
-.toggle-menu {
-  width: 100%;
-  color: #6c5ce7;
-  text-align: center;
-  padding: 10px 0;
-  letter-spacing: 0.2em;
-  cursor: pointer;
-  transition: letter-spacing 0.5s;
-}
-
-.toggle-menu:hover {
-  color: blue;
-  letter-spacing: 0.5em;
-}
-
-.el-menu-item {
-  text-align: center;
-  letter-spacing: 0.3em;
 }
 </style>

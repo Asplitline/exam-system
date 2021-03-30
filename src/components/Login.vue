@@ -1,37 +1,22 @@
 <template>
-  <div class="login_container">
-    <div class="login_box">
-      <!-- <div class="avatar_box">
-        <img src="../assets/logo.png" alt="" />
-      </div> -->
-      <el-form
-        class="login_form"
-        :model="loginForm"
-        :rules="loginFormRules"
-        ref="loginFormRef"
-      >
+  <div class="login-container">
+    <div class="login-box">
+      <h1 class="login-title">登录界面</h1>
+      <el-form class="login-form" :model="loginForm" :rules="loginFormRules"
+        ref="loginFormRef">
         <el-form-item prop="username">
-          <el-input
-            prefix-icon="el-icon-user-solid"
-            v-model="loginForm.username"
-          >
+          <el-input prefix-icon="el-icon-user-solid" v-model="loginForm.username"
+            placeholder="账号">
           </el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input
-            prefix-icon="el-icon-lock"
-            v-model="loginForm.password"
-            type="password"
-            @keyup.enter.native="submitForm('loginFormRef')"
-          ></el-input>
+          <el-input prefix-icon="el-icon-lock" v-model="loginForm.password"
+            placeholder="密码" type="password"
+            @keyup.enter.native="submitForm('loginFormRef')"></el-input>
         </el-form-item>
         <el-form-item class="btns">
-          <el-button type="info" @click="resetForm('loginFormRef')"
-            >重置</el-button
-          >
-          <el-button type="success" @click="submitForm('loginFormRef')"
-            >登录</el-button
-          >
+          <el-button type="info" @click="resetForm('loginFormRef')">重置</el-button>
+          <el-button type="success" @click="submitForm('loginFormRef')">登录</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -94,64 +79,57 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields()
     }
-    // toUrlParams(form) {
-    //   let params = []
-    //   for (const key in form) {
-    //     params.push(key + '=' + form[key])
-    //   }
-    //   params = params.join('&')
-    //   return params
-    // }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.login_container {
+@import '~@css/variables.less';
+.login-container {
   height: 100%;
-  background-color: #1e1e1e;
+  background-image: linear-gradient(120deg, #04fff3, #3b99f0);
 }
-
-.login_box {
+.login-box {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 450px;
-  height: 300px;
-  background-color: #fff;
-  border-radius: 3px;
+  width: 500px;
+  height: 350px;
+  background-color: #fffe;
+  border-radius: 10px;
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 10px #ddd;
-  .avatar_box {
-    width: 100px;
-    height: 100px;
-    border: 1px solid #ccc;
-    border-radius: 50%;
-    padding: 10px;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #fff;
-    img {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background-color: #eee;
+  box-shadow: 0px 0px 10px rgba(17, 39, 59, 0.8);
+  border: 1px solid rgba(17, 39, 59, 1);
+  .login-title {
+    text-align: center;
+    font-size: 30px;
+    font-weight: 500;
+    text-shadow: 0 0 10px rgba(200, 200, 200, 0.8);
+    letter-spacing: 0.2em;
+  }
+  .login-form {
+    padding: 30px 80px 0;
+    // box-sizing: border-box;
+    /deep/.el-form-item {
+      margin-bottom: 40px;
+      .el-input__inner {
+        box-shadow: 0 0 3px black;
+        // border-color: transparent;
+        border-radius: 20px;
+        &:focus {
+          box-shadow: 0 0 4px 4px rgba(@color-gray, 0.8);
+          border-color: @color-gray;
+        }
+      }
+      .el-form-item__error {
+        text-indent: 2em;
+        margin-top: 6px;
+      }
     }
   }
 }
 
-.login_form {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  padding: 0 40px;
-  box-sizing: border-box;
-}
-
 .btns {
-  display: flex;
-  justify-content: flex-end;
-  margin-right: 20px;
+  text-align: center;
 }
 </style>

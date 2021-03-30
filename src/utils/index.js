@@ -1,0 +1,65 @@
+import { REG_EMAIL, REG_PHONE, URL_SERVER } from '@static'
+
+/**
+ * 校验邮箱
+ */
+export function checkEmail (rule, value, callback) {
+    if (REG_EMAIL.test(value)) return callback()
+    callback(new Error('邮箱不合法'))
+}
+
+/**
+ * 校验手机
+ */
+export function checkPhone (rule, value, callback) {
+    if (REG_PHONE.test(value)) return callback()
+    callback(new Error('手机号码不合法'))
+}
+/**
+ * 校验分数
+ */
+export function checkScore (rule, value, callback) {
+    if (!Number.isInteger(value)) {
+        callback(new Error('请输入数值'))
+    } else {
+        if (value < 0) {
+            callback(new Error('分数不能小于0'))
+        } else if (value > 50) {
+            callback(new Error('分数不能大于50'))
+        } else {
+            callback()
+        }
+    }
+}
+/**
+ * 绑定服务器端地址
+ * @param {String} url
+ * @returns
+ */
+export function bindURL (url) {
+    return URL_SERVER + url
+}
+/**
+ * 设置SessionStorage
+ * @param {String} name
+ * @param {Object|Array} data
+ */
+export function setSessionStorage (name, data) {
+    sessionStorage.setItem(name, JSON.stringify(data))
+}
+/**
+ * 获取SessionStorage
+ * @param {String} name
+ * @returns
+ */
+export function getSessionStorage (name) {
+    return sessionStorage.getItem(name) && JSON.parse(sessionStorage.getItem(name))
+}
+export function getCurrentByDate (data) {
+    data && data.forEach((item) => {
+        if (item.startTime > Date.now()) item.current = 0
+        else if (item.endTime < Date.now()) item.current = 2
+        else item.current = 1
+    })
+    return data
+}
