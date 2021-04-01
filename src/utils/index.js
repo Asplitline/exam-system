@@ -7,7 +7,6 @@ export function checkEmail (rule, value, callback) {
     if (REG_EMAIL.test(value)) return callback()
     callback(new Error('邮箱不合法'))
 }
-
 /**
  * 校验手机
  */
@@ -37,7 +36,7 @@ export function checkScore (rule, value, callback) {
  * @returns
  */
 export function bindURL (url) {
-    return URL_SERVER + url
+    return URL_SERVER + '/' + url
 }
 /**
  * 设置SessionStorage
@@ -55,6 +54,12 @@ export function setSessionStorage (name, data) {
 export function getSessionStorage (name) {
     return sessionStorage.getItem(name) && JSON.parse(sessionStorage.getItem(name))
 }
+
+/**
+ * 根据当前时间获取考试状态
+ * @param {Date} data
+ * @returns
+ */
 export function getCurrentByDate (data) {
     data && data.forEach((item) => {
         if (item.startTime > Date.now()) item.current = 0
@@ -62,4 +67,19 @@ export function getCurrentByDate (data) {
         else item.current = 1
     })
     return data
+}
+
+/**
+ * 简单深拷贝
+ */
+export function convertDeepCopy (data) {
+    return JSON.parse(JSON.stringify(data))
+}
+
+export function convertURL (data) {
+    const params = []
+    for (const key in data) {
+        params.push(`${key}=${data[key]}`)
+    }
+    return params.join('&')
 }

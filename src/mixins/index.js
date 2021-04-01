@@ -1,4 +1,4 @@
-import topSearch from '@components/common/TopSearch';
+import topSearch from '@components/common/TopSearch'
 export const aMixin = {
     data () {
         return {
@@ -53,7 +53,17 @@ export const aMixin = {
                 .catch(() => {
                     this.$message.warning('已取消删除')
                 })
+        },
+        // 处理成功标志
+        handleSuccess (success, info, callback) {
+            if (success) {
+                this.$message.success(`${info}成功`)
+                callback && callback()
+            } else {
+                this.$message.error(`${info}失败`)
+            }
         }
+
     },
     components: {
         topSearch

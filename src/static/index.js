@@ -13,6 +13,15 @@ export const contestStatus = [
     { state: 2, content: '已结束' }
 ]
 
+export const levels = [
+    { id: 0, value: '学生', type: 'info' },
+    { id: 1, value: '教师', type: 'primary' },
+    { id: 2, value: '管理员', type: 'danger' }
+]
+
 export const URL_SERVER = 'http://localhost:8088'
 export const REG_EMAIL = /^\w+@\w+(\.\w+)+$/
 export const REG_PHONE = /^1[34578]\d{9}$/
+export const ADD = 0
+export const EDIT = 1
+export const DEFAULT_PWD = 123456

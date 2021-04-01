@@ -1,0 +1,50 @@
+.el-breadcrumb {
+  font-size: 18px;
+  font-weight: 500;
+  padding: 0 0 16px 0;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+.el-table {
+  box-shadow: 0px 0px 6px 2px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+.el-table .el-link {
+  font-size: 15px;
+  margin-right: 16px;
+}
+.el-card {
+  position: relative;
+}
+.el-card .top-search {
+  position: absolute;
+  right: 100px;
+  top: 7px;
+}
+.el-dialog [class$='-dialog-form'] {
+  padding: 0 4%;
+}
+ /deep/ .avatar-uploader .el-upload {
+  border: 4px double #8c939d;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+ /deep/ .avatar-uploader .el-upload:hover {
+  border-color: tomato;
+}
+ /deep/ .avatar-uploader .avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+ /deep/ .avatar-uploader .avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}

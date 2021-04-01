@@ -1,12 +1,12 @@
 import { _get, _post, _delete } from './helper'
-
 // user
 const _getUserList = _post('/account/pageAccount')
+const _changePassword = _get('/account/changePassword')
 const _deleteUser = _delete('/account/delete')
 // contest
 const _getContestList = _get('/contest/api/pageContest')
 const _deleteContest = _delete('contest/api/deleteContest')
-// subject 
+// subject
 const _getSubjectList = _get('/subject/api/pageSubjects')
 const _deleteSubject = _delete('subject/api/deleteSubject')
 // problem
@@ -18,6 +18,7 @@ const _deletePost = _delete('/post/api/deletePost')
 export {
     // user
     _getUserList,
+    _changePassword,
     _deleteUser,
     // contest
     _getContestList,

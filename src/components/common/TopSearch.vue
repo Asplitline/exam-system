@@ -40,7 +40,7 @@ export default {
       this.$emit('t-enter', this.searchValue)
     },
     handleAdd(e) {
-      console.log(e)
+      this.$emit('t-btn')
     }
   },
   mounted() {
