@@ -75,11 +75,27 @@ export function getCurrentByDate (data) {
 export function convertDeepCopy (data) {
     return JSON.parse(JSON.stringify(data))
 }
-
+/**
+ * 转换URL
+ * @param {Object} data
+ * @returns
+ */
 export function convertURL (data) {
     const params = []
     for (const key in data) {
         params.push(`${key}=${data[key]}`)
     }
     return params.join('&')
+}
+/**
+ * 获取uid
+ */
+export function getUid () {
+    return Date.now() % 999999999
+}
+/**
+ * 补0
+ */
+export function pad0 (data, len = 2) {
+    return ('00000000000' + data).substr(-len)
 }

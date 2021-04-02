@@ -5,7 +5,7 @@
       <el-form class="login-form" :model="loginForm" :rules="loginFormRules"
         ref="loginFormRef">
         <el-form-item prop="username">
-          <el-input prefix-icon="el-icon-user-solid" v-model="loginForm.username"
+          <el-input v-focus prefix-icon="el-icon-user-solid" v-model="loginForm.username"
             placeholder="账号">
           </el-input>
         </el-form-item>
@@ -24,7 +24,9 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex'
+import { mapMutations } from 'vuex'
+import { convertURL } from '@utils'
+import { _login } from '@api'
 export default {
   data() {
     return {
@@ -45,34 +47,19 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['setUserList']),
-    ...mapMutations(['initUser', 'initUserList']),
+    ...mapMutations(['setCurrentUser']),
     // 表单验证
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
-        if (valid) {
-          const params = this.toUrlParams(this.loginForm)
-          const result = await this.$http.post('account/api/login', params)
-          const { message, success, data } = result.data
-          if (success === false) {
-            this.$message.error(message)
-          } else {
-            this.$message.success('登录成功')
-            window.sessionStorage.setItem('token', data.id)
-            window.sessionStorage.setItem('name', data.username)
-            window.sessionStorage.setItem('avatar', data.avatarImgUrl)
-            window.sessionStorage.setItem('activeMenu', '/_contest')
-            window.sessionStorage.setItem('userInfo', { userInfo: data })
-            // 设置用户列表
-            this.setUserList(data.id)
-            // 设置当前登录用户
-            this.initUser(data)
-            this.initUserList()
-            if (data.level === 2) this.$router.push('/admin')
-            else this.$router.push('/home')
-          }
+        if (!valid) return
+        const { data, success } = await _login(convertURL(this.loginForm))
+        if (success) {
+          this.$message.success('登录成功')
+          this.setCurrentUser(data)
+          if (data.level === 2) this.$router.push('/admin')
+          else this.$router.push('/home')
         } else {
-          return false
+          this.$message.error('账号或密码错误')
         }
       })
     },

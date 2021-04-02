@@ -11,7 +11,7 @@
           <el-menu-item index="/share">分享中心</el-menu-item>
           <el-submenu class="userInfo" index>
             <template slot="title">
-              <el-avatar :src="bindSrc(user.avatarImgUrl)"></el-avatar>
+              <el-avatar :src="bindURL(user.avatarImgUrl)"></el-avatar>
               {{ user.name }}
             </template>
             <el-menu-item index="/user">个人信息</el-menu-item>
@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import { bindURL } from '@utils'
 /**
  * 考试中心
  * 题目练习
@@ -50,19 +51,20 @@ export default {
     }
   },
   methods: {
+    bindURL,
     logout() {
       window.sessionStorage.clear()
       this.$router.push('/login')
     }
   },
   created() {
-    this.user = this.$store.state.currentUser
-    this.active = window.sessionStorage.getItem('currentMenu')
-    this.isIndex = window.sessionStorage.getItem('isIndex') === 'true'
+    // this.user = this.$store.state.currentUser
+    // this.active = window.sessionStorage.getItem('currentMenu')
+    // this.isIndex = window.sessionStorage.getItem('isIndex') === 'true'
   },
   updated() {
-    this.active = window.sessionStorage.getItem('currentMenu')
-    this.isIndex = window.sessionStorage.getItem('isIndex') === 'true'
+    // this.active = window.sessionStorage.getItem('currentMenu')
+    // this.isIndex = window.sessionStorage.getItem('isIndex') === 'true'
   }
 }
 </script>

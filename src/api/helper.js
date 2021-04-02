@@ -6,7 +6,12 @@ const $http = axios.create({
     withCredentials: false
 })
 
-// get 
+/**
+ * GET
+ * @param {*} url
+ * @param {*} mode.
+ * @returns
+ */
 export function _get (url, model = 1) {
     return function (params) {
         return $http.get(url, { params })
@@ -18,6 +23,12 @@ export function _get (url, model = 1) {
     }
 }
 
+/**
+ * POST
+ * @param {*} url
+ * @param {*} model
+ * @returns
+ */
 export function _post (url, model = 1) {
     return function (params) {
         return $http.post(url, params)
@@ -29,6 +40,12 @@ export function _post (url, model = 1) {
     }
 }
 
+/**
+ * DELETE
+ * @param {*} url
+ * @param {*} model
+ * @returns
+ */
 export function _delete (url, model = 1) {
     return function (params) {
         let URL
@@ -41,5 +58,22 @@ export function _delete (url, model = 1) {
                     console.log(err)
                 })
         }
+    }
+}
+
+/**
+ * PUT
+ * @param {*} url
+ * @param {*} model
+ * @returns
+ */
+export function _put (url, model = 1) {
+    return function (params) {
+        return $http.put(url, params)
+            .then(res => {
+                return res.data
+            }).catch(err => {
+                console.log(err)
+            })
     }
 }

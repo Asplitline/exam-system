@@ -3,8 +3,8 @@
     <el-card>
       <!-- 面包导航 -->
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: 'index' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{path:'contest'}">考试</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ name: 'index' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{name:'contest'}">考试</el-breadcrumb-item>
         <el-breadcrumb-item>考试列表</el-breadcrumb-item>
       </el-breadcrumb>
       <!-- 搜索框 -->
@@ -16,13 +16,11 @@
         </el-table-column>
         <el-table-column prop="startTime" label="开始时间" min-width="150">
           <template v-slot="{ row }">
-            <!-- {{ formatDate(scope.row.startTime) }} -->
             {{ row.startTime | formatDate }}
           </template>
         </el-table-column>
         <el-table-column prop="endTime" label="结束时间" min-width="150">
           <template v-slot="{ row }">
-            <!-- {{ formatDate(scope.row.endTime) }} -->
             {{ row.endTime | formatDate }}
           </template>
         </el-table-column>
@@ -117,23 +115,11 @@ export default {
   data() {
     return {
       contestList: [],
-      isAddContestDialog: false,
-      isEditContestDialog: false,
+      contestDialog: false,
       subjects: {},
       miniSubjects: {},
-      addContestForm: {},
-      addContestRules: {
-        title: [
-          { required: true, message: '请输入考试名称', trigger: 'blur' },
-          { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
-        ],
-        subjectId: [
-          { required: true, message: '请选择考试科目', trigger: 'blur' }
-        ],
-        date: [{ required: true, message: '请选择考试时间', trigger: 'blur' }]
-      },
-      editContestForm: {},
-      editContestRules: {
+      contestForm: {},
+      contestRules: {
         title: [
           { required: true, message: '请输入考试名称', trigger: 'blur' },
           { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }

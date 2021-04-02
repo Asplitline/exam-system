@@ -26,19 +26,11 @@
         </el-table-column>
         <el-table-column label="操作" min-width="100">
           <template v-slot="{ row }">
-            <el-button type="info" disabled size="mini" v-if="row.state === 1"
-              >未开始</el-button
-            >
-            <el-button
-              v-else-if="row.state === 2"
-              type="primary"
-              @click="goContestDetail(row)"
-              size="mini"
-              >进入考试</el-button
-            >
-            <el-button type="danger" size="mini" disabled v-else
-              >已结束</el-button
-            >
+            <el-button type="info" disabled size="mini" v-if="row.state === 1">未开始
+            </el-button>
+            <el-button v-else-if="row.state === 2" type="primary"
+              @click="goContestDetail(row)" size="mini">进入考试</el-button>
+            <el-button type="danger" size="mini" disabled v-else>已结束</el-button>
           </template>
         </el-table-column>
       </el-table>

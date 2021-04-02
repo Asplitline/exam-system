@@ -62,7 +62,12 @@ export const aMixin = {
             } else {
                 this.$message.error(`${info}失败`)
             }
-        }
+        },
+        // 关闭对话框，清空表单
+        clearDialog (formName) {
+            this.$refs[formName].resetFields()
+            this[formName] = {}
+        },
 
     },
     components: {

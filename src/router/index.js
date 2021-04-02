@@ -24,6 +24,8 @@ import cContestDetail from '@components/home/contest/ContestDetail'
 
 import sPostDetail from '@components/home/share/postDetail'
 import sPostSubmit from '@components/home/share/sPostSubmit'
+import store from '@store'
+import { aMiniMenuList } from '@static'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -33,14 +35,14 @@ const router = new VueRouter({
     {
       path: '/admin',
       component: Admin,
-      redirect: '/user',
+      redirect: '/_user',
       children: [
-        { path: 'admin-use', name: 'user', alias: '/user', component: User },
-        { path: 'admin-contest', name: 'contest', alias: '/contest', component: Contest },
-        { path: 'admin-subject', name: 'subject', alias: '/subject', component: Subject },
-        { path: 'admin-problem', name: 'problem', alias: '/problem', component: Problem },
-        { path: 'admin-correct', name: 'correct', alias: '/correct', component: Correct },
-        { path: 'admin-discuss', name: 'discuss', alias: '/discuss', component: Discuss }
+        { path: '/_user', name: 'user', component: User },
+        { path: '/_contest', name: 'contest', component: Contest },
+        { path: '/_subject', name: 'subject', component: Subject },
+        { path: '/_problem', name: 'problem', component: Problem },
+        { path: '/_correct', name: 'correct', component: Correct },
+        { path: '/_discuss', name: 'discuss', component: Discuss }
       ]
     },
     {
@@ -64,26 +66,17 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log(to.path)
-  if (to.path === '/login') next()
-  const token = window.sessionStorage.getItem('token')
-  if (to.path !== '/index') {
-    window.sessionStorage.setItem('isIndex', false)
-  } else {
-    window.sessionStorage.setItem('isIndex', true)
+  const usr = store.state.currentUser
+  if (aMiniMenuList.includes(to.path)) {
+    window.sessionStorage.setItem('currentAIndex', to.path)
+    store.commit('setCurrentAIndex', to.path)
   }
-  switch (to.path) {
-    case '/index':
-    case '/contest':
-    case '/subject':
-    case '/share':
-      window.sessionStorage.setItem('currentMenu', to.path)
-      break
-  }
-  if (!token) {
+  if (usr === null && to.path !== '/login') {
     next('/login')
   }
-  next()
+  else {
+    next()
+  }
 })
 
 export default router

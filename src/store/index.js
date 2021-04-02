@@ -5,13 +5,23 @@ import { getSessionStorage, setSessionStorage } from '@utils'
 Vue.use(Vuex)
 // state
 const state = {
-    allSubject: getSessionStorage('allSubject')
+    currentUser: getSessionStorage('currentUser'),
+    allSubject: getSessionStorage('allSubject'),
+    currentAIndex: sessionStorage.getItem('currentAIndex')
 }
 // mutations
 const mutations = {
+    setCurrentUser (state, data) {
+        setSessionStorage('currentUser', data)
+        state.currentUser = data
+    },
     setAllSubject (state, data) {
         setSessionStorage('allSubject', data)
         state.allSubject = data
+    },
+    setCurrentAIndex (state, index) {
+        setSessionStorage('currentAIndex', index)
+        state.currentAIndex = index
     }
 }
 // getters

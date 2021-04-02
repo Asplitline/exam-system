@@ -3,8 +3,8 @@
     <el-card>
       <!-- 面包导航 -->
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: 'index' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{path:'user'}">用户</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ name: 'index' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{name:'user'}">用户</el-breadcrumb-item>
         <el-breadcrumb-item>用户列表</el-breadcrumb-item>
       </el-breadcrumb>
       <!-- 搜索模块 -->
@@ -29,7 +29,8 @@
         </el-table-column>
         <el-table-column prop="level" label="身份" min-width="80">
           <template v-slot="{row}">
-            <el-tag :type="levels[row.level].type">{{levels[row.level].value}}</el-tag>
+            <el-tag :type="levels[row.level].type" v-if="levels">
+              {{levels[row.level].value}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="操作" min-width="150">
@@ -53,12 +54,12 @@
 
     </el-card>
     <!-- 用户对话框 -->
-    <el-dialog title='添加用户' :visible.sync="userDialogVisible" width="30%"
-      @close="clearDialog('userForm')">
+    <el-dialog :title="userForm.flag===0?'添加用户':'修改用户'" :visible.sync="userDialogVisible"
+      width="30%" @close="clearDialog('userForm')">
       <el-form :model="userForm" :rules="userRules" ref="userForm" label-width="100px"
         size="small" class="user-dialog-form">
-        <el-form-item prop="avatarImgUrl">
-          <el-upload class="avatar-uploader" :action="bindURL('/uploadfile')"
+        <el-form-item prop="avatarImgUrl" label="头像" v-if="userForm.flag === 1">
+          <el-upload class="avatar-uploader" :action="bindURL('/uploadfile')" name="files"
             :show-file-list="false" :on-success="handleAvatarSuccess">
             <img v-if="userForm.avatarImgUrl" :src="bindURL(userForm.avatarImgUrl)"
               class="avatar">
@@ -66,10 +67,14 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="账号" prop="username">
-          <el-input v-model="userForm.username"></el-input>
+          <el-input v-model="userForm.username" :disabled="userForm.flag === 1">
+          </el-input>
         </el-form-item>
         <el-form-item label="姓名" prop="name">
           <el-input v-model="userForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password" v-if="userForm.flag === 0">
+          <el-input v-model="userForm.password" type="password"></el-input>
         </el-form-item>
         <el-form-item label="QQ" prop="qq">
           <el-input v-model="userForm.qq"></el-input>
@@ -95,7 +100,7 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="userDialogVisible = false" size="small">取 消</el-button>
         <el-button type="primary" @click="submitUser(userForm.flag,'userForm')"
-          size="small">确 定
+          size="small">{{userForm.flag === 0? '添加': '修改'}}
         </el-button>
       </span>
     </el-dialog>
@@ -105,14 +110,20 @@
 
 <script>
 import { aMixin } from '@mixins'
-import { _getUserList, _deleteUser, _changePassword } from '@api'
+import {
+  _getUserList,
+  _deleteUser,
+  _changePassword,
+  _addUser,
+  _editUser
+} from '@api'
 import {
   checkEmail,
   checkPhone,
   bindURL,
   convertDeepCopy,
   convertURL,
-  handleSuccess
+  getUid
 } from '@utils'
 import { ADD, EDIT, DEFAULT_PWD, levels } from '@static'
 export default {
@@ -136,7 +147,10 @@ export default {
           { required: true, message: '请填入电子邮箱', trigger: 'blur' },
           { validator: checkEmail, trigger: 'blur' }
         ],
-        level: [{ required: true, message: '请选择用户身份', trigger: 'blur' }]
+        level: [{ required: true, message: '请选择用户身份', trigger: 'blur' }],
+        avatarImgUrl: [
+          { required: true, message: '请选择头像', trigger: 'blur' }
+        ]
       },
       userDialogVisible: false
     }
@@ -158,21 +172,27 @@ export default {
           this.userForm.flag = ADD
           break
         case EDIT:
-          this.userForm = data
-          // this.userForm = ConvertDeepCopy(data)
+          this.userForm = convertDeepCopy(data)
           this.userForm.flag = EDIT
           break
       }
     },
     submitUser(flag, formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(async (valid) => {
         if (!valid) return
+        this[formName].updateTime = Date.now()
+        if (flag === ADD) {
+          this[formName].id = getUid()
+          this[formName].state = 0
+          const { success } = await _addUser(this[formName])
+          this.handleSuccess(success, '添加用户')
+        } else if (flag === EDIT) {
+          const { success } = await _editUser(this[formName])
+          this.handleSuccess(success, '修改用户')
+        }
+        this.userDialogVisible = false
+        this.fetchUser()
       })
-      console.log(flag)
-    },
-    // 关闭对话框，清空表单
-    clearDialog(formName) {
-      this.$refs.userForm.resetFields()
     },
     // 上传图片
     handleAvatarSuccess(res, file) {
@@ -180,10 +200,14 @@ export default {
     },
     // 重置密码
     async resetPassword(id) {
-      console.log(123)
-      const success = await _changePassword()
-      // '?' + convertURL({ id, password: DEFAULT_PWD })
-      handleSuccess(success, '重置密码')
+      const success = await _changePassword(
+        '?' + convertURL({ id, password: DEFAULT_PWD })
+      )
+      if (success) {
+        this.$message.success('重置密码:123456')
+      } else {
+        this.$message.error('重置失败')
+      }
     }
   },
   mixins: [aMixin],

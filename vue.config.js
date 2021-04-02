@@ -43,5 +43,6 @@ module.exports = {
             .set('@mixins', load('./src/mixins'))
             .set('@utils', load('./src/utils'))
             .set('@plugins', load('./src/plugins'))
+            .set('@store', load('./src/store'))
     }
 }

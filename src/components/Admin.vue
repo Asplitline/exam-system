@@ -4,17 +4,17 @@
     <el-aside :width="isCollapse ? '64px' : '260px'">
       <div class="logo">
         <img src="../assets/logo.png" alt="">
-        <span>初中题库管理系统</span>
+        <span v-show="!isCollapse">初中题库管理系统</span>
       </div>
-      <el-menu :default-active="activePath" text-color="#fff" active-text-color="#92cd18"
-        :collapse="isCollapse" :collapse-transition="false" router>
-        <el-menu-item :index="item.index" @click="saveActiveMenu(item.index)"
-          v-for="item in menuList">
+      <el-menu :default-active="currentAIndex" text-color="#fff"
+        active-text-color="#92cd18" :collapse="isCollapse" :collapse-transition="false"
+        router>
+        <el-menu-item :index="item.index" v-for="item in aMenuList">
           <i :class='item.icon'></i>
           <span slot="title">{{item.content}}</span>
         </el-menu-item>
       </el-menu>
-      <a href="javascript:;" class="toggle">|||</a>
+      <a href="javascript:;" class="toggle" @click="toggleMenu()">|||</a>
     </el-aside>
     <!-- 顶部导航 -->
     <el-container class="content-container">
@@ -23,14 +23,12 @@
           <el-menu class="el-menu-demo" mode="horizontal" background-color="#fff"
             text-color="#000" active-text-color="#0000004d">
             <el-submenu class="user-info" index="0">
-              <template slot="title">
-                <img
-                  src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-                  alt="" class="avatar" />
-                <span>你好,{{ name }}</span>
+              <template slot="title" v-if="currentUser">
+                <img :src="bindURL(currentUser.avatarImgUrl)" alt="" class="avatar" />
+                <span>你好,{{currentUser.name }}</span>
               </template>
               <el-menu-item><i class="icon-user iconfont"></i>个人中心</el-menu-item>
-              <el-menu-item @click="logout"><i class="icon-log-out iconfont"></i>退出系统
+              <el-menu-item @click="logout"><i class="icon-logout iconfont"></i>退出系统
               </el-menu-item>
             </el-submenu>
           </el-menu>
@@ -54,34 +52,30 @@
  * 试卷批改
  * 交流区管理
  */
-import { menuList } from '@static'
+import { aMenuList } from '@static'
+import { mapMutations, mapState } from 'vuex'
+import { bindURL } from '@utils'
 export default {
   data() {
     return {
       isCollapse: false,
-      activePath: '',
-      name: window.sessionStorage.getItem('name'),
-      avatar: window.sessionStorage.getItem('avatar'),
-      menuList
+      aMenuList
     }
   },
   methods: {
+    bindURL,
+    ...mapMutations(['setCurrentUser']),
     logout() {
       window.sessionStorage.clear()
       this.$router.push('/login')
+      this.setCurrentUser(null)
     },
-    toToggleMenu() {
+    toggleMenu() {
       this.isCollapse = !this.isCollapse
-    },
-    saveActiveMenu(url) {
-      window.sessionStorage.setItem('activeMenu', url)
     }
   },
-  updated() {
-    console.log(this.$route)
-  },
-  created() {
-    this.activePath = window.sessionStorage.getItem('activeMenu')
+  computed: {
+    ...mapState(['currentAIndex', 'currentUser'])
   }
 }
 </script>
