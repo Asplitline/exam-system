@@ -9,7 +9,7 @@
       </el-breadcrumb>
       <!-- 搜索框 -->
       <top-search :data="query.keyword" @t-enter="handleEnter(fetchPost,$event)"
-        @t-close="handleClose(fetchPost)" text="帖子" />
+        @t-close="handleClose(fetchPost)" text="帖子" :showAdd="false" />
       <el-table stripe style="width: 100%" :data="PostList">
         <el-table-column prop="title" label="标题" min-width="180">
         </el-table-column>
@@ -39,7 +39,7 @@
         </el-table-column>
         <el-table-column label="操作" min-width="80">
           <template v-slot="{row}">
-            <el-link :underline="false" type="primary">修改</el-link>
+            <el-link :underline="false" type="primary">详情</el-link>
             <el-link :underline="false" type="danger"
               @click="deleteById(_deletePost,fetchPost,row.id,'帖子')">删除</el-link>
           </template>

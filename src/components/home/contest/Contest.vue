@@ -1,10 +1,5 @@
 <template>
   <div>
-    <el-breadcrumb separator="/">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>在线测评</el-breadcrumb-item>
-    </el-breadcrumb>
-    <el-divider></el-divider>
     <el-card>
       <el-table :data="contestList" stripe style="width: 100%">
         <el-table-column prop="title" label="考试名称" min-width="180">

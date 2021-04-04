@@ -1,53 +1,29 @@
 <template>
   <div class="sub-main">
-    <el-breadcrumb separator="/">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item><a href="/">科目学习</a></el-breadcrumb-item>
-    </el-breadcrumb>
-    <el-divider></el-divider>
     <el-card class="card-subject">
       <div class="card-row">
-        <el-card
-          class="card-content"
-          v-for="item in subjectlist"
-          :key="item.id"
-          body-style="padding: 0"
-          shadow="hover"
-        >
+        <el-card class="card-content" v-for="item in subjectlist" :key="item.id"
+          body-style="padding: 0" shadow="hover">
           <a class="card-pic" @click="goSuject(item.id, item.name)">
             <img :src="bindSrc(item.imgUrl)" alt="" />
           </a>
-          <el-button
-            type="text"
-            class="card-title"
-            @click="goSuject(item.id, item.name)"
-            >{{ item.name }}</el-button
-          >
+          <el-button type="text" class="card-title" @click="goSuject(item.id, item.name)">
+            {{ item.name }}</el-button>
           <div class="card-author">
             <span class="author"><i class="el-icon-user-solid"></i>admin</span>
           </div>
           <div class="card-detail">
             <span class="problem-num">
-              <i class="el-icon-tickets"></i>{{ item.questionNum }}</span
-            >
+              <i class="el-icon-tickets"></i>{{ item.questionNum }}</span>
             <span class="problem-info">
-              <i class="el-icon-upload"></i>私有题库</span
-            >
+              <i class="el-icon-upload"></i>私有题库</span>
           </div>
         </el-card>
         <!-- 补位 -->
-        <div
-          class="card-content hidden"
-          v-for="index in currentSize"
-          :key="index"
-        ></div>
+        <div class="card-content hidden" v-for="index in currentSize" :key="index"></div>
       </div>
-      <el-pagination
-        layout="prev, pager, next"
-        :total="total"
-        :page-size="query.size"
-        @current-change="handleCurrent"
-      >
+      <el-pagination layout="prev, pager, next" :total="total" :page-size="query.size"
+        @current-change="handleCurrent">
       </el-pagination>
     </el-card>
     <div class="sub-search"></div>

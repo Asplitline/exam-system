@@ -18,6 +18,7 @@ export function checkPhone (rule, value, callback) {
  * 校验分数
  */
 export function checkScore (rule, value, callback) {
+    value = Number(value)
     if (!Number.isInteger(value)) {
         callback(new Error('请输入数值'))
     } else {

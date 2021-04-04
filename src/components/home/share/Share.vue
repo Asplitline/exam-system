@@ -1,11 +1,5 @@
 <template>
   <div class="share">
-    <el-breadcrumb separator="/">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>分享中心</el-breadcrumb-item>
-    </el-breadcrumb>
-    <el-divider></el-divider>
-
     <el-container>
       <el-main>
         <!-- 顶部导航 -->
@@ -30,27 +24,19 @@
             <el-tab-pane label="最热"></el-tab-pane>
             <el-tab-pane label="精华"> </el-tab-pane>
           </el-tabs>
-          <el-button
-            type="danger"
-            class="addpost"
-            size="mini"
-            plain
-            @click="goPostSubmit"
-            ><i class="el-icon-edit-outline"></i>我要发布</el-button
-          >
+          <el-button type="danger" class="addpost" size="mini" plain
+            @click="goPostSubmit"><i class="el-icon-edit-outline"></i>我要发布</el-button>
           <ul>
             <li class="postdesc" v-for="item in postList" :key="item.id">
-              <a @click="goPostById(item.id, item.authorId)" href="javascript:;"
-                ><h3>{{ item.title }}</h3></a
-              >
+              <a @click="goPostById(item.id, item.authorId)" href="javascript:;">
+                <h3>{{ item.title }}</h3>
+              </a>
               <p>
                 <span class="author">{{ getName(item.authorId) }}</span>
-                <span class="createDate"
-                  >{{ item.createTime | formatDate }}发表在
-                  <em>[我要提问]</em></span
-                >
-                <span class="replyDate"
-                  >最后回复时间: <em>{{ item.lastReplyTime | formatDate }}</em>
+                <span class="createDate">{{ item.createTime | formatDate }}发表在
+                  <em>[我要提问]</em></span>
+                <span class="replyDate">最后回复时间:
+                  <em>{{ item.lastReplyTime | formatDate }}</em>
                 </span>
               </p>
               <p class="icons">
@@ -61,13 +47,8 @@
             </li>
           </ul>
           <!-- 分页 -->
-          <el-pagination
-            layout="prev, pager, next"
-            :total="total"
-            :page-size="query.size"
-            @current-change="handleCurrent"
-            v-if="total"
-          >
+          <el-pagination layout="prev, pager, next" :total="total" :page-size="query.size"
+            @current-change="handleCurrent" v-if="total">
           </el-pagination>
         </el-card>
       </el-main>

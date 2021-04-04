@@ -7,7 +7,9 @@ Vue.use(Vuex)
 const state = {
     currentUser: getSessionStorage('currentUser'),
     allSubject: getSessionStorage('allSubject'),
-    currentAIndex: sessionStorage.getItem('currentAIndex')
+    currentAIndex: sessionStorage.getItem('currentAIndex'),
+    currentHIndex: sessionStorage.getItem('currentHIndex'),
+    isIndex: sessionStorage.getItem('isIndex')
 }
 // mutations
 const mutations = {
@@ -22,11 +24,23 @@ const mutations = {
     setCurrentAIndex (state, index) {
         setSessionStorage('currentAIndex', index)
         state.currentAIndex = index
+    },
+    setCurrentHIndex (state, index) {
+        setSessionStorage('currentHIndex', index)
+        state.currentHIndex = index
     }
 }
 // getters
 const getters = {
-
+    getMiniSubject: (state) => () => {
+        return state.allSubject.map(({ id, name }) => { return { id, name } })
+    },
+    getSubjectById: (state) => (id) => {
+        return state.allSubject.find(item => item.id === id)
+    },
+    getIsIndex: (state) => () => {
+        return state.currentHIndex === "/index"
+    }
 }
 // actions
 const actions = {

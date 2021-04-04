@@ -1,24 +1,18 @@
 <template>
-  <div>
-    <div class="main">
-      <h1>成都东软学院在线考试教学辅助系统</h1>
-      <div class="btns">
-        <a class="items" href="#/contest">
-          <i class="icon-computer iconfont"></i>
-          <h4>考试</h4>
-          <p>即使是正规的教学考试，也能轻松应对，准确评判</p>
-        </a>
-        <a class="items" href="#/subject">
-          <i class="icon-interface4 iconfont"></i>
-          <h4>题库</h4>
-          <p>适合教学使用的题目，合理的题目分类</p>
-        </a>
-        <a class="items" href="#/share">
-          <i class="icon-comment iconfont"></i>
-          <h4>社区</h4>
-          <p>在这里同学可以分享自己的学习体验，解答疑惑</p>
-        </a>
-      </div>
+  <div class="main">
+    <p class="m-banner">海量|智能|多端</p>
+    <h1 class="m-title">初中题库管理系统</h1>
+    <p class="m-desc">开始你的学习旅程吧！</p>
+    <div class="btns">
+      <a href="#/contest">
+        <span>考试中心</span>
+        <i class="iconfont icon-ArrowRight-copy"></i>
+      </a>
+      <a href="#/problem">
+        <span>题目练习</span>
+        <i class="iconfont icon-ArrowRight-copy"></i>
+        <i></i>
+      </a>
     </div>
   </div>
 </template>
@@ -28,42 +22,74 @@ export default {}
 </script>
 
 <style lang="less" scoped>
-.main {
+.m-banner,
+.m-title,
+.m-desc {
+  text-align: center;
   color: #fff;
-  h1 {
-    font-size: 30px;
-    font-weight: normal;
+  text-shadow: 4px 9px 4px rgb(0 0 0 / 10%);
+}
+.m-banner {
+  margin-top: 100px;
+  font-size: 28px;
+  line-height: 33px;
+  letter-spacing: 40px;
+}
+.m-title {
+  font-size: 63px;
+  font-weight: normal;
+  line-height: 73px;
+  letter-spacing: 17px;
+}
+.m-desc {
+  font-size: 24px;
+  line-height: 33px;
+  margin: 0 0 40px;
+}
+.btns {
+  position: relative;
+  width: 324px;
+  height: 50px;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  a {
+    display: inline-block;
+    height: 50px;
+    width: 150px;
+    border-radius: 25px;
+    line-height: 50px;
+    font-size: 20px;
     text-align: center;
-    margin-bottom: 200px;
-  }
-  .btns {
-    text-align: center;
-    .items {
-      display: inline-block;
-      width: 200px;
-      height: 200px;
-      padding: 14px;
-      margin-right: 10px;
-      border-radius: 10px;
-      color: #dcdde1;
-      transition: all cubic-bezier(0.075, 0.82, 0.165, 1) 0.5s;
-
-      i {
-        font-size: 4em;
-        display: block;
-      }
-      h4 {
-        // margin: 0;
-        // margin-top: 6px;
-      }
-      p {
-        font-size: 14px;
+    // transition: all 0.5s ease-in;
+    margin-right: 20px;
+    border: 1px solid #fff;
+    background-color: transparent;
+    span {
+      // vertical-align: middle;
+      color: #fff;
+    }
+    i {
+      &::before {
+        transition: all 0.5s ease-out;
+        font-size: 20px;
+        color: #fff;
       }
     }
-    .items:hover {
-      color: #fff;
-      background-color: rgba(0, 0, 0, 0.5);
-      transform: scale(1.1);
+    &:hover {
+      // letter-spacing: 0.15em;
+      background-color: #fff;
+      border-color: #58ab2f;
+      span,
+      i::before {
+        color: #58ab2f;
+        margin-left: 6px;
+      }
+    }
+    &:last-child {
+      margin-right: 0;
     }
   }
 }

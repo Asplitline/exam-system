@@ -7,14 +7,27 @@ export const aMenuList = [
     { index: '/_discuss', icon: 'iconfont icon-discuss', content: '交流管理' }
 ]
 
+export const hMenuList = [
+    { index: '/index', icon: 'iconfont', content: '首页' },
+    { index: '/contest', icon: 'iconfont', content: '考试中心' },
+    { index: '/problem', icon: 'iconfont', content: '题目练习' },
+    { index: '/discuss', icon: 'iconfont', content: '交流区' },
+    { index: '/info', icon: 'iconfont', content: '个人信息' },
+]
 export const aMiniMenuList = ['/_user', '/_contest', '/_subject', '/_problem', '/_correct', '/_discuss',]
-
+export const hMiniMenuList = ['/index', '/contest', '/problem', '/discuss', '/info']
 export const contestStatus = [
     { state: 0, content: '未开始', type: 'info' },
-    { state: 1, content: '考试中', type: 'success' },
+    { state: 1, content: '考试中', type: 'primary' },
     { state: 2, content: '已结束', type: 'danger' }
 ]
 
+export const problemStatus = [
+    { questionType: 0, content: '单选题' },
+    { questionType: 1, content: '多选题' },
+    { questionType: 2, content: '判断题' },
+    { questionType: 3, content: '解答题' }
+]
 export const levels = [
     { id: 0, value: '学生', type: 'info' },
     { id: 1, value: '教师', type: 'primary' },

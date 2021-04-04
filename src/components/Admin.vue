@@ -27,8 +27,9 @@
                 <img :src="bindURL(currentUser.avatarImgUrl)" alt="" class="avatar" />
                 <span>你好,{{currentUser.name }}</span>
               </template>
-              <el-menu-item><i class="icon-user iconfont"></i>个人中心</el-menu-item>
-              <el-menu-item @click="logout"><i class="icon-logout iconfont"></i>退出系统
+              <el-menu-item @click="goIndex()"><i class="icon-home iconfont"></i>跳转前台
+              </el-menu-item>
+              <el-menu-item @click="logout()"><i class="icon-logout iconfont"></i>退出系统
               </el-menu-item>
             </el-submenu>
           </el-menu>
@@ -72,6 +73,9 @@ export default {
     },
     toggleMenu() {
       this.isCollapse = !this.isCollapse
+    },
+    goIndex() {
+      this.$router.push('/')
     }
   },
   computed: {

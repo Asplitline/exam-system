@@ -1,6 +1,6 @@
 <template>
   <div class="top-search">
-    <div class="search">
+    <div class="search" v-show="showSearch">
       <el-input type="text" placeholder="请开始搜索" :clearable="true" v-model="searchValue"
         @clear="handleClose" @keyup.enter.native="handleEnter"
         @keyup.esc.native="handleClose">
@@ -8,7 +8,7 @@
         </el-button>
       </el-input>
     </div>
-    <div class="add">
+    <div class="add" v-show="showAdd">
       <el-button icon="el-icon-plus" @click="handleAdd()">添加{{text}}</el-button>
     </div>
   </div>
@@ -23,6 +23,14 @@ export default {
     },
     text: {
       type: String
+    },
+    showSearch: {
+      type: Boolean,
+      default: true
+    },
+    showAdd: {
+      type: Boolean,
+      default: true
     }
   },
   data() {

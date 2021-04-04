@@ -9,7 +9,7 @@
       </el-breadcrumb>
       <!-- 搜索框 -->
       <top-search :data="query.keyword" @t-enter="handleEnter(fetchContest,$event)"
-        @t-close="handleClose(fetchContest)" text="帖子" />
+        @t-close="handleClose(fetchContest)" text="帖子" :showAdd="false" />
       <!-- 考试列表 -->
       <el-table :data="contestList" stripe style="width: 100%" max-height="600">
         <el-table-column prop="title" label="考试名称" min-width="150">
@@ -41,7 +41,7 @@
         </el-table-column>
         <el-table-column label="操作" min-width="100">
           <template v-slot="{ row }">
-            <el-link :underline="false" type="primary">详情</el-link>
+            <el-link :underline="false" type="primary">结果</el-link>
             <el-link :underline="false" type="danger">批改</el-link>
           </template>
         </el-table-column>

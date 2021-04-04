@@ -1,50 +1,51 @@
 <template>
-  <div class="problem">
+  <div class="contest-detail">
     <el-card>
       <!-- 面包导航 -->
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: 'index' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{path:'problem'}">题目</el-breadcrumb-item>
-        <el-breadcrumb-item>题目列表</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ name: 'index' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{name:'contest'}">考试</el-breadcrumb-item>
+        <el-breadcrumb-item>考试详情</el-breadcrumb-item>
       </el-breadcrumb>
       <!-- 搜索框 -->
       <top-search :data="query.keyword" @t-enter="handleEnter(fetchProblem,$event)"
         @t-close="handleClose(fetchProblem)" text="题目" @t-btn="showProblemDialog(0)" />
-      <!-- 题目表单 -->
+      <!-- 考试列表 -->
       <el-table :data="problemList" stripe style="width: 100%" max-height="600">
-        <el-table-column prop="id" label="题号" min-width="60"></el-table-column>
-        <el-table-column prop="title" label="题目" min-width="120"></el-table-column>
-        <el-table-column prop="sujectId" label="课程" min-width="100">
-          <template v-slot="{ row }">
-            {{getSubjectById(row.subjectId)&&getSubjectById(row.subjectId).name}}
-          </template>
+        <el-table-column prop="title" label="题目标题" min-width="120">
         </el-table-column>
-        <el-table-column prop="questionType" label="题型" min-width="100">
+        <el-table-column prop="questionType" label="题目类型" min-width="120">
           <template v-slot="{ row }">
             <span>{{problemStatus[row.questionType].content}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="difficulty" label="难度" min-width="100">
-          <template v-slot="{ row }">
-            <el-rate v-model="row.difficulty" disabled> </el-rate>
+        <el-table-column prop="subjectId" label="所属课程" min-width="120">
+          <template v-slot="{row}">
+            {{getSubjectById(row.subjectId)&&getSubjectById(row.subjectId).name}}
           </template>
         </el-table-column>
-        <el-table-column label="操作" min-width="100">
-          <template v-slot="{ row }">
+        <el-table-column prop="difficulty" label="题目难度" min-width="120">
+          <template v-slot="{row}">
+            <el-rate v-model="row.difficulty" disabled>
+            </el-rate>
+          </template>
+        </el-table-column>
+        <el-table-column prop="score" label="题目分数" min-width="120">
+          <template v-slot="{row}">
+            <el-tag type="info" effect="dark">{{row.score}}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" min-width="120">
+          <template v-slot="{row}">
             <el-link :underline="false" type="primary" @click="showProblemDialog(1,row)">
               修改
             </el-link>
             <el-link :underline="false" type="danger"
-              @click="deleteById(_deleteProblem,fetchProblem,row.id,'题目')">删除</el-link>
+              @click="deleteById(_deleteProblem,fetchProblem,row.id,'题目')">删除
+            </el-link>
           </template>
         </el-table-column>
       </el-table>
-      <!-- 题目分页 -->
-      <el-pagination @size-change="handleSizeChange(fetchProblem,$event)"
-        @current-change="handleCurrentChange(fetchProblem,$event)"
-        :current-page="query.page" :page-sizes="[1, 2, 5, 10]" :page-size="query.size"
-        layout="total, sizes, prev, pager, next, jumper" :total="total">
-      </el-pagination>
     </el-card>
     <!-- 题目对话框 -->
     <el-dialog :title="problemForm.flag===0?'添加题目':'修改题目'"
@@ -118,7 +119,8 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="problemDialogVisible = false" size="small">取 消</el-button>
         <el-button type="primary" @click="submitProblem(problemForm.flag,'problemForm')"
-          size="small">{{problemForm.flag === 0? '添加': '修改'}}
+          size="small">
+          {{problemForm.flag === 0? '添加': '修改'}}
         </el-button>
       </span>
     </el-dialog>
@@ -126,20 +128,22 @@
 </template>
 
 <script>
-import {
-  _getProblemList,
-  _deleteProblem,
-  _addProblem,
-  _editProblem
-} from '@api'
-import { checkScore, convertDeepCopy, getUid } from '@utils'
-import { mapActions, mapGetters } from 'vuex'
 import { aMixin } from '@mixins'
 import { problemStatus, ADD, EDIT } from '@static'
+import { mapGetters, mapActions } from 'vuex'
+import { checkScore, getUid, convertDeepCopy } from '@utils'
+import {
+  _addProblem,
+  _getProblemByContestId,
+  _editProblem,
+  _deleteProblem
+} from '@api'
 export default {
+  props: ['id', 'title'],
   data() {
     return {
       problemList: [],
+      problemStatus,
       problemForm: {},
       problemDialogVisible: false,
       problemRules: {
@@ -175,20 +179,16 @@ export default {
           { required: true, message: '分值不能为空', trigger: 'blur' },
           { validator: checkScore, trigger: 'blur' }
         ]
-      },
-      problemStatus
+      }
     }
   },
   methods: {
     _deleteProblem,
     ...mapActions(['fetchAllSubject']),
-    // 获取问题列表
     async fetchProblem() {
-      const { list, total } = await _getProblemList(this.query)
+      const list = await _getProblemByContestId({ contestId: this.id })
       this.problemList = list
-      this.total = total
     },
-    // 显示对话框
     showProblemDialog(flag, data) {
       this.problemDialogVisible = true
       switch (flag) {
@@ -201,7 +201,6 @@ export default {
           break
       }
     },
-    // 提交
     submitProblem(flag, formName) {
       this.$refs[formName].validate(async (valid) => {
         if (!valid) return
@@ -209,6 +208,7 @@ export default {
         if (flag === ADD) {
           this[formName].id = getUid()
           this[formName].state = 1
+          this[formName].contestId = this.id
           const { success } = await _addProblem(this[formName])
           this.handleSuccess(success, '添加题目')
         } else if (flag === EDIT) {
@@ -220,23 +220,16 @@ export default {
       })
     }
   },
-  mixins: [aMixin],
   computed: {
     ...mapGetters(['getMiniSubject', 'getSubjectById'])
   },
+  mixins: [aMixin],
   created() {
-    this.fetchProblem()
     this.fetchAllSubject()
+    this.fetchProblem()
   }
 }
 </script>
 <style lang="less" scoped>
 @import '~@css/common.less';
-.el-radio.is-bordered {
-  margin-right: 10px;
-}
-
-.el-radio.is-bordered + .el-radio.is-bordered {
-  margin-left: 0;
-}
 </style>

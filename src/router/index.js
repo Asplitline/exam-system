@@ -5,18 +5,20 @@ import Login from '@components/Login'
 import Admin from '@components/Admin'
 import User from '@components/admin/user/User'
 import Contest from '@components/admin/contest/Contest'
+import ContestDetail from '@components/admin/contest/ContestDetail'
 import Subject from '@components/admin/subject/Subject'
 import Problem from '@components/admin/problem/Problem'
 import Correct from '@components/admin/correct/Correct'
 import Discuss from '@components/admin/discuss/Discuss'
 // ----
-// 前台
+// home
 import Home from '@components/Home'
 import Index from '@components/home/index/Index'
 import ContestIndex from '@components/home/contest/Contest'
-import ShareIndex from '@components/home/share/Share'
-import SubjectIndex from '@components/home/subject/Subject'
-import UserIndex from '@components/home/user/User'
+import DiscussIndex from '@components/home/discuss/Discuss'
+import InfoIndex from '@components/home/info/Info'
+import ProblemIndex from '@components/home/problem/Problem'
+
 // ----
 import SProblemList from '@components/home/subject/sProblemList'
 import SProblemDetail from '@components/home/subject/sProblemDetail'
@@ -25,7 +27,7 @@ import cContestDetail from '@components/home/contest/ContestDetail'
 import sPostDetail from '@components/home/share/postDetail'
 import sPostSubmit from '@components/home/share/sPostSubmit'
 import store from '@store'
-import { aMiniMenuList } from '@static'
+import { aMiniMenuList, hMiniMenuList } from '@static'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -39,6 +41,7 @@ const router = new VueRouter({
       children: [
         { path: '/_user', name: 'user', component: User },
         { path: '/_contest', name: 'contest', component: Contest },
+        { path: '/_contest/:title/:id', name: 'contestDetail', component: ContestDetail, props: true },
         { path: '/_subject', name: 'subject', component: Subject },
         { path: '/_problem', name: 'problem', component: Problem },
         { path: '/_correct', name: 'correct', component: Correct },
@@ -52,9 +55,9 @@ const router = new VueRouter({
       children: [
         { path: '/index', component: Index },
         { path: '/contest', component: ContestIndex },
-        { path: '/share', component: ShareIndex },
-        { path: '/subject', component: SubjectIndex },
-        { path: '/user', component: UserIndex },
+        { path: '/problem', component: ProblemIndex },
+        { path: '/discuss', component: DiscussIndex },
+        { path: '/info', component: InfoIndex },
         { path: '/subject/:id/:name', component: SProblemList, props: true },
         { path: '/sProblem/:id/:name', component: SProblemDetail, props: true },
         { path: '/contest/:id/:name', component: cContestDetail, props: true },
@@ -67,9 +70,14 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   const usr = store.state.currentUser
-  if (aMiniMenuList.includes(to.path)) {
-    window.sessionStorage.setItem('currentAIndex', to.path)
-    store.commit('setCurrentAIndex', to.path)
+  const path = '/' + to.path.split('/')[1]
+  sessionStorage.setItem('123', '123')
+  if (aMiniMenuList.includes(path)) {
+    window.sessionStorage.setItem('currentAIndex', path)
+    store.commit('setCurrentAIndex', path)
+  } else if (hMiniMenuList.includes(path)) {
+    window.sessionStorage.setItem('currentHIndex', path)
+    store.commit('setCurrentHIndex', path)
   }
   if (usr === null && to.path !== '/login') {
     next('/login')
