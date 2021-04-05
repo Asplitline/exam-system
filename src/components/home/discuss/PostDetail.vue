@@ -78,16 +78,9 @@ export default {
     ...mapState(['currentPost', 'currentUser'])
   },
   created() {
-    console.log(this.id)
     this.post = this.currentPost
   }
 }
-
-//  "content": "string",
-//   "createTime": "2021-04-05T06:35:27.885Z",
-//   "id": 0,
-//   "postId": 0,
-//   "userId": 0
 </script>
 
 <style lang="less" scoped>
@@ -127,7 +120,7 @@ export default {
 }
 
 .p-content {
-  padding-bottom: 26px;
+  padding: 0 40px 26px;
   border-bottom: 1px dashed #92cd18;
   text-indent: 2em;
   //   line-height: 1;

@@ -72,7 +72,7 @@ export default {
   display: flex;
   flex-flow: column;
   min-height: 100%;
-  // background-color: #fcfdff;
+  background-color: #fafafa;
   .el-header {
     background-color: #2f323a;
     padding: 0;
@@ -107,14 +107,14 @@ export default {
   float: right !important;
 }
 
-.mainIndex {
-  background-image: linear-gradient(#4e9e49, #5db21f);
-}
-
 /deep/.el-menu--horizontal > .el-submenu .el-submenu__title {
   color: #eee;
   &:hover {
     color: #ddd;
   }
+}
+
+.container.mainIndex {
+  background-image: linear-gradient(#4e9e49, #5db21f);
 }
 </style>

@@ -112,6 +112,7 @@ export default {
 .main-list {
   padding-top: 0;
   .main-list-item {
+    background-color: #fff;
     border: 1px solid #ddd;
     padding: 20px;
     transition: all 0.2s ease-in;

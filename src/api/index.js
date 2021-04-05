@@ -23,6 +23,7 @@ const _deleteSubject = _delete('subject/api/deleteSubject')
 // problem
 const _getProblemList = _get('/question/api/pageQuestion')
 const _getProblemByContestId = _get('/question/api/getQuestionsByContestId')
+// const _getProblemBySubjectId = _get('/question/api/getQuestionsBySubjectId')
 const _addProblem = _post('/question/api/addQuestion')
 const _editProblem = _post('/question/api/updateQuestion')
 const _deleteProblem = _delete('/question/api/deleteQuestion')
@@ -51,6 +52,7 @@ export {
     _deleteContest,
     // subject
     _getSubjectList,
+    // _getProblemBySubjectId,
     _deleteSubject,
     _addSubject,
     _editSubject,

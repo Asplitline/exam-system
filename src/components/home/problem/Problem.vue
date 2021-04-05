@@ -3,7 +3,7 @@
     <el-card>
       <ul class="p-list">
         <li class="p-item" v-for="item in subjectList" :key="item.id">
-          <a href="javascript:;">
+          <a href="javascript:;" @click="goProlemList(item)">
             <img :src="bindURL(item.imgUrl)" alt="">
             <p>{{item.name}}</p>
           </a>
@@ -30,6 +30,9 @@ export default {
       const { list, total } = await _getSubjectList(this.query)
       this.subjectList = list
       this.total = total
+    },
+    goProlemList(data) {
+      this.$router.push(`/problem/${data.id}`)
     }
   },
   computed: {

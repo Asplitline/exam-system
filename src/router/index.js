@@ -15,19 +15,17 @@ import Discuss from '@components/admin/discuss/Discuss'
 import Home from '@components/Home'
 import Index from '@components/home/index/Index'
 import ContestIndex from '@components/home/contest/Contest'
+import ProblemIndex from '@components/home/problem/Problem'
+import ProblemListIndex from '@components/home/problem/ProblemList'
 import DiscussIndex from '@components/home/discuss/Discuss'
 import PostDetailIndex from '@components/home/discuss/PostDetail'
 import AddPostIndex from '@components/home/discuss/AddPost'
 import InfoIndex from '@components/home/info/Info'
-import ProblemIndex from '@components/home/problem/Problem'
 
 // ----
-import SProblemList from '@components/home/subject/sProblemList'
-import SProblemDetail from '@components/home/subject/sProblemDetail'
+
 import cContestDetail from '@components/home/contest/ContestDetail'
 
-import sPostDetail from '@components/home/share/postDetail'
-import sPostSubmit from '@components/home/share/sPostSubmit'
 import store from '@store'
 import { aMiniMenuList, hMiniMenuList } from '@static'
 Vue.use(VueRouter)
@@ -58,15 +56,12 @@ const router = new VueRouter({
         { path: '/index', component: Index },
         { path: '/contest', component: ContestIndex },
         { path: '/problem', component: ProblemIndex },
+        { path: '/problem/:id', name: 'iProblemList', component: ProblemListIndex },
         { path: '/discuss', name: 'iDiscuss', component: DiscussIndex },
         { path: '/discuss/:id', name: 'iPostDetail', component: PostDetailIndex, props: true },
         { path: '/addPost', name: 'iAddPost', component: AddPostIndex },
         { path: '/info', component: InfoIndex },
-        { path: '/subject/:id/:name', component: SProblemList, props: true },
-        { path: '/sProblem/:id/:name', component: SProblemDetail, props: true },
         { path: '/contest/:id/:name', component: cContestDetail, props: true },
-        { path: '/share/post/:id/:uid', component: sPostDetail, props: true },
-        { path: '/share/sPostSubmit', component: sPostSubmit }
       ]
     }
   ]
