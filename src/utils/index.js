@@ -1,5 +1,5 @@
 import { REG_EMAIL, REG_PHONE, URL_SERVER } from '@static'
-
+import marked from 'marked'
 /**
  * 校验邮箱
  */
@@ -99,4 +99,18 @@ export function getUid () {
  */
 export function pad0 (data, len = 2) {
     return ('00000000000' + data).substr(-len)
+}
+
+export function markdownToHtml (mark) {
+    return marked(mark)
+}
+
+export function htmlToText (html) {
+    return marked(html)
+        .replace(/<(style|script|iframe)[^>]*?>[\s\S]+?<\/\1\s*>/gi, '')
+        .replace(/<[^>]+?>/g, '')
+        .replace(/\s+/g, ' ')
+        .replace(/ /g, ' ')
+        .replace(/>/g, ' ')
+        .trim()
 }

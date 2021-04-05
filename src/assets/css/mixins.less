@@ -4,3 +4,10 @@
     left: 50%;
     transform: translate(-50%,-50%);
 }
+
+.text-ellipsis-s(@num) {
+    overflow : hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: @num;
+    -webkit-box-orient: vertical;
+}

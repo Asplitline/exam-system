@@ -61,8 +61,8 @@ export default {
     })
   },
   updated() {
-    console.log(this.isIndex)
-    console.log(this.currentHIndex)
+    // console.log(this.isIndex)
+    // console.log(this.currentHIndex)
   }
 }
 </script>

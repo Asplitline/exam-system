@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { _getSubjectList } from '@api'
+import { _getSubjectList, _getUser } from '@api'
 import { getSessionStorage, setSessionStorage } from '@utils'
 Vue.use(Vuex)
 // state
@@ -9,7 +9,9 @@ const state = {
     allSubject: getSessionStorage('allSubject'),
     currentAIndex: sessionStorage.getItem('currentAIndex'),
     currentHIndex: sessionStorage.getItem('currentHIndex'),
-    isIndex: sessionStorage.getItem('isIndex')
+    isIndex: sessionStorage.getItem('isIndex'),
+    allUser: getSessionStorage('allUser'),
+    currentPost: getSessionStorage('currentPost')
 }
 // mutations
 const mutations = {
@@ -28,6 +30,14 @@ const mutations = {
     setCurrentHIndex (state, index) {
         setSessionStorage('currentHIndex', index)
         state.currentHIndex = index
+    },
+    setAllUser (state, data) {
+        setSessionStorage('allUser', data)
+        state.allUser = data
+    },
+    setCurrentPost (state, data) {
+        setSessionStorage('currentPost', data)
+        state.currentPost = data
     }
 }
 // getters
@@ -40,6 +50,9 @@ const getters = {
     },
     getIsIndex: (state) => () => {
         return state.currentHIndex === "/index"
+    },
+    getUserById: (state) => (id) => {
+        return state.allUser.find((item) => item.id === id)
     }
 }
 // actions
@@ -47,6 +60,10 @@ const actions = {
     async fetchAllSubject ({ commit }, query = { size: 999 }) {
         const { list } = await _getSubjectList(query)
         commit('setAllSubject', list)
+    },
+    async fetchAllUser ({ commit }) {
+        const list = await _getUser()
+        commit('setAllUser', list)
     }
 }
 

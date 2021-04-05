@@ -74,3 +74,31 @@ export const aMixin = {
         topSearch
     }
 }
+
+export const hMixin = {
+    data () {
+        return {
+            query: {
+                page: 1,
+                size: 10,
+                keyword: null
+            },
+            total: 0
+        }
+    },
+    methods: {
+        // 处理成功标志
+        handleSuccess (success, info, callback) {
+            if (success) {
+                this.$message.success(`${info}成功`)
+                callback && callback()
+            } else {
+                this.$message.error(`${info}失败`)
+            }
+        },
+        // 返回
+        goBack () {
+            window.history.go(-1)
+        }
+    }
+}

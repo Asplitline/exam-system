@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="contest">
     <el-card>
-      <el-table :data="contestList" stripe style="width: 100%">
+      <el-table :data="contestList" stripe style="width: 100%" key="contestTable">
         <el-table-column prop="title" label="考试名称" min-width="180">
         </el-table-column>
         <el-table-column prop="startTime" label="开始时间" min-width="180">
@@ -14,16 +14,24 @@
             {{ row.endTime | formatDate }}
           </template>
         </el-table-column>
-        <el-table-column prop="subjectId" label="考试科目" min-width="180">
+        <el-table-column label="考试状态" min-width="180">
           <template v-slot="{ row }">
-            {{ miniSubject[row.id] }}
+            <el-tag :type="contestStatus[row.state].type"
+              :key="contestStatus[row.state].state">
+              {{contestStatus[row.state].content}}
+            </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" min-width="100">
+        <el-table-column prop="subjectId" label="考试科目" min-width="180">
           <template v-slot="{ row }">
-            <el-button type="info" disabled size="mini" v-if="row.state === 1">未开始
+            {{ getSubjectById(row.subjectId) &&  getSubjectById(row.subjectId).name}}
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" min-width="120">
+          <template v-slot="{ row }">
+            <el-button type="info" disabled size="mini" v-if="row.state === 0">未开始
             </el-button>
-            <el-button v-else-if="row.state === 2" type="primary"
+            <el-button v-else-if="row.state === 1" type="primary"
               @click="goContestDetail(row)" size="mini">进入考试</el-button>
             <el-button type="danger" size="mini" disabled v-else>已结束</el-button>
           </template>
@@ -34,41 +42,29 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
+import { _getContestList } from '@api'
+import { hMixin } from '@mixins'
+import { contestStatus } from '@static'
 export default {
   data() {
     return {
       contestList: [],
       miniSubject: [],
-      query: {
-        page: 1,
-        size: 10,
-        keyword: null
-      },
-      total: 0
+      contestStatus
     }
   },
   methods: {
     ...mapMutations(['initCurrentContest', 'initContestList']),
+    ...mapActions(['fetchAllSubject']),
     // 获取考试列表
     async getContest() {
-      const { data, status } = await this.$http.get(
-        '/contest/api/pageContest',
-        {
-          params: this.query
-        }
-      )
-      if (status === 200) {
-        const { list, total } = data
-        this.total = total
-        this.initContestList(list)
-        list.forEach((item) => {
-          item.state = this.handleContestState(item.startTime, item.endTime)
-        })
-        this.contestList = list
-      } else {
-        this.$message.warning('请求失败')
-      }
+      const { list, total } = await _getContestList(this.query)
+      this.contestList = list
+      this.contestList.forEach((item) => {
+        item.state = this.handleContestState(item.startTime, item.endTime)
+      })
+      this.total = total
     },
     // 进入考试
     goContestDetail(data) {
@@ -79,16 +75,20 @@ export default {
     handleContestState(start, end) {
       const now = Date.now()
       if (start > now) {
-        return 1
+        return 0
       } else if (start <= now && now <= end) {
+        return 1
+      } else if (now >= end) {
         return 2
-      } else if (start >= end) {
-        return 3
       }
     }
   },
-  async created() {
-    this.miniSubject = await this.getMiniSubject()
+  computed: {
+    ...mapGetters(['getSubjectById'])
+  },
+  mixins: [hMixin],
+  created() {
+    this.fetchAllSubject()
     this.getContest()
   }
 }

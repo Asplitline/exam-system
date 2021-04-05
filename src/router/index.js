@@ -16,6 +16,8 @@ import Home from '@components/Home'
 import Index from '@components/home/index/Index'
 import ContestIndex from '@components/home/contest/Contest'
 import DiscussIndex from '@components/home/discuss/Discuss'
+import PostDetailIndex from '@components/home/discuss/PostDetail'
+import AddPostIndex from '@components/home/discuss/AddPost'
 import InfoIndex from '@components/home/info/Info'
 import ProblemIndex from '@components/home/problem/Problem'
 
@@ -56,7 +58,9 @@ const router = new VueRouter({
         { path: '/index', component: Index },
         { path: '/contest', component: ContestIndex },
         { path: '/problem', component: ProblemIndex },
-        { path: '/discuss', component: DiscussIndex },
+        { path: '/discuss', name: 'iDiscuss', component: DiscussIndex },
+        { path: '/discuss/:id', name: 'iPostDetail', component: PostDetailIndex, props: true },
+        { path: '/addPost', name: 'iAddPost', component: AddPostIndex },
         { path: '/info', component: InfoIndex },
         { path: '/subject/:id/:name', component: SProblemList, props: true },
         { path: '/sProblem/:id/:name', component: SProblemDetail, props: true },

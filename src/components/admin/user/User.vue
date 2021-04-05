@@ -200,9 +200,7 @@ export default {
     },
     // 重置密码
     async resetPassword(id) {
-      const success = await _changePassword(
-        '?' + convertURL({ id, password: DEFAULT_PWD })
-      )
+      const success = await _changePassword({ id, password: DEFAULT_PWD })
       if (success) {
         this.$message.success('重置密码:123456')
       } else {

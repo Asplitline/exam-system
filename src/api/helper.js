@@ -9,7 +9,7 @@ const $http = axios.create({
 /**
  * GET
  * @param {*} url
- * @param {*} mode.
+ * @param {*} mode
  * @returns
  */
 export function _get (url, model = 1) {

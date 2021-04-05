@@ -1,7 +1,10 @@
 import { _get, _post, _delete, _put } from './helper'
+const NO_HANDLE = 0
 // base 
 const _login = _post('account/api/login')
+const _uploadFile = _post('/uploadfile')
 // user
+const _getUser = _get('/account/list')
 const _getUserList = _post('/account/pageAccount')
 const _changePassword = _get('/account/changePassword')
 const _addUser = _post('/account/insert')
@@ -25,11 +28,17 @@ const _editProblem = _post('/question/api/updateQuestion')
 const _deleteProblem = _delete('/question/api/deleteQuestion')
 // discuss
 const _getPostList = _get('/post/api/pagePosts')
+const _addPost = _post('/post/api/addPost')
+const _editPost = _post('/post/api/updatePost')
 const _deletePost = _delete('/post/api/deletePost')
+// comment 
+const _addComment = _post('/comment/api/addComment')
 export {
     // base
     _login,
+    _uploadFile,
     // user
+    _getUser,
     _getUserList,
     _changePassword,
     _addUser,
@@ -53,5 +62,9 @@ export {
     _deleteProblem,
     // discuss
     _getPostList,
-    _deletePost
+    _addPost,
+    _editPost,
+    _deletePost,
+    // comment 
+    _addComment
 }
