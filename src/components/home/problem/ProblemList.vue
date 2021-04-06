@@ -1,15 +1,21 @@
 <template>
   <div class="problem-list">
-    <h1>题库预览</h1>
-    <ul class="pl-list">
-      <li class="pl-item" v-for="item in problemList" :key="item.id">
-        <p class="pl-title">
-          <span class="pl-tag">[单选题]</span>{{item.title}}
-        </p>
-        <a href="javascript:;" class="pl-btn">完整试题|答案解析</a>
-      </li>
-    </ul>
+    <el-breadcrumb separator-class="el-icon-d-arrow-right">
+      <el-breadcrumb-item :to="{ name:'iProblem' }">题目练习</el-breadcrumb-item>
+      <el-breadcrumb-item>数学七年级(上册)</el-breadcrumb-item>
+    </el-breadcrumb>
+    <el-card>
+      <ul class="pl-list">
+        <li class="pl-item" v-for="item in problemList" :key="item.id">
+          <p class="pl-title">
+            <span class="pl-tag">[单选题]</span>{{item.title}}
+          </p>
+          <a href="javascript:;" class="pl-btn">完整试题|答案解析</a>
+        </li>
+      </ul>
+    </el-card>
   </div>
+
 </template>
 
 <script>
@@ -40,19 +46,17 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import '~@css/hcommon.less';
 .problem-list {
-  h1 {
-    padding-left: 24px;
-    border-left: 3px solid #92cd18;
-    // background-color: #fff;
+  /deep/.el-card__body {
+    padding: 0 20px;
   }
 }
 .pl-item {
-  background-color: #fff;
-  border: 1px solid #eee;
+  border-bottom: 1px solid #ddd;
   padding: 10px 24px;
   .pl-tag {
-    color: #92cd18;
+    color: @color-main;
     font-weight: 700;
     margin-right: 4px;
     letter-spacing: 0.1em;
@@ -64,13 +68,14 @@ export default {
   .pl-btn {
     display: inline-block;
     padding: 6px 10px;
-    border: 2px solid #92cd18;
-    color: #92cd18;
+    border: 2px solid @color-main;
+    color: @color-main;
     letter-spacing: 3px;
     transition: all 0.2s linear;
+    margin-bottom: 16px;
     &:hover {
       color: #fff;
-      background-color: #92cd18;
+      background-color: @color-main;
     }
   }
 }

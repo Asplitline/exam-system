@@ -1,5 +1,9 @@
 <template>
   <div class="post-detail">
+    <el-breadcrumb separator-class="el-icon-d-arrow-right">
+      <el-breadcrumb-item :to="{ name:'iDiscuss' }">交流区</el-breadcrumb-item>
+      <el-breadcrumb-item>{{post.title}}</el-breadcrumb-item>
+    </el-breadcrumb>
     <el-card>
       <div class="p-header">
         <h2>{{post.title}}</h2>
@@ -13,6 +17,9 @@
       </div>
       <div class="p-content" v-html="post.htmlContent" v-highlight>
       </div>
+      <!-- <div class="btns">
+        <el-link type="primary" :underline="false">编辑内容</el-link>
+      </div> -->
       <div class="p-comment">
         <div class="p-comment-header">
           <el-input type="text" v-model="comment"></el-input>
@@ -84,14 +91,16 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import '~@css/hcommon.less';
 .p-header {
   padding-bottom: 26px;
   border-bottom: 1px dashed #92cd18;
   h2 {
-    font-size: 30px;
+    font-size: 26px;
     font-weight: normal;
     border-left: 3px solid #92cd18;
     padding-left: 20px;
+    margin-top: 0;
   }
   .p-info {
     display: flex;

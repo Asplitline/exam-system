@@ -29,6 +29,7 @@ const _editProblem = _post('/question/api/updateQuestion')
 const _deleteProblem = _delete('/question/api/deleteQuestion')
 // discuss
 const _getPostList = _get('/post/api/pagePosts')
+const _getPostByAuthorId = _get('/post/api/pagePostByAuthorId')
 const _addPost = _post('/post/api/addPost')
 const _editPost = _post('/post/api/updatePost')
 const _deletePost = _delete('/post/api/deletePost')
@@ -66,6 +67,7 @@ export {
     _getPostList,
     _addPost,
     _editPost,
+    _getPostByAuthorId,
     _deletePost,
     // comment 
     _addComment

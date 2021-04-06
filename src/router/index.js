@@ -54,8 +54,8 @@ const router = new VueRouter({
       component: Home,
       children: [
         { path: '/index', component: Index },
-        { path: '/contest', component: ContestIndex },
-        { path: '/problem', component: ProblemIndex },
+        { path: '/contest', name: 'iContest', component: ContestIndex },
+        { path: '/problem', name: 'iProblem', component: ProblemIndex },
         { path: '/problem/:id', name: 'iProblemList', component: ProblemListIndex },
         { path: '/discuss', name: 'iDiscuss', component: DiscussIndex },
         { path: '/discuss/:id', name: 'iPostDetail', component: PostDetailIndex, props: true },

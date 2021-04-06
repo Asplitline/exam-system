@@ -9,23 +9,23 @@
         </div>
       </div>
       <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane name="user-info">
+        <el-tab-pane name="user-info" :lazy="true">
           <span slot="label"><i class="iconfont icon-user1"></i> 个人信息</span>
           <user-info />
         </el-tab-pane>
-        <el-tab-pane name="change-password">
+        <el-tab-pane name="change-password" :lazy="true">
           <span slot="label"><i class="iconfont icon-keychange"></i> 修改密码</span>
           <change-password :id="currentUser.id" />
         </el-tab-pane>
-        <el-tab-pane name="error-record">
+        <el-tab-pane name="error-record" :lazy="true">
           <span slot="label"><i class="iconfont icon-edit"></i> 错题记录</span>
           <error-record />
         </el-tab-pane>
-        <el-tab-pane name="post-record">
+        <el-tab-pane name="post-record" :lazy="true">
           <span slot="label"><i class="iconfont icon-editorpublish"></i> 发帖记录</span>
           <post-record />
         </el-tab-pane>
-        <el-tab-pane name="contest-record">
+        <el-tab-pane name="contest-record" :lazy="true">
           <span slot="label"><i class="iconfont icon-record"></i> 考试记录</span>
           <contest-record />
         </el-tab-pane>
@@ -38,9 +38,9 @@
 <script>
 import userInfo from './UserInfo'
 import changePassword from './ChangePassword'
-import errorRecord from './ErrorRecord'
-import postRecord from './PostRecord'
-import contestRecord from './ContestRecord'
+import errorRecord from './ErrorRecords'
+import postRecord from './PostRecords'
+import contestRecord from './ContestRecords'
 import { mapState } from 'vuex'
 import { bindURL } from '@utils'
 export default {

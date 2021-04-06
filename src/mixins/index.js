@@ -96,6 +96,12 @@ export const hMixin = {
                 this.$message.error(`${info}失败`)
             }
         },
+        // 当前页
+        handleCurrentChange (callback, value) {
+            this.query.page = value
+            console.log(this.query.page)
+            callback()
+        },
         // 返回
         goBack () {
             window.history.go(-1)

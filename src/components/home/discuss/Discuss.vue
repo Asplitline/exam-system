@@ -1,5 +1,9 @@
 <template>
   <div class="discuss">
+    <el-breadcrumb separator-class="el-icon-d-arrow-right">
+      <el-breadcrumb-item :to="{ name:'iDiscuss' }">交流区</el-breadcrumb-item>
+      <el-breadcrumb-item>交流区列表</el-breadcrumb-item>
+    </el-breadcrumb>
     <el-container>
       <el-main class="d-main">
         <ul class="main-list" v-if="postList">
@@ -78,7 +82,9 @@ export default {
 </script> 
 
 <style lang="less" scoped>
+@import '~@css/hcommon.less';
 @import '~@css/mixins.less';
+
 .discuss {
   // padding: 0 10%;
 }

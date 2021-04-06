@@ -1,5 +1,9 @@
 <template>
   <div class="contest">
+    <el-breadcrumb separator-class="el-icon-d-arrow-right">
+      <el-breadcrumb-item :to="{ name:'iContest' }">考试中心</el-breadcrumb-item>
+      <el-breadcrumb-item>考试列表</el-breadcrumb-item>
+    </el-breadcrumb>
     <el-card>
       <el-table :data="contestList" stripe style="width: 100%" key="contestTable">
         <el-table-column prop="title" label="考试名称" min-width="180">
@@ -93,3 +97,7 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+@import '~@css/hcommon.less';
+</style>

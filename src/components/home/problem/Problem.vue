@@ -1,5 +1,9 @@
 <template>
   <div class="problem">
+    <el-breadcrumb separator-class="el-icon-d-arrow-right">
+      <el-breadcrumb-item :to="{ name:'iProblem' }">题目练习</el-breadcrumb-item>
+      <el-breadcrumb-item>题目列表</el-breadcrumb-item>
+    </el-breadcrumb>
     <el-card>
       <ul class="p-list">
         <li class="p-item" v-for="item in subjectList" :key="item.id">
@@ -37,7 +41,7 @@ export default {
   },
   computed: {
     blankNum() {
-      return this.allNum % 4 === 0 ? 0 : 4 - (this.allNum % 4)
+      return this.allNum % 6 === 0 ? 0 : 6 - (this.allNum % 6)
     },
     allNum() {
       return this.subjectList.length
@@ -51,17 +55,18 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import '~@css/hcommon.less';
 .p-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
-  padding: 20px 60px;
+  padding: 20px 40px;
   border: 1px solid #eee;
 }
 
 .p-item {
-  width: 200px;
-  height: 300px;
+  width: 150px;
+  height: 225px;
   margin-bottom: 20px;
   img {
     width: 100%;
