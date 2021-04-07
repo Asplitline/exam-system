@@ -12,9 +12,9 @@ export const hMenuList = [
     { index: '/contest', icon: 'iconfont', content: '考试中心' },
     { index: '/problem', icon: 'iconfont', content: '题目练习' },
     { index: '/discuss', icon: 'iconfont', content: '交流区' },
-    { index: '/info', icon: 'iconfont', content: '个人信息' },
+    { index: '/info', icon: 'iconfont', content: '个人信息' }
 ]
-export const aMiniMenuList = ['/_user', '/_contest', '/_subject', '/_problem', '/_correct', '/_discuss',]
+export const aMiniMenuList = ['/_user', '/_contest', '/_subject', '/_problem', '/_correct', '/_discuss']
 export const hMiniMenuList = ['/index', '/contest', '/problem', '/discuss', '/info']
 export const contestStatus = [
     { state: 0, content: '未开始', type: 'info' },
@@ -40,3 +40,5 @@ export const REG_PHONE = /^1[34578]\d{9}$/
 export const ADD = 0
 export const EDIT = 1
 export const DEFAULT_PWD = 123456
+export const SHOW = 0
+export const CORRECT = 1

@@ -13,7 +13,11 @@
       <el-table stripe style="width: 100%" :data="PostList">
         <el-table-column prop="title" label="标题" min-width="180">
         </el-table-column>
-        <el-table-column prop="authorId" label="发布者"> </el-table-column>
+        <el-table-column prop="authorId" label="发布者">
+          <template v-slot="{row}">
+            {{row.author.name}}
+          </template>
+        </el-table-column>
         <el-table-column prop="createTime" label="创建时间" min-width="120">
           <template v-slot="{ row }">
             {{ row.createTime | formatDate }}
@@ -39,7 +43,8 @@
         </el-table-column>
         <el-table-column label="操作" min-width="80">
           <template v-slot="{row}">
-            <el-link :underline="false" type="primary">详情</el-link>
+            <el-link :underline="false" type="primary" @click="goPostDetail(row)">详情
+            </el-link>
             <el-link :underline="false" type="danger"
               @click="deleteById(_deletePost,fetchPost,row.id,'帖子')">删除</el-link>
           </template>
@@ -57,6 +62,7 @@
 <script>
 import { _getPostList, _deletePost } from '@api'
 import { aMixin } from '@mixins'
+import { mapGetters, mapMutations } from 'vuex'
 export default {
   data() {
     return {
@@ -66,12 +72,24 @@ export default {
   },
   methods: {
     _deletePost,
+    ...mapMutations(['setCurrentPost']),
     // 获取帖子列表
     async fetchPost() {
       const { list, total } = await _getPostList(this.query)
       this.PostList = list
+      this.PostList.forEach((item) => {
+        item.author = this.getUserById(item.authorId)
+      })
       this.total = total
+    },
+    // 跳转到文章详情
+    goPostDetail(data) {
+      this.setCurrentPost(data)
+      this.$router.push(`/discuss/${data.id}`)
     }
+  },
+  computed: {
+    ...mapGetters(['getUserById'])
   },
   mixins: [aMixin],
   created() {

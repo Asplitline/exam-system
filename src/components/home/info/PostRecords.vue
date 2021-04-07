@@ -14,8 +14,12 @@
         </template>
       </el-table-column>
       <el-table-column label="操作" min-width="80">
-        <el-link type="primary" :underline="false">详情</el-link>
-        <el-link type="danger" :underline="false">删除</el-link>
+        <template v-slot="{row}">
+          <el-link type="primary" :underline="false" @click="goPostDetail(row)">详情
+          </el-link>
+          <el-link type="danger" :underline="false"
+            @click="deleteById(_deletePost,fetchPost,row.id,'文章')">删除</el-link>
+        </template>
       </el-table-column>
     </el-table>
     <el-pagination layout="prev, pager, next" :total="total"
@@ -25,9 +29,10 @@
 </template>
 
 <script>
-import { _getPostByAuthorId } from '@api'
-import { mapState } from 'vuex'
+import { _getPostByAuthorId, _deletePost } from '@api'
+import { mapGetters, mapMutations, mapState } from 'vuex'
 import { hMixin } from '@mixins'
+import { htmlToText } from '@utils'
 export default {
   name: 'post-record',
   data() {
@@ -36,16 +41,28 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['setCurrentPost']),
+    _deletePost,
     async fetchPost() {
       this.query.keyword = this.currentUser.id
       const { list, total } = await _getPostByAuthorId(this.query)
       this.total = total
       this.postList = list
+      this.postList.map((item) => {
+        item.desc = htmlToText(item.htmlContent)
+        item.author = this.getUserById(item.authorId) || {}
+        return item
+      })
+    },
+    goPostDetail(data) {
+      this.setCurrentPost(data)
+      this.$router.push(`/discuss/${data.id}`)
     }
   },
   mixins: [hMixin],
   computed: {
-    ...mapState(['currentUser'])
+    ...mapState(['currentUser']),
+    ...mapGetters(['getUserById'])
   },
   created() {
     this.fetchPost()

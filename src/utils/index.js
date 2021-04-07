@@ -69,7 +69,22 @@ export function getCurrentByDate (data) {
     })
     return data
 }
-
+/**
+ * 更新考试状态
+ * @param {Date} start
+ * @param {Date} end
+ * @returns 1 未开始 2 进行中 3 已结束
+ */
+export function handleContestState (start, end) {
+    const now = Date.now()
+    if (start > now) {
+        return 0
+    } else if (start <= now && now <= end) {
+        return 1
+    } else if (now >= end) {
+        return 2
+    }
+}
 /**
  * 简单深拷贝
  */

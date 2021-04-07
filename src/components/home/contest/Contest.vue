@@ -50,6 +50,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex'
 import { _getContestList } from '@api'
 import { hMixin } from '@mixins'
 import { contestStatus } from '@static'
+import { handleContestState } from '@utils'
 export default {
   data() {
     return {
@@ -59,32 +60,21 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['initCurrentContest', 'initContestList']),
+    ...mapMutations(['setCurrentContest']),
     ...mapActions(['fetchAllSubject']),
     // 获取考试列表
     async getContest() {
       const { list, total } = await _getContestList(this.query)
       this.contestList = list
       this.contestList.forEach((item) => {
-        item.state = this.handleContestState(item.startTime, item.endTime)
+        item.state = handleContestState(item.startTime, item.endTime)
       })
       this.total = total
     },
     // 进入考试
     goContestDetail(data) {
-      this.initCurrentContest(data)
-      this.$router.push(`/contest/${data.id}/${data.title}`)
-    },
-    // 更新考试状态
-    handleContestState(start, end) {
-      const now = Date.now()
-      if (start > now) {
-        return 0
-      } else if (start <= now && now <= end) {
-        return 1
-      } else if (now >= end) {
-        return 2
-      }
+      this.setCurrentContest(data)
+      this.$router.push(`/contest/${data.id}`)
     }
   },
   computed: {

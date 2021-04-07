@@ -9,6 +9,7 @@
   <title>
     <%= htmlWebpackPlugin.options.isProd ? '' : 'dev - ' %>在线考试系统
   </title>
+  <link href="https://cdn.bootcss.com/github-markdown-css/2.10.0/github-markdown.min.css" rel="stylesheet">
   <!-- 按需加载外部的 CDN 资源 -->
   <% if(htmlWebpackPlugin.options.isProd) { %>
     <link rel="stylesheet" href="https://cdn.staticfile.org/quill/1.3.4/quill.core.min.css" />

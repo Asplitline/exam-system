@@ -1,4 +1,4 @@
-@import url('//at.alicdn.com/t/font_2462919_cyh0jgv4lq.css');
+@import url('//at.alicdn.com/t/font_2462919_yh9gbx7x4w.css');
 
 html,
 body,
@@ -35,6 +35,9 @@ a {
 .hidden {
     visibility: hidden;
 }
+.no-display {
+    display: none;
+}
 
 
 ::-webkit-scrollbar {
@@ -44,4 +47,21 @@ a {
 .el-menu--popup {
     text-align: center;
     letter-spacing: 0.2em;
+}
+
+.not-found {
+    padding: 120px;
+    background-color: #fef;
+    i {
+        font-size: 20px;
+        text-align: center;
+        letter-spacing: 0.5em;
+        color: tomato;
+        vertical-align: middle;
+        &::before {
+            font-size: 30px;
+         vertical-align: middle;
+         font-weight: 700;
+        }
+    }
 }

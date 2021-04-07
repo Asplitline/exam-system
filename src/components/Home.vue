@@ -14,7 +14,7 @@
               <el-avatar :src="bindURL(currentUser.avatarImgUrl)"></el-avatar>
               {{ currentUser.name }}
             </template>
-            <el-menu-item index="/user"> <i class="iconfont icon-user"></i>个人信息
+            <el-menu-item index="/info"> <i class="iconfont icon-user"></i>个人信息
             </el-menu-item>
             <el-menu-item @click="logout"> <i class="iconfont icon-logout"></i>退出系统
             </el-menu-item>
@@ -116,5 +116,10 @@ export default {
 
 .container.mainIndex {
   background-image: linear-gradient(#4e9e49, #5db21f);
+}
+
+/deep/.el-menu--horizontal > .el-submenu.is-active .el-submenu__title {
+  border-bottom: 2px solid transparent;
+  color: #fff;
 }
 </style>

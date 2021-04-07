@@ -1,6 +1,7 @@
 import hljs from 'highlight.js'
-import 'highlight.js/styles/dracula.css'
+import 'highlight.js/styles/github.css'
 import { pad0 } from '@utils'
+import { problemStatus } from '@static'
 const myPlugin = {}
 
 myPlugin.install = function (Vue) {
@@ -18,10 +19,11 @@ myPlugin.install = function (Vue) {
         const hour = pad0(date.getHours())
         const minute = pad0(date.getMinutes())
         const second = pad0(date.getSeconds())
-        if (model === 0)
+        if (model === 0) {
             return `${year}-${month}-${day} ${hour}:${minute}:${second}`
-        else if (model === 1)
+        } else if (model === 1) {
             return `${year}-${month}-${day}`
+        }
     })
 
     Vue.directive('highlight', function (el) {
@@ -31,6 +33,13 @@ myPlugin.install = function (Vue) {
         })
     })
 
+    Vue.filter('quesType', (data, array = problemStatus) => {
+        return `[${array[data].content}]`
+    })
+
+    Vue.filter('handleScore', (data, model = 0) => {
+        return model !== 0 ? `(${data}分)` : `${data}分`
+    })
 }
 
 export default myPlugin

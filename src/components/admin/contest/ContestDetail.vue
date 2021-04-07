@@ -70,7 +70,8 @@
               :key="item.questionType" border>{{item.content}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <template v-if="problemForm.questionType===0| problemForm.questionType===1">
+        <template
+          v-if="problemForm.questionType===0 || problemForm.questionType===1 || problemForm.questionType === 2">
           <el-form-item label="选项A" prop="optionA">
             <el-input v-model="problemForm.optionA">
             </el-input>
@@ -79,14 +80,17 @@
             <el-input v-model="problemForm.optionB">
             </el-input>
           </el-form-item>
-          <el-form-item label="选项C" prop="optionC">
-            <el-input v-model="problemForm.optionC">
-            </el-input>
-          </el-form-item>
-          <el-form-item label="选项D" prop="optionD">
-            <el-input v-model="problemForm.optionD">
-            </el-input>
-          </el-form-item>
+          <template v-if="problemForm.questionType!==2">
+            <el-form-item label="选项C" prop="optionC">
+              <el-input v-model="problemForm.optionC">
+              </el-input>
+            </el-form-item>
+            <el-form-item label="选项D" prop="optionD">
+              <el-input v-model="problemForm.optionD">
+              </el-input>
+            </el-form-item>
+          </template>
+
         </template>
         <template v-else>
           <el-form-item label="详情" prop="content">

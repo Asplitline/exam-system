@@ -15,11 +15,8 @@
           </div>
         </div>
       </div>
-      <div class="p-content" v-html="post.htmlContent" v-highlight>
+      <div class="p-content markdown-body" v-html="post.htmlContent" v-highlight>
       </div>
-      <!-- <div class="btns">
-        <el-link type="primary" :underline="false">编辑内容</el-link>
-      </div> -->
       <div class="p-comment">
         <div class="p-comment-header">
           <el-input type="text" v-model="comment"></el-input>
@@ -27,14 +24,12 @@
         </div>
         <div class="p-comment-content">
           <ul class="p-comment-list">
-            <li class="p-comment-item">
-              <img
-                src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-                alt="">
+            <li class="p-comment-item" v-for="item in commentList" :key="item.id">
+              <img :src="bindURL(item.user.avatarImgUrl)" alt="">
               <div>
-                <p class="p-comment-author">小王</p>
-                <p class="p-comment-content">rust早点出来就没go啥事了 xl x bdocker k8s都会选rust编写</p>
-                <p class="p-comment-date">2021-04-03 09:10</p>
+                <p class="p-comment-author">{{item.user.name}}</p>
+                <p class="p-comment-content">{{item.content}}</p>
+                <p class="p-comment-date">{{item.createTime | formatDate}}</p>
               </div>
               <div class="p-comment-tools">
                 <!-- <a href="javascript:;"> <i class="iconfont icon-discuss"></i>回复</a> -->
@@ -48,19 +43,27 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { bindURL, getUid } from '@utils'
-import { _addComment } from '@api'
+import { mapGetters, mapState } from 'vuex'
+import { bindURL, getUid, convertURL } from '@utils'
+import { _addComment, _getCommentByPostId } from '@api'
 export default {
   props: ['id'],
   data() {
     return {
       comment: '',
-      post: {}
+      post: {},
+      commentList: {}
     }
   },
   methods: {
     bindURL,
+    async fetchComment() {
+      const params = convertURL({ postId: this.id })
+      this.commentList = await _getCommentByPostId(params)
+      this.commentList.forEach((item) => {
+        item.user = this.getUserById(item.userId)
+      })
+    },
     async addComment() {
       if (this.comment.trim().length === 0) {
         this.$message.warning('评论不能为空')
@@ -75,6 +78,7 @@ export default {
       })
       if (success) {
         this.comment = ''
+        this.fetchComment()
         this.$message.success('评论成功')
       } else {
         this.$message.error('评论失败')
@@ -82,10 +86,12 @@ export default {
     }
   },
   computed: {
-    ...mapState(['currentPost', 'currentUser'])
+    ...mapState(['currentPost', 'currentUser']),
+    ...mapGetters(['getUserById'])
   },
   created() {
     this.post = this.currentPost
+    this.fetchComment()
   }
 }
 </script>
@@ -129,7 +135,7 @@ export default {
 }
 
 .p-content {
-  padding: 0 40px 26px;
+  padding: 10px;
   border-bottom: 1px dashed #92cd18;
   text-indent: 2em;
   //   line-height: 1;
@@ -150,7 +156,8 @@ export default {
     .p-comment-item {
       display: flex;
       position: relative;
-      //   border: 1px solid #000;
+      border-bottom: 1px solid #eee;
+      padding: 10px 0;
       img {
         width: 40px;
         height: 40px;
@@ -164,7 +171,7 @@ export default {
       }
       .p-comment-date {
         color: #888;
-        font-size: 14px;
+        font-size: 13px;
       }
       .p-comment-tools {
         position: absolute;

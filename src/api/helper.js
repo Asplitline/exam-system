@@ -31,12 +31,21 @@ export function _get (url, model = 1) {
  */
 export function _post (url, model = 1) {
     return function (params) {
-        return $http.post(url, params)
-            .then(res => {
-                return res.data
-            }).catch(err => {
-                console.log(err)
-            })
+        if (model === 1) {
+            return $http.post(url, params)
+                .then(res => {
+                    return res.data
+                }).catch(err => {
+                    console.log(err)
+                })
+        } else if (model === 0) {
+            return $http.post(`${url}?${params}`)
+                .then(res => {
+                    return res.data
+                }).catch(err => {
+                    console.log(err)
+                })
+        }
     }
 }
 

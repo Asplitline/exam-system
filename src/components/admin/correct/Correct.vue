@@ -26,7 +26,7 @@
         </el-table-column>
         <el-table-column prop="subjectId" label="考试科目" min-width="120">
           <template v-slot:default="{ row }">
-            {{ findSubJectById(row.subjectId) }}
+            {{row.subject.name}}
           </template>
         </el-table-column>
         <el-table-column prop="state" label="当前状态" min-width="100">
@@ -41,8 +41,12 @@
         </el-table-column>
         <el-table-column label="操作" min-width="100">
           <template v-slot="{ row }">
-            <el-link :underline="false" type="primary">结果</el-link>
-            <el-link :underline="false" type="danger">批改</el-link>
+            <el-link :underline="false" type="primary" @click="goCorrectDetail(row,0)">结果
+              <!-- :disabled="row.current === 2" -->
+            </el-link>
+            <el-link :underline="false" type="danger" @click="goCorrectDetail(row,1)">批改
+              <!-- :disabled="row.current === 2" -->
+            </el-link>
           </template>
         </el-table-column>
       </el-table>
@@ -59,8 +63,9 @@
 <script>
 import { aMixin } from '@mixins'
 import { _getContestList } from '@api'
-import { mapActions } from 'vuex'
-import { getCurrentByDate } from '@utils'
+import { mapActions, mapGetters } from 'vuex'
+import { handleContestState } from '@utils'
+import { SHOW, CORRECT } from '@static'
 export default {
   data() {
     return {
@@ -70,25 +75,29 @@ export default {
   },
   methods: {
     ...mapActions(['fetchAllSubject']),
-    // 查找对应的课程
-    findSubJectById(id) {
-      return this.miniSubjects[id] || '综合测试'
-    },
     // 获取考试列表
     async fetchContest() {
       const { list, total } = await _getContestList(this.query)
       this.contestList = list
+      this.contestList.forEach((item) => {
+        item.subject = this.getSubjectById(item.subjectId)
+        item.current = handleContestState(item.startTime, item.endTime)
+      })
       this.total = total
-      getCurrentByDate(this.contestList)
     },
     // 跳转到成绩列表
-    goShowGrade(id, title) {
-      this.$router.push(`/_grade/show/${id}/${title}`)
-    },
-    // 跳转到批改页面
-    goCorrectGrade(id, title) {
-      this.$router.push(`/_grade/correct/${id}/${title}`)
+    goCorrectDetail(data, flag) {
+      switch (flag) {
+        case SHOW:
+          break
+        case CORRECT:
+          break
+      }
+      this.$router.push(`/_correct/${data.id}`)
     }
+  },
+  computed: {
+    ...mapGetters(['getSubjectById'])
   },
   mixins: [aMixin],
   created() {

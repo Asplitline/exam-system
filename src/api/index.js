@@ -1,6 +1,6 @@
 import { _get, _post, _delete, _put } from './helper'
-const NO_HANDLE = 0
-// base 
+const TRADITION_MODEL = 0
+// base
 const _login = _post('account/api/login')
 const _uploadFile = _post('/uploadfile')
 // user
@@ -23,7 +23,6 @@ const _deleteSubject = _delete('subject/api/deleteSubject')
 // problem
 const _getProblemList = _get('/question/api/pageQuestion')
 const _getProblemByContestId = _get('/question/api/getQuestionsByContestId')
-// const _getProblemBySubjectId = _get('/question/api/getQuestionsBySubjectId')
 const _addProblem = _post('/question/api/addQuestion')
 const _editProblem = _post('/question/api/updateQuestion')
 const _deleteProblem = _delete('/question/api/deleteQuestion')
@@ -33,8 +32,12 @@ const _getPostByAuthorId = _get('/post/api/pagePostByAuthorId')
 const _addPost = _post('/post/api/addPost')
 const _editPost = _post('/post/api/updatePost')
 const _deletePost = _delete('/post/api/deletePost')
-// comment 
+// comment
 const _addComment = _post('/comment/api/addComment')
+const _getCommentByPostId = _post('/reply/api/getCommentsByPostId', TRADITION_MODEL)
+// answerCard
+const _addAnswerCard = _post('/grade/api/submitContest')
+const _getContestRecord = _get('/grade/api/pageGradeByStudentId')
 export {
     // base
     _login,
@@ -53,7 +56,7 @@ export {
     _deleteContest,
     // subject
     _getSubjectList,
-    // _getProblemBySubjectId,
+    // _getProblemBySubjectId
     _deleteSubject,
     _addSubject,
     _editSubject,
@@ -69,6 +72,10 @@ export {
     _editPost,
     _getPostByAuthorId,
     _deletePost,
-    // comment 
-    _addComment
+    // comment
+    _addComment,
+    _getCommentByPostId,
+    // answerCard
+    _addAnswerCard,
+    _getContestRecord
 }

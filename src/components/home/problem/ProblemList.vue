@@ -2,15 +2,19 @@
   <div class="problem-list">
     <el-breadcrumb separator-class="el-icon-d-arrow-right">
       <el-breadcrumb-item :to="{ name:'iProblem' }">题目练习</el-breadcrumb-item>
-      <el-breadcrumb-item>数学七年级(上册)</el-breadcrumb-item>
+      <el-breadcrumb-item>题目列表</el-breadcrumb-item>
     </el-breadcrumb>
-    <el-card>
+    <div v-if="problemList.length===0" class="not-found"><i
+        class="iconfont icon-40401">暂无题目</i></div>
+    <el-card v-else>
       <ul class="pl-list">
         <li class="pl-item" v-for="item in problemList" :key="item.id">
           <p class="pl-title">
-            <span class="pl-tag">[单选题]</span>{{item.title}}
+            <span
+              class="pl-tag">{{'[' + problemStatus[item.questionType].content+ ']'}}</span>{{item.title}}
           </p>
-          <a href="javascript:;" class="pl-btn">完整试题|答案解析</a>
+          <a href="javascript:;" class="pl-btn"
+            @click="goProblemDetail(item)">完整试题|答案解析</a>
         </li>
       </ul>
     </el-card>
@@ -22,6 +26,7 @@
 import { _getProblemList } from '@api'
 import { hMixin } from '@mixins'
 import { problemStatus } from '@static'
+import { mapMutations } from 'vuex'
 export default {
   props: ['id'],
   data() {
@@ -31,13 +36,19 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['setCurrentProblem']),
     async fetchProblemList() {
       this.query.subjectId = this.id
       const { list, total } = await _getProblemList(this.query)
       this.problemList = list
       this.total = total
+    },
+    goProblemDetail(data) {
+      this.setCurrentProblem(data)
+      this.$router.push(`/problemDetail/${data.id}`)
     }
   },
+  computed: {},
   mixins: [hMixin],
   created() {
     this.fetchProblemList()

@@ -11,7 +11,9 @@ const state = {
     currentHIndex: sessionStorage.getItem('currentHIndex'),
     isIndex: sessionStorage.getItem('isIndex'),
     allUser: getSessionStorage('allUser'),
-    currentPost: getSessionStorage('currentPost')
+    currentPost: getSessionStorage('currentPost'),
+    currentProblem: getSessionStorage('currentProblem'),
+    currentContest: getSessionStorage('currentContest')
 }
 // mutations
 const mutations = {
@@ -38,6 +40,14 @@ const mutations = {
     setCurrentPost (state, data) {
         setSessionStorage('currentPost', data)
         state.currentPost = data
+    },
+    setCurrentProblem (state, data) {
+        setSessionStorage('currentProblem', data)
+        state.currentProblem = data
+    },
+    setCurrentContest (state, data) {
+        setSessionStorage('currentContest', data)
+        state.currentContest = data
     }
 }
 // getters
@@ -49,7 +59,7 @@ const getters = {
         return state.allSubject.find(item => item.id === id)
     },
     getIsIndex: (state) => () => {
-        return state.currentHIndex === "/index"
+        return state.currentHIndex === '/index'
     },
     getUserById: (state) => (id) => {
         return state.allUser.find((item) => item.id === id)

@@ -9,6 +9,7 @@ import ContestDetail from '@components/admin/contest/ContestDetail'
 import Subject from '@components/admin/subject/Subject'
 import Problem from '@components/admin/problem/Problem'
 import Correct from '@components/admin/correct/Correct'
+import CorrectDetail from '@components/admin/correct/CorrectDetail'
 import Discuss from '@components/admin/discuss/Discuss'
 // ----
 // home
@@ -17,6 +18,7 @@ import Index from '@components/home/index/Index'
 import ContestIndex from '@components/home/contest/Contest'
 import ProblemIndex from '@components/home/problem/Problem'
 import ProblemListIndex from '@components/home/problem/ProblemList'
+import ProblemDetailIndex from '@components/home/problem/ProblemDetail'
 import DiscussIndex from '@components/home/discuss/Discuss'
 import PostDetailIndex from '@components/home/discuss/PostDetail'
 import AddPostIndex from '@components/home/discuss/AddPost'
@@ -45,6 +47,7 @@ const router = new VueRouter({
         { path: '/_subject', name: 'subject', component: Subject },
         { path: '/_problem', name: 'problem', component: Problem },
         { path: '/_correct', name: 'correct', component: Correct },
+        { path: '/_correct/:id', name: 'correctDetail', component: CorrectDetail, props: true },
         { path: '/_discuss', name: 'discuss', component: Discuss }
       ]
     },
@@ -56,12 +59,13 @@ const router = new VueRouter({
         { path: '/index', component: Index },
         { path: '/contest', name: 'iContest', component: ContestIndex },
         { path: '/problem', name: 'iProblem', component: ProblemIndex },
-        { path: '/problem/:id', name: 'iProblemList', component: ProblemListIndex },
+        { path: '/problem/:id', name: 'iProblemList', component: ProblemListIndex, props: true },
+        { path: '/problemDetail/:id', name: 'iProblemDetail', component: ProblemDetailIndex, props: true },
         { path: '/discuss', name: 'iDiscuss', component: DiscussIndex },
         { path: '/discuss/:id', name: 'iPostDetail', component: PostDetailIndex, props: true },
         { path: '/addPost', name: 'iAddPost', component: AddPostIndex },
         { path: '/info', component: InfoIndex },
-        { path: '/contest/:id/:name', component: cContestDetail, props: true },
+        { path: '/contest/:id', component: cContestDetail, props: true }
       ]
     }
   ]
@@ -80,8 +84,7 @@ router.beforeEach((to, from, next) => {
   }
   if (usr === null && to.path !== '/login') {
     next('/login')
-  }
-  else {
+  } else {
     next()
   }
 })

@@ -2,7 +2,7 @@
   <div class="problem">
     <el-breadcrumb separator-class="el-icon-d-arrow-right">
       <el-breadcrumb-item :to="{ name:'iProblem' }">题目练习</el-breadcrumb-item>
-      <el-breadcrumb-item>题目列表</el-breadcrumb-item>
+      <el-breadcrumb-item>学科列表</el-breadcrumb-item>
     </el-breadcrumb>
     <el-card>
       <ul class="p-list">
@@ -12,7 +12,8 @@
             <p>{{item.name}}</p>
           </a>
         </li>
-        <li v-for="item in blankNum" class="p-item"></li>
+        <li v-for="item in blankNum" class="p-item" :key="item" style="visibility:hidden">
+        </li>
       </ul>
     </el-card>
   </div>
@@ -41,9 +42,9 @@ export default {
   },
   computed: {
     blankNum() {
-      return this.allNum % 6 === 0 ? 0 : 6 - (this.allNum % 6)
+      return this.totalNum % 6 === 0 ? 0 : 6 - (this.totalNum % 6)
     },
-    allNum() {
+    totalNum() {
       return this.subjectList.length
     }
   },
