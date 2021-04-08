@@ -26,7 +26,7 @@
         <el-input v-model="userForm.email"></el-input>
       </el-form-item>
       <el-form-item label="个人简介" prop="description">
-        <el-input type="textarea" autosize placeholder="请输入内容"
+        <el-input type="textarea" placeholder="请输入内容"
           v-model="userForm.description" :autosize="{minRows:2,maxRows:4}" resize="none">
         </el-input>
       </el-form-item>

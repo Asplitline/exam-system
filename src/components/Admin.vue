@@ -9,7 +9,7 @@
       <el-menu :default-active="currentAIndex" text-color="#fff"
         active-text-color="#92cd18" :collapse="isCollapse" :collapse-transition="false"
         router>
-        <el-menu-item :index="item.index" v-for="item in aMenuList">
+        <el-menu-item :index="item.index" v-for="item in aMenuList" :key="item.index">
           <i :class='item.icon'></i>
           <span slot="title">{{item.content}}</span>
         </el-menu-item>

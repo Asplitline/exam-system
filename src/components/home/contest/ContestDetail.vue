@@ -89,7 +89,8 @@
               v-for="(item,index) in problemList" :key="item.id">
               <a href="javascript:;" @click="setCurrentIndex(index)"> {{index+1}}</a>
             </li>
-            <li class="c-card-item" v-for="item in blankNum" style="visibility:hidden">
+            <li class="c-card-item" v-for="item in blankNum" :key="item"
+              style="visibility:hidden">
             </li>
           </ul>
         </el-card>
@@ -184,7 +185,7 @@ export default {
       return setInterval(() => {
         const date = (this.currentContest.endTime - Date.now()) / 1000
         if (date === 0 || date < 0) {
-          endCountDown()
+          this.endCountDown()
           this.$router.push({ name: 'iContest' })
         }
         const hour = pad0(Math.floor(date / (60 * 60)), 3)

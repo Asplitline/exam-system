@@ -86,14 +86,14 @@
           <el-input v-model="userForm.email"></el-input>
         </el-form-item>
         <el-form-item label="身份" prop="level">
-          <el-radio v-for="level in levels" :label="level.id" v-model="userForm.level">
+          <el-radio v-for="level in levels" :label="level.id" v-model="userForm.level"
+            :key="level.id">
             {{level.value}}
           </el-radio>
         </el-form-item>
         <el-form-item label="个人描述" prop="description">
-          <el-input type="textarea" autosize placeholder="请输入内容"
-            v-model="userForm.description" :autosize="{minRows:2,maxRows:4}"
-            resize="none">
+          <el-input type="textarea" placeholder="请输入内容" v-model="userForm.description"
+            :autosize="{minRows:2,maxRows:4}" resize="none">
           </el-input>
         </el-form-item>
       </el-form>
@@ -122,7 +122,6 @@ import {
   checkPhone,
   bindURL,
   convertDeepCopy,
-  convertURL,
   getUid
 } from '@utils'
 import { ADD, EDIT, DEFAULT_PWD, levels } from '@static'

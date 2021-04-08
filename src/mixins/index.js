@@ -125,6 +125,6 @@ export const hMixin = {
                 .catch(() => {
                     this.$message.warning('已取消删除')
                 })
-        },
+        }
     }
 }

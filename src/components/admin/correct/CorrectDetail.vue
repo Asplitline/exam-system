@@ -149,7 +149,7 @@ export default {
             manulResult += item.value
           }
         })
-        let result = autoResult + manulResult
+        const result = autoResult + manulResult
         Object.assign(this.currentCard, {
           autoResult,
           manulResult,

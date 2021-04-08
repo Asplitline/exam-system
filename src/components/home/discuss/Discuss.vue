@@ -34,9 +34,8 @@
 
 <script>
 import { _getPostList } from '@api'
-import { htmlToText } from '@utils'
+import { htmlToText, bindURL } from '@utils'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
-import { bindURL } from '@utils'
 export default {
   data() {
     return {
@@ -79,7 +78,7 @@ export default {
     this.fetchPost()
   }
 }
-</script> 
+</script>
 
 <style lang="less" scoped>
 @import '~@css/hcommon.less';

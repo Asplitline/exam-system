@@ -8,7 +8,7 @@ module.exports = {
     chainWebpack: config => {
         // 配置生产阶段
         config.when(process.env.NODE_ENV === 'production', config => {
-            config.entry('app').clear().add('./src/main.dev.js')
+            config.entry('app').clear().add('./src/main.prod.js')
             // key - package中名字
             // value - 项目中变量名
             // import hljs from 'highlight.js'
@@ -16,9 +16,9 @@ module.exports = {
                 vue: 'Vue',
                 'vue-router': 'VueRouter',
                 axios: 'axios',
-                'vue-quill-editor': 'VueQuillEditor',
                 'highlight.js': 'hljs',
-                "element-ui": "ElementUI"
+                "element-ui": "ElementUI",
+                "mavon-editor": 'mavonEditor'
             })
             config.plugin('html').tap(args => {
                 args[0].isProd = true

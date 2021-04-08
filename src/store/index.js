@@ -103,8 +103,7 @@ const actions = {
     async fetchAllProblem ({ commit }, query = { size: 999 }) {
         const { list } = await _getProblemList(query)
         commit('setAllProblem', list)
-    },
-
+    }
 }
 
 export default new Vuex.Store({

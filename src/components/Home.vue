@@ -7,7 +7,7 @@
           <el-menu-item class="logo"><img src="../assets/logo.png" alt="" height="50" />
           </el-menu-item>
           <!-- 菜单栏 -->
-          <el-menu-item v-for="item in hMenuList" :index="item.index">{{item.content}}
+          <el-menu-item v-for="item in hMenuList" :index="item.index" :key="item.index">{{item.content}}
           </el-menu-item>
           <el-submenu class="userInfo" index>
             <template slot="title">
