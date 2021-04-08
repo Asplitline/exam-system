@@ -38,6 +38,10 @@ const _getCommentByPostId = _post('/reply/api/getCommentsByPostId', TRADITION_MO
 // answerCard
 const _addAnswerCard = _post('/grade/api/submitContest')
 const _getContestRecord = _get('/grade/api/pageGradeByStudentId')
+const _getAnswerCardById = _get('/grade/api/pageGradeByContestId')
+const _finishAnswerCard = _post('/grade/api/finishGrade')
+// wrong
+const _getWrongProblem = _get('/wrong/get')
 export {
     // base
     _login,
@@ -56,7 +60,6 @@ export {
     _deleteContest,
     // subject
     _getSubjectList,
-    // _getProblemBySubjectId
     _deleteSubject,
     _addSubject,
     _editSubject,
@@ -77,5 +80,9 @@ export {
     _getCommentByPostId,
     // answerCard
     _addAnswerCard,
-    _getContestRecord
+    _getContestRecord,
+    _getAnswerCardById,
+    _finishAnswerCard,
+    // wrong
+    _getWrongProblem
 }

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { _getSubjectList, _getUser } from '@api'
+import { _getSubjectList, _getUser, _getContestList, _getProblemList } from '@api'
 import { getSessionStorage, setSessionStorage } from '@utils'
 Vue.use(Vuex)
 // state
@@ -13,7 +13,9 @@ const state = {
     allUser: getSessionStorage('allUser'),
     currentPost: getSessionStorage('currentPost'),
     currentProblem: getSessionStorage('currentProblem'),
-    currentContest: getSessionStorage('currentContest')
+    currentContest: getSessionStorage('currentContest'),
+    allContest: getSessionStorage('allContest'),
+    allProblem: getSessionStorage('allProblem')
 }
 // mutations
 const mutations = {
@@ -48,6 +50,14 @@ const mutations = {
     setCurrentContest (state, data) {
         setSessionStorage('currentContest', data)
         state.currentContest = data
+    },
+    setAllContest (state, data) {
+        setSessionStorage('allContest', data)
+        state.allContest = data
+    },
+    setAllProblem (state, data) {
+        setSessionStorage('allProblem', data)
+        state.allProblem = data
     }
 }
 // getters
@@ -63,6 +73,17 @@ const getters = {
     },
     getUserById: (state) => (id) => {
         return state.allUser.find((item) => item.id === id)
+    },
+    getContestById: (state) => (id) => {
+        return state.allContest.find(item => item.id === id)
+    },
+    getMiniContest: (state) => () => {
+        return state.allContest.map(({ id, title }) => {
+            return { id, title }
+        })
+    },
+    getProblemById: (state) => (id) => {
+        return state.allProblem.find(item => item.id === id)
     }
 }
 // actions
@@ -74,7 +95,16 @@ const actions = {
     async fetchAllUser ({ commit }) {
         const list = await _getUser()
         commit('setAllUser', list)
-    }
+    },
+    async fetchAllContest ({ commit }, query = { size: 999 }) {
+        const { list } = await _getContestList(query)
+        commit('setAllContest', list)
+    },
+    async fetchAllProblem ({ commit }, query = { size: 999 }) {
+        const { list } = await _getProblemList(query)
+        commit('setAllProblem', list)
+    },
+
 }
 
 export default new Vuex.Store({

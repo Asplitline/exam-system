@@ -8,7 +8,7 @@ module.exports = {
     chainWebpack: config => {
         // 配置生产阶段
         config.when(process.env.NODE_ENV === 'production', config => {
-            config.entry('app').clear().add('./src/main.prod.js')
+            config.entry('app').clear().add('./src/main.dev.js')
             // key - package中名字
             // value - 项目中变量名
             // import hljs from 'highlight.js'

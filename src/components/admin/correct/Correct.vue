@@ -41,11 +41,11 @@
         </el-table-column>
         <el-table-column label="操作" min-width="100">
           <template v-slot="{ row }">
-            <el-link :underline="false" type="primary" @click="goCorrectDetail(row,0)">结果
-              <!-- :disabled="row.current === 2" -->
+            <!-- <el-link :underline="false" type="primary" @click="goCorrectDetail(row,0)">结果 -->
             </el-link>
             <el-link :underline="false" type="danger" @click="goCorrectDetail(row,1)">批改
-              <!-- :disabled="row.current === 2" -->
+            </el-link>
+            <el-link :underline="false" type="success" @click="goCorrectDetail(row,1)">提交
             </el-link>
           </template>
         </el-table-column>

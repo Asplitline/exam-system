@@ -70,7 +70,7 @@ export default {
 
 <style lang="less" scoped>
 .info {
-  padding: 0 20%;
+  padding: 0 14%;
 }
 .i-header {
   display: flex;

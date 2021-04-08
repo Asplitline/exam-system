@@ -211,6 +211,7 @@ export default {
           this[formName].id = getUid()
           this[formName].state = 1
           const { success } = await _addProblem(this[formName])
+          console.log(success)
           this.handleSuccess(success, '添加题目')
         } else if (flag === EDIT) {
           const { success } = await _editProblem(this[formName])
