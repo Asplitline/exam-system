@@ -90,7 +90,6 @@
               </el-input>
             </el-form-item>
           </template>
-
         </template>
         <template v-else>
           <el-form-item label="详情" prop="content">

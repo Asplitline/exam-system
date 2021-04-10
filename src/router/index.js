@@ -74,7 +74,6 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   const usr = store.state.currentUser
   const path = '/' + to.path.split('/')[1]
-  sessionStorage.setItem('123', '123')
   if (aMiniMenuList.includes(path)) {
     window.sessionStorage.setItem('currentAIndex', path)
     store.commit('setCurrentAIndex', path)

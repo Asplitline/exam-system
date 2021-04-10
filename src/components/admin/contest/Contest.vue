@@ -153,7 +153,6 @@ export default {
         this[formName].endTime = this[formName].date[1]
         if (flag === ADD) {
           this[formName].id = getUid()
-
           const { success } = await _addContest(this[formName])
           this.handleSuccess(success, '添加考试')
         } else if (flag === EDIT) {

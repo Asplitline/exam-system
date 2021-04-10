@@ -38,7 +38,6 @@ export default {
       searchValue: ''
     }
   },
-
   methods: {
     handleClose() {
       this.searchValue = ''

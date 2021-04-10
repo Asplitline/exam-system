@@ -29,14 +29,24 @@
               </el-radio>
             </div>
             <div class="p-mul-select" v-else-if="item.questionType === 1">
-              <el-checkbox v-model="answer[index]" label="A" border>{{item.optionA}}
+              <!-- <el-checkbox v-model="answer[index]" label="A" border>{{item.optionA}}
               </el-checkbox>
               <el-checkbox v-model="answer[index]" label="B" border>{{item.optionB}}
               </el-checkbox>
               <el-checkbox v-model="answer[index]" label="C" border>{{item.optionC}}
               </el-checkbox>
               <el-checkbox v-model="answer[index]" label="D" border>{{item.optionD}}
-              </el-checkbox>
+              </el-checkbox> -->
+              <el-checkbox-group v-model="answer[index]">
+                <el-checkbox label="A" border>{{item.optionA}}
+                </el-checkbox>
+                <el-checkbox label="B" border>{{item.optionB}}
+                </el-checkbox>
+                <el-checkbox label="C" border>{{item.optionC}}
+                </el-checkbox>
+                <el-checkbox label="D" border>{{item.optionD}}
+                </el-checkbox>
+              </el-checkbox-group>
             </div>
             <div class="p-judge" v-else-if="item.questionType === 2">
               <el-radio v-model="answer[index]" label="A" border>
@@ -101,7 +111,6 @@
           </div>
         </el-card>
       </el-aside>
-
     </el-container>
   </div>
 </template>
@@ -117,7 +126,7 @@ export default {
     return {
       problemList: [],
       problemStatus,
-      answer: {},
+      answer: [],
       currentIndex: 0,
       answerFlag: {},
       timer: null,
@@ -128,6 +137,13 @@ export default {
     // 获取题目
     async fetchProblem() {
       this.problemList = await _getProblemByContestId({ contestId: this.id })
+      this.problemList.forEach((item) => {
+        if (item.questionType === 1) {
+          this.answer.push([])
+        } else {
+          this.answer.push('')
+        }
+      })
     },
     // 提交答题卡
     submitContest() {
@@ -171,11 +187,21 @@ export default {
     handleAnswerCard() {
       let cnt = 0
       for (const key in this.answer) {
-        if (this.answer[key].trim().length !== 0) {
-          this.answerFlag[key] = true
-          cnt++
+        const val = this.answer[key]
+        if (typeof val !== 'object' || val === null) {
+          if (val.trim && val.trim().length !== 0) {
+            this.answerFlag[key] = true
+            cnt++
+          } else {
+            this.answerFlag[key] = false
+          }
         } else {
-          this.answerFlag[key] = false
+          if (val.length !== 0) {
+            this.answerFlag[key] = true
+            cnt++
+          } else {
+            this.answerFlag[key] = false
+          }
         }
       }
       return cnt === this.totalNum
