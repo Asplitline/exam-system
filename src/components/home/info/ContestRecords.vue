@@ -18,12 +18,6 @@
       </el-table-column>
       <el-table-column prop="result" label="考试成绩" min-width="80">
       </el-table-column>
-      <!-- <el-table-column label="操作" min-width="50">
-        <template v-slot="{row}">
-          <el-link type="primary" :underline="false" @click="goPostDetail(row)">错题
-          </el-link>
-        </template>
-      </el-table-column> -->
     </el-table>
     <el-pagination layout="prev, pager, next" :total="total"
       @current-change="handleCurrentChange(fetchPost,$event)">
