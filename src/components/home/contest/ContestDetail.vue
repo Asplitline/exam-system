@@ -160,7 +160,7 @@ export default {
           const { success } = await _addAnswerCard(this.handleAnswer())
           const loading = this.$loading({
             lock: true,
-            text: '提交试卷中',
+            text: '提交试卷中...',
             spinner: 'el-icon-loading',
             background: 'rgba(0, 0, 0, 0.7)'
           })
@@ -170,7 +170,7 @@ export default {
               this.$message.success('交卷成功')
               this.$router.push({ name: 'iContest' })
             } else {
-              this.$message.error('交卷失败')
+              this.$message.error('试卷已经提交过了')
             }
           }, 2000)
         })

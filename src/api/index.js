@@ -15,6 +15,7 @@ const _getContestList = _get('/contest/api/pageContest')
 const _addContest = _post('/contest/api/addContest')
 const _editContest = _put('/contest/api/updateContest')
 const _deleteContest = _delete('contest/api/deleteContest')
+const _finishContest = _get('/contest/api/finishContest', TRADITION_MODEL)
 // subject
 const _getSubjectList = _get('/subject/api/pageSubjects')
 const _addSubject = _post('/subject/api/addSubject')
@@ -39,7 +40,7 @@ const _getCommentByPostId = _post('/reply/api/getCommentsByPostId', TRADITION_MO
 const _addAnswerCard = _post('/grade/api/submitContest')
 const _getContestRecord = _get('/grade/api/pageGradeByStudentId')
 const _getAnswerCardById = _get('/grade/api/pageGradeByContestId')
-const _finishAnswerCard = _post('/grade/api/finishGrade')
+const _finishGrade = _post('/grade/api/finishGrade')
 // wrong
 const _getWrongProblem = _get('/wrong/get')
 export {
@@ -58,6 +59,7 @@ export {
     _addContest,
     _editContest,
     _deleteContest,
+    _finishContest,
     // subject
     _getSubjectList,
     _deleteSubject,
@@ -82,7 +84,7 @@ export {
     _addAnswerCard,
     _getContestRecord,
     _getAnswerCardById,
-    _finishAnswerCard,
+    _finishGrade,
     // wrong
     _getWrongProblem
 }

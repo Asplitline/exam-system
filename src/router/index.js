@@ -47,7 +47,7 @@ const router = new VueRouter({
         { path: '/_subject', name: 'subject', component: Subject },
         { path: '/_problem', name: 'problem', component: Problem },
         { path: '/_correct', name: 'correct', component: Correct },
-        { path: '/_correct/:id', name: 'correctDetail', component: CorrectDetail, props: true },
+        { path: '/_correct/:id/:flag', name: 'correctDetail', component: CorrectDetail, props: true },
         { path: '/_discuss', name: 'discuss', component: Discuss }
       ]
     },

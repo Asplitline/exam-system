@@ -34,18 +34,19 @@
         </el-table-column>
         <el-table-column prop="result" label="总分" min-width="150">
         </el-table-column>
-        <el-table-column label="操作" min-width="150">
+        <el-table-column label="操作" min-width="150" v-if="xFlag === 1">
           <template v-slot="{row}">
             <el-link :underline="false" type="primary" @click="handleAnswerCard(row)">批改
-            </el-link>
-            <el-link :underline="false" type="danger" @click="submitAnswerCard(row)">提交
             </el-link>
           </template>
         </el-table-column>
       </el-table>
+      <el-link type="danger" class="c-finish" :underline="false" @click="submitContest()"
+        v-if="xFlag === 1">
+        完成批改</el-link>
     </el-card>
-
-    <el-dialog title="学生试卷" :visible.sync="correctDialogVisible" width="30%">
+    <el-dialog title="学生试卷" :visible.sync="correctDialogVisible" width="30%"
+      :close-on-click-modal="false">
       <el-form :model="answerForm" ref="answerForm" size="small"
         :close-on-click-modal="false">
         <el-form-item :prop="'answer.'+index+'.value'"
@@ -85,13 +86,14 @@
 import {
   _getAnswerCardById,
   _getProblemByContestId,
-  _finishAnswerCard
+  _finishGrade,
+  _finishContest
 } from '@api'
 import { aMixin } from '@mixins'
 import { mapActions, mapGetters } from 'vuex'
 import { convertDeepCopy } from '@utils'
 export default {
-  props: ['id'],
+  props: ['id', 'flag'],
   data() {
     return {
       studentList: [],
@@ -109,10 +111,10 @@ export default {
     async fetchAnswerCard() {
       this.query.keyword = this.id
       const { list, total } = await _getAnswerCardById(this.query)
-      this.studentList = list
-      this.studentList.forEach((item) => {
+      list.forEach((item) => {
         item.student = this.getUserById(item.studentId)
       })
+      this.studentList = list
       this.total = total
     },
     // 处理答题卡
@@ -156,18 +158,41 @@ export default {
           result,
           finishTime: Date.now()
         })
-        const { success } = await _finishAnswerCard(this.currentCard)
+        const { success } = await _finishGrade(this.currentCard)
         this.handleSuccess(success, '判卷', this.fetchAnswerCard)
         this.correctDialogVisible = false
       })
     },
-    // 提交答题卡
-    submitAnswerCard() {
-      console.log(this.answerForm)
+    // 完成批改
+    submitContest() {
+      if (!this.correctState)
+        return this.$message.error('还存在未批改的试卷，无法提交')
+      this.$confirm('将完成试卷批改，是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'error'
+      }).then(async () => {
+        const { success } = await _finishContest(this.id)
+        if (success) {
+          this.$message.success('已完成批改，可查看成绩')
+          this.$router.go(-1)
+        } else {
+          this.$message.error('完成批改失败')
+        }
+      })
     }
   },
   computed: {
-    ...mapGetters(['getUserById'])
+    ...mapGetters(['getUserById']),
+    correctState() {
+      console.log(this.studentList)
+      return this.studentList.every((item) => {
+        return item.finishTime != null
+      })
+    },
+    xFlag() {
+      return Number(this.flag)
+    }
   },
   mixins: [aMixin],
   created() {
@@ -215,6 +240,23 @@ export default {
     padding: 0px 10px;
     border: 1px solid #dadada;
     background-color: #fafafa;
+  }
+}
+.c-finish {
+  position: absolute;
+  right: 30px;
+  bottom: 12px;
+  padding: 6px 10px;
+  border: 1px solid #f56c6c;
+}
+.el-link.el-link--danger:hover {
+  background-color: #f56c6c;
+  color: #fff;
+}
+.correct-detail > .el-card {
+  position: relative;
+  /deep/.el-card__body {
+    padding-bottom: 50px;
   }
 }
 </style>

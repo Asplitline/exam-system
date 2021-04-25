@@ -12,8 +12,11 @@
             <p>{{item.name}}</p>
           </a>
         </li>
-        <li v-for="item in blankNum" class="p-item" :key="item" style="visibility:hidden">
-        </li>
+        <template v-if="blankNum">
+          <li v-for="item in blankNum" class="p-item" :key="item"
+            style="visibility:hidden">
+          </li>
+        </template>
       </ul>
     </el-card>
   </div>
